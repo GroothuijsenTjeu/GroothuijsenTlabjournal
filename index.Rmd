@@ -1,6 +1,6 @@
 ---
-title: "Lab journal"
-author: "by: Your Name"
+title: "SNA Course Lab Journal"
+author: "Tjeu Groothuijsen"
 bibliography: references.bib
 
  
@@ -50,7 +50,7 @@ But please note, we are not here to make a beautiful website, our intention is j
 :::: {.columns}
 ::: {.column width="50%"}
 
-# My Lab Journal
+# SNA Course Lab Journal
 Last compiled on `r format(Sys.time(), '%B, %Y')`  
 
 *Describe lab journal here.*

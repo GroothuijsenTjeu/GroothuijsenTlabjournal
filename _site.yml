@@ -1,6 +1,6 @@
-name: "Example Lab Journal"
+name: "SNA Course Lab Journal"
 author: 
-  - 'Your Name'
+  - 'Tjeu Groothuijsen'
 output_dir: "docs"
 exclude: 
   - "data"
@@ -20,7 +20,7 @@ navbar:
 
   right:
   - icon: fab fa-github
-    href: https://github.com/JochemTolsma/labjournal
+    href: https://github.com/GroothuijsenTjeu/GroothuijsenTlabjournal
 output:
   html_document:
     theme: flatly
