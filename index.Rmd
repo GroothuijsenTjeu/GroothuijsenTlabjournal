@@ -53,13 +53,15 @@ But please note, we are not here to make a beautiful website, our intention is j
 # SNA Course Lab Journal
 Last compiled on `r format(Sys.time(), '%B, %Y')`  
 
-*Describe lab journal here.*
+*I see things in the computer screen, troublesome things. First attempt at logging research on a website, seems very useful. If someone asks me what I did exactly I can tell them to google it!*
 
 <br>
 
 ----
 
 ## Open Science  
+
+Sharing our work openly with our colleagues is good for science, as long as we credit each other. Merton said that, I think [@Merton]. 
 
 Everyone can fork this repository. Use this example to journal your lab work and assignments. 
 
