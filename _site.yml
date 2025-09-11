@@ -12,10 +12,10 @@ navbar:
       href: index.html
     - text: "My journal"
       menu:
-    - text: "Example"
-      href: lab1.html
-    - text: "Research questions"
-      href: week1hw.html
+      - text: "Example"
+        href: lab1.html
+      - text: "Research questions"
+        href: week1hw.html
         
         # here, other .Rmds can be added
 
