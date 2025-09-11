@@ -1,9 +1,8 @@
 ---
-title: "Example page"
-#bibliography: references.bib
-author: "So am I supposed to credit Jochem as author here? I hardly edited this"
+title: "Research questions"
+output: html_document
+author: "Tjeu Groothuijsen"
 ---
-
 
 
 ```{r, globalsettings, echo=FALSE, warning=FALSE, results='hide'}
@@ -26,22 +25,12 @@ klippy::klippy(position = c('top', 'right'))
 #klippy::klippy(tooltip_message = 'Click to copy', tooltip_success = 'Done')
 ```
 
-Last compiled on `r format(Sys.time(), '%B, %Y')`
+Last compiled yesterday or something
 
 <br>
 
 ----
   
-This is just an example page of your `r colorize("lab journal", "red")`.
-You can journal the assignments of the first day here.
+TESTTEST
   
-
 ----
-
-
-```{r}
-print("Hello Lab Journal")
-```
-
-
-
