@@ -2,6 +2,7 @@
 title: "Research questions"
 output: html_document
 author: "Tjeu Groothuijsen"
+bibliography: references.bib
 ---
 
 
@@ -31,6 +32,27 @@ Last compiled yesterday or something
 
 ----
   
-TESTTEST
+Something that has kept me busy for a few years now are the various specialties and
+distinctions in sociology, specifically in the Netherlands. I am hesitant to make claims
+about my observations here because I know some of you reading this know far more about it
+than I do, but during the third year of my bachelor I got the impression that there is a
+clearly distinct group called 'analytical sociology' (or various other names depending on
+who you ask) which is quite well represented in the Netherlands. This group their own
+professional association and looks to be linked to a graduate school called 'ICS'.
+
+Recently I read an article that described the development of sociology in the Netherlands
+which also went into some depth regarding the differences between two prominent graduate
+schools, ICS and AISSR [@Haan]. Apparently my view that there are topical and
+methodological differences between these schools is to some extent correct, with them
+having (or having had) distinct approaches to sociology.
+
+This lead me to question whether the graduates of the two schools formed separate groups,
+or if they perhaps integrate and start collaborations regardless of where they studied. 
+I think if they stay separated it might lead to clear clustering in the network, so I
+found some articles which study the extent of clustering in science collaboration.
+
+Moody studied a social science network and found no clustering [@moody]. Studies by
+Newman and Tomassini and Luthi, however, both found high clustering [@Newman][@Tomas].
+
+
   
-----
