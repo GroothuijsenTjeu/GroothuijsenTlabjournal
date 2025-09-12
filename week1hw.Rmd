@@ -51,8 +51,11 @@ or if they perhaps integrate and start collaborations regardless of where they s
 I think if they stay separated it might lead to clear clustering in the network, so I
 found some articles which study the extent of clustering in science collaboration.
 
-Moody studied a social science network and found no clustering [@moody]. Studies by
+Moody studied a social science network and found no clustering [@Moody]. Studies by
 Newman and Tomassini and Luthi, however, both found high clustering [@Newman][@Tomas].
 
+So does clustering occur in our data?
+
+And my real question: is the clustering caused by grad school affiliation?
 
   
