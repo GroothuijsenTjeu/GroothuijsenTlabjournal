@@ -65,7 +65,7 @@ Sharing our work openly with our colleagues is good for science, as long as we c
 
 Everyone can fork this repository. Use this example to journal your lab work and assignments. 
 
-The creators of this lab journal template, Jochem Tolsma and Bas Hofstra, use this repository for this Social Network Analysis For Social Scientists course [@SNASS]. <!--- this is a reference, stored in references.bib. It will be automatically added at the bottom of the page --->
+The creators of this lab journal template, Jochem Tolsma and Bas Hofstra, use this repository for their Social Network Analysis For Social Scientists course [@SNASS]. <!--- this is a reference, stored in references.bib. It will be automatically added at the bottom of the page --->
 
 
 :::

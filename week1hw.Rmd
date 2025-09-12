@@ -53,9 +53,18 @@ found some articles which study the extent of clustering in science collaboratio
 
 Moody studied a social science network and found no clustering [@Moody]. Studies by
 Newman and Tomassini and Luthi, however, both found high clustering [@Newman][@Tomas].
+So whether or not there is clustering in science collaboration networks is not settled!
+Which leads to the descriptive question:
 
-So does clustering occur in our data?
+Does clustering occur in our data?
 
-And my real question: is the clustering caused by grad school affiliation?
+Theoretically I am mainly interested in whether clustering may be based on which graduate
+school scientists attended because it could be related to their topical and
+methodological preferences [@Moody]. If this is the case it would be an interesting way
+in which distinct 'schools' of sociology solidify and reproduce themselves over cohorts
+of sociologists. Since we likely do not have data on preferences before and after grad
+school, we cannot test the mechanism, so I will settle for the simpler question:
+
+Is the clustering caused by grad school affiliation?
 
   
