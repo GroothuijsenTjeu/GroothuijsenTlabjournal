@@ -16,6 +16,8 @@ navbar:
         href: lab1.html
       - text: "Research questions"
         href: week1hw.html
+      - text: "Introduction"
+        href: week2class.html
         
         # here, other .Rmds can be added
 
