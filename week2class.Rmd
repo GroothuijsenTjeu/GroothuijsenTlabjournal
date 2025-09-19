@@ -1,34 +1,45 @@
 ---
-title: "Playing with networks"
+title: "Introduction"
 author: "Tjeu Groothuijsen"
-date: "2025-09-12"
+date: "2025-09-17"
 output: html_document
+bibliography: references.bib
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
+The previous page already illustrated how I got to these research questions, now to
+elaborate on why this matters. The research questions are:
 
----
-This code makes a matrix with 100 rows and 100 columns and values between 0 and 10.
-The matrix is meant to represent a weighed network with directed ties.
-Of course it has no theoretical meaning, but let's say a tie indicates how much someone 
-likes someone else.
----
+1. Does clustering occur in our data?
 
-```{r}
-#Makin Matrices
-dicho<-sample(x=c(0:1),size=10000,replace=TRUE)
-net1<-matrix(data=dicho,100,100)
-diag(net1)=0
-sumnet1<-rowSums(data[net1,1:100])
+2. Is the clustering caused by grad school affiliation?
 
+The ideas people have depend in part on the ideas that are prevalent in their network. 
+This is also the case for social scientists[@Moody]. There is a wide variety of schools
+of thought, theoretically and methodologically the social sciences are definitely
+pluralist, if not multiparadigmatic [@Raub]. For the advancement of knowledge, this
+variety has certain advantages and disadvantages. In my opinion, multiple researchers
+taking multiple theoretical approaches to the same problem can lead to a more rigorous
+theoretical explanation than multiple researchers all using the same approach, so this
+pluralism should allow for the development of better theory. However, if the researchers
+only come into contact with researchers and studies which use the same approach they
+themselves already use, this advantage is lost and fragmentation of the field could 
+occur instead. So, if social scientists are to make optimal use of intradisciplinary
+pluralism, they must be aware of the dividing lines within their discipline and 
+willing to cross them to seek out answers to questions their own perspective may only
+partially answer.
+From this previous section, the importance of a social network perspective may already be
+apparent. The potential problem of fragmentation of a discipline is in large part defined
+by the properties of networks of scientists, namely whether there exist groups with
+internally homogenous theoretical and/or methodological preferences and the extent
+to which membership in one of these groups defines with whom a scientists collaborates.
+Graduate school affiliation is sort of a proxy, can this be helped? i.e., can we instead
+measure theoretical and/or methodological preferences?
 
-net2<-matrix(runif(n=10000,min=0,max=10),nrow=100,ncol=100)
-diag(net2)=0
-```
-
----
-Now we're going to use this artificial network to test some commands to descriptively
-analyse a network. First of all, 
----
+data demands:
+node: 
+  -grad school affiliation
+  -department affiliation
+  -
+edge:
+  -collaboration
+  -

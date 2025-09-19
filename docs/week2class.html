@@ -11,9 +11,9 @@
 
 <meta name="author" content="Tjeu Groothuijsen" />
 
-<meta name="date" content="2025-09-12" />
+<meta name="date" content="2025-09-17" />
 
-<title>Playing with networks</title>
+<title>Introduction</title>
 
 <script src="site_libs/header-attrs-2.29/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -71,6 +71,29 @@ if (window.hljs) {
 }
 </style>
 
+<style type="text/css">
+/* for pandoc --citeproc since 2.11 */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
 
 <link rel="stylesheet" href="tweaks.css" type="text/css" />
 
@@ -352,6 +375,9 @@ div.tocify {
     <li>
       <a href="week1hw.html">Research questions</a>
     </li>
+    <li>
+      <a href="week2class.html">Introduction</a>
+    </li>
   </ul>
 </li>
       </ul>
@@ -381,47 +407,58 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Playing with networks</h1>
+<h1 class="title toc-ignore">Introduction</h1>
 <h4 class="author">Tjeu Groothuijsen</h4>
-<h4 class="date">2025-09-12</h4>
+<h4 class="date">2025-09-17</h4>
 
 </div>
 
 
-<table>
-<tbody>
-<tr class="odd">
-<td>This code makes a matrix with 100 rows and 100 columns and values
-between 0 and 10.</td>
-</tr>
-<tr class="even">
-<td>The matrix is meant to represent a weighed network with directed
-ties.</td>
-</tr>
-<tr class="odd">
-<td>Of course it has no theoretical meaning, but let’s say a tie
-indicates how much someone</td>
-</tr>
-<tr class="even">
-<td>likes someone else.</td>
-</tr>
-</tbody>
-</table>
-<pre class="fun"><code>net1&lt;-matrix(runif(n=10000,min=0,max=10),nrow=100,ncol=100)
-diag(net1)=0</code></pre>
-<table>
-<tbody>
-<tr class="odd">
-<td>Now we’re going to use this artificial network to test some commands
-to descriptively</td>
-</tr>
-<tr class="even">
-<td>analyse a network. First of all,</td>
-</tr>
-</tbody>
-</table>
+<p>The previous page already illustrated how I got to these research
+questions, now to elaborate on why this matters. The research questions
+are:</p>
+<ol style="list-style-type: decimal">
+<li><p>Does clustering occur in our data?</p></li>
+<li><p>Is the clustering caused by grad school affiliation?</p></li>
+</ol>
+<p>The ideas people have depend in part on the ideas that are prevalent
+in their network. This is also the case for social scientists<span
+class="citation">(Moody 2004)</span>. There is a wide variety of schools
+of thought, theoretically and methodologically the social sciences are
+definitely pluralist, if not multiparadigmatic <span
+class="citation">(<strong>Raub?</strong>)</span>. For the advancement of
+knowledge, this variety has certain advantages and disadvantages. In my
+opinion, multiple researchers taking multiple theoretical approaches to
+the same problem can lead to a more rigorous theoretical explanation
+than multiple researchers all using the same approach, so this pluralism
+should allow for the development of better theory. However, if the
+researchers only come into contact with researchers and studies which
+use the same approach they themselves already use, this advantage is
+lost and fragmentation of the field could occur instead. So, if social
+scientists are to make optimal use of intradisciplinary pluralism, they
+must be aware of the dividing lines within their discipline and willing
+to cross them to seek out answers to questions their own perspective may
+only partially answer. From this previous section, the importance of a
+social network perspective may already be apparent. The potential
+problem of fragmentation of a discipline is in large part defined by the
+properties of networks of scientists, namely whether there exist groups
+with internally homogenous theoretical and/or methodological preferences
+and the extent to which membership in one of these groups defines with
+whom a scientists collaborates. Graduate school affiliation is sort of a
+proxy, can this be helped? i.e., can we instead measure theoretical
+and/or methodological preferences?</p>
+<p>data demands: node: -grad school affiliation -department affiliation
+- edge: -collaboration -</p>
+<div id="refs" class="references csl-bib-body hanging-indent"
+entry-spacing="0">
+<div id="ref-Moody" class="csl-entry">
+Moody, James. 2004. <em><a href="">The Structure of a Social Science
+Collaboration Network: Disciplinary Cohesion from 1963 to 1999</a></em>.
+Ohio State University: American Sociological Review.
+</div>
+</div>
 
-<div id="rmd-source-code">LS0tDQp0aXRsZTogIlBsYXlpbmcgd2l0aCBuZXR3b3JrcyINCmF1dGhvcjogIlRqZXUgR3Jvb3RodWlqc2VuIg0KZGF0ZTogIjIwMjUtMDktMTIiDQpvdXRwdXQ6IGh0bWxfZG9jdW1lbnQNCi0tLQ0KDQpgYGB7ciBzZXR1cCwgaW5jbHVkZT1GQUxTRX0NCmtuaXRyOjpvcHRzX2NodW5rJHNldChlY2hvID0gVFJVRSkNCmBgYA0KDQotLS0NClRoaXMgY29kZSBtYWtlcyBhIG1hdHJpeCB3aXRoIDEwMCByb3dzIGFuZCAxMDAgY29sdW1ucyBhbmQgdmFsdWVzIGJldHdlZW4gMCBhbmQgMTAuDQpUaGUgbWF0cml4IGlzIG1lYW50IHRvIHJlcHJlc2VudCBhIHdlaWdoZWQgbmV0d29yayB3aXRoIGRpcmVjdGVkIHRpZXMuDQpPZiBjb3Vyc2UgaXQgaGFzIG5vIHRoZW9yZXRpY2FsIG1lYW5pbmcsIGJ1dCBsZXQncyBzYXkgYSB0aWUgaW5kaWNhdGVzIGhvdyBtdWNoIHNvbWVvbmUgDQpsaWtlcyBzb21lb25lIGVsc2UuDQotLS0NCg0KYGBge0Z1biB3aXRoIG1hdHJpY2VzfQ0KbmV0MTwtbWF0cml4KHJ1bmlmKG49MTAwMDAsbWluPTAsbWF4PTEwKSxucm93PTEwMCxuY29sPTEwMCkNCmRpYWcobmV0MSk9MA0KYGBgDQoNCi0tLQ0KTm93IHdlJ3JlIGdvaW5nIHRvIHVzZSB0aGlzIGFydGlmaWNpYWwgbmV0d29yayB0byB0ZXN0IHNvbWUgY29tbWFuZHMgdG8gZGVzY3JpcHRpdmVseQ0KYW5hbHlzZSBhIG5ldHdvcmsuIEZpcnN0IG9mIGFsbCwgDQotLS0=</div>
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIkludHJvZHVjdGlvbiINCmF1dGhvcjogIlRqZXUgR3Jvb3RodWlqc2VuIg0KZGF0ZTogIjIwMjUtMDktMTciDQpvdXRwdXQ6IGh0bWxfZG9jdW1lbnQNCmJpYmxpb2dyYXBoeTogcmVmZXJlbmNlcy5iaWINCi0tLQ0KDQpUaGUgcHJldmlvdXMgcGFnZSBhbHJlYWR5IGlsbHVzdHJhdGVkIGhvdyBJIGdvdCB0byB0aGVzZSByZXNlYXJjaCBxdWVzdGlvbnMsIG5vdyB0bw0KZWxhYm9yYXRlIG9uIHdoeSB0aGlzIG1hdHRlcnMuIFRoZSByZXNlYXJjaCBxdWVzdGlvbnMgYXJlOg0KDQoxLiBEb2VzIGNsdXN0ZXJpbmcgb2NjdXIgaW4gb3VyIGRhdGE/DQoNCjIuIElzIHRoZSBjbHVzdGVyaW5nIGNhdXNlZCBieSBncmFkIHNjaG9vbCBhZmZpbGlhdGlvbj8NCg0KVGhlIGlkZWFzIHBlb3BsZSBoYXZlIGRlcGVuZCBpbiBwYXJ0IG9uIHRoZSBpZGVhcyB0aGF0IGFyZSBwcmV2YWxlbnQgaW4gdGhlaXIgbmV0d29yay4gDQpUaGlzIGlzIGFsc28gdGhlIGNhc2UgZm9yIHNvY2lhbCBzY2llbnRpc3RzW0BNb29keV0uIFRoZXJlIGlzIGEgd2lkZSB2YXJpZXR5IG9mIHNjaG9vbHMNCm9mIHRob3VnaHQsIHRoZW9yZXRpY2FsbHkgYW5kIG1ldGhvZG9sb2dpY2FsbHkgdGhlIHNvY2lhbCBzY2llbmNlcyBhcmUgZGVmaW5pdGVseQ0KcGx1cmFsaXN0LCBpZiBub3QgbXVsdGlwYXJhZGlnbWF0aWMgW0BSYXViXS4gRm9yIHRoZSBhZHZhbmNlbWVudCBvZiBrbm93bGVkZ2UsIHRoaXMNCnZhcmlldHkgaGFzIGNlcnRhaW4gYWR2YW50YWdlcyBhbmQgZGlzYWR2YW50YWdlcy4gSW4gbXkgb3BpbmlvbiwgbXVsdGlwbGUgcmVzZWFyY2hlcnMNCnRha2luZyBtdWx0aXBsZSB0aGVvcmV0aWNhbCBhcHByb2FjaGVzIHRvIHRoZSBzYW1lIHByb2JsZW0gY2FuIGxlYWQgdG8gYSBtb3JlIHJpZ29yb3VzDQp0aGVvcmV0aWNhbCBleHBsYW5hdGlvbiB0aGFuIG11bHRpcGxlIHJlc2VhcmNoZXJzIGFsbCB1c2luZyB0aGUgc2FtZSBhcHByb2FjaCwgc28gdGhpcw0KcGx1cmFsaXNtIHNob3VsZCBhbGxvdyBmb3IgdGhlIGRldmVsb3BtZW50IG9mIGJldHRlciB0aGVvcnkuIEhvd2V2ZXIsIGlmIHRoZSByZXNlYXJjaGVycw0Kb25seSBjb21lIGludG8gY29udGFjdCB3aXRoIHJlc2VhcmNoZXJzIGFuZCBzdHVkaWVzIHdoaWNoIHVzZSB0aGUgc2FtZSBhcHByb2FjaCB0aGV5DQp0aGVtc2VsdmVzIGFscmVhZHkgdXNlLCB0aGlzIGFkdmFudGFnZSBpcyBsb3N0IGFuZCBmcmFnbWVudGF0aW9uIG9mIHRoZSBmaWVsZCBjb3VsZCANCm9jY3VyIGluc3RlYWQuIFNvLCBpZiBzb2NpYWwgc2NpZW50aXN0cyBhcmUgdG8gbWFrZSBvcHRpbWFsIHVzZSBvZiBpbnRyYWRpc2NpcGxpbmFyeQ0KcGx1cmFsaXNtLCB0aGV5IG11c3QgYmUgYXdhcmUgb2YgdGhlIGRpdmlkaW5nIGxpbmVzIHdpdGhpbiB0aGVpciBkaXNjaXBsaW5lIGFuZCANCndpbGxpbmcgdG8gY3Jvc3MgdGhlbSB0byBzZWVrIG91dCBhbnN3ZXJzIHRvIHF1ZXN0aW9ucyB0aGVpciBvd24gcGVyc3BlY3RpdmUgbWF5IG9ubHkNCnBhcnRpYWxseSBhbnN3ZXIuDQpGcm9tIHRoaXMgcHJldmlvdXMgc2VjdGlvbiwgdGhlIGltcG9ydGFuY2Ugb2YgYSBzb2NpYWwgbmV0d29yayBwZXJzcGVjdGl2ZSBtYXkgYWxyZWFkeSBiZQ0KYXBwYXJlbnQuIFRoZSBwb3RlbnRpYWwgcHJvYmxlbSBvZiBmcmFnbWVudGF0aW9uIG9mIGEgZGlzY2lwbGluZSBpcyBpbiBsYXJnZSBwYXJ0IGRlZmluZWQNCmJ5IHRoZSBwcm9wZXJ0aWVzIG9mIG5ldHdvcmtzIG9mIHNjaWVudGlzdHMsIG5hbWVseSB3aGV0aGVyIHRoZXJlIGV4aXN0IGdyb3VwcyB3aXRoDQppbnRlcm5hbGx5IGhvbW9nZW5vdXMgdGhlb3JldGljYWwgYW5kL29yIG1ldGhvZG9sb2dpY2FsIHByZWZlcmVuY2VzIGFuZCB0aGUgZXh0ZW50DQp0byB3aGljaCBtZW1iZXJzaGlwIGluIG9uZSBvZiB0aGVzZSBncm91cHMgZGVmaW5lcyB3aXRoIHdob20gYSBzY2llbnRpc3RzIGNvbGxhYm9yYXRlcy4NCkdyYWR1YXRlIHNjaG9vbCBhZmZpbGlhdGlvbiBpcyBzb3J0IG9mIGEgcHJveHksIGNhbiB0aGlzIGJlIGhlbHBlZD8gaS5lLiwgY2FuIHdlIGluc3RlYWQNCm1lYXN1cmUgdGhlb3JldGljYWwgYW5kL29yIG1ldGhvZG9sb2dpY2FsIHByZWZlcmVuY2VzPw0KDQpkYXRhIGRlbWFuZHM6DQpub2RlOiANCiAgLWdyYWQgc2Nob29sIGFmZmlsaWF0aW9uDQogIC1kZXBhcnRtZW50IGFmZmlsaWF0aW9uDQogIC0NCmVkZ2U6DQogIC1jb2xsYWJvcmF0aW9uDQogIC0NCg==</div>
 
 
 </div>
