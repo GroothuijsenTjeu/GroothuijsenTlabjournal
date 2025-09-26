@@ -1,0 +1,67 @@
+---
+title: "week3hw"
+author: "Tjeu Groothuijsen"
+date: "2025-09-24"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+---
+Webscraping data about researchers' graduate school affiliations.
+Graduate school affiliation is not included as a data point in Openalex, nor is it
+reported on the personal profile pages of researchers on most university websites.
+
+This turned out to be a bit more difficult than expected. 
+The ICS has a list of affiliated staff and PhD students on their websites, but other grad
+schools such as AISSR do not. My initial plan relied heavily on these lists, so now I
+have to come up with something else. An alternative way to get the needed data for the
+final study might be scraping linkedin?
+As a first step, I will scrape the ICS website to at least get that data.  
+---
+```{"Scraping ICS"}
+
+#Scraping member info from the ICS website
+require(rvest)
+require(xml2)
+require(dplyr)
+
+#Faculty
+icsfac<-read_html("https://ics-graduateschool.nl/faculty/")
+icsfac<-icsfac %>%
+  html_nodes("body") %>%
+  xml_find_all("//tbody") %>%
+  html_table()
+icsfac<-bind_rows(icsfac)
+icsfac$X5<-"Faculty"
+
+#Postdocs
+icspost<-read_html("https://ics-graduateschool.nl/postdocs/")
+icspost<-icspost %>%
+  html_nodes("body") %>%
+  xml_find_all("//tbody") %>%
+  html_table()
+icspost<-bind_rows(icspost)
+icspost$X5<-"Postdoc"
+
+#PhDs
+icsphd<-read_html("https://ics-graduateschool.nl/phds/")
+icsphd<-icsphd %>%
+  html_nodes("body") %>%
+  xml_find_all("//tbody") %>%
+  html_table()
+icsphd<-bind_rows(icsphd)
+icsphd$X5<-"PhD"
+
+#Merging into one table
+ics<-rbind(icsfac,icspost)
+ics<-rbind(ics,icsphd)
+ics
+
+
+```
+---
+
+This script takes the tables of associated faculty members, postdocs and phd students
+from the ICS website and merges them, also including each persons position.

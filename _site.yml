@@ -18,6 +18,8 @@ navbar:
         href: week1hw.html
       - text: "Introduction"
         href: week2class.html
+      - text: "First data"
+        href: week3scrape.html
         
         # here, other .Rmds can be added
 
