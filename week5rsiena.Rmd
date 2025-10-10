@@ -1,0 +1,188 @@
+---
+title: "week5help"
+author: "Tjeu Groothuijsen"
+date: "2025-10-03"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+---
+So I only got the memo just now that we're supposed to use the lab journal as a notebook in class, should have 
+understood that from the name maybe.
+Code below is from the morning of week 5, Jochem explained how RSiena works.
+---
+
+```{r, eval=FALSE}
+packages = c("RSiena", "devtools", "igraph")
+fpackage.check(packages)
+#devtools::install_github('JochemTolsma/RsienaTwoStep', build_vignettes=TRUE)
+packages = c("RsienaTwoStep")
+fpackage.check(packages)
+
+ts_net1
+net1g <- graph_from_adjacency_matrix(ts_net1, mode = "directed")
+coords <- layout_(net1g, nicely())  #let us keep the layout
+par(mar = c(0.1, 0.1, 0.1, 0.1))
+plot.igraph(net1g, layout = coords)
+    graphics::box()
+    
+```
+
+---
+Here I'm going to get my first hands on experience with RSiena, estimating a model and interpreting it.
+
+---
+
+```{r,eval=FALSE}
+
+#Using RSienas included data about alcohol use
+# put the nets in an array
+test_array <- array(data = c(s501, s502), dim = c(dim(s501), 2))
+# dependent
+net <- sienaDependent(test_array)
+alcohol<-s50a[,1]
+alcohol<-coCovar(alcohol)
+testdata<-sienaDataCreate(net, alcohol)
+testeff<-getEffects(testdata)
+effectsDocumentation(testeff)
+#I stopped copying Jochem from this point on because it all went a bit fast
+
+
+```
+
+---
+Trying out RSiena on the scholars data, using only RU sociologists. 
+Following along with Jochem, kept up.
+
+---
+
+```{r,eval=FALSE}
+#First I use the tutorial code to make the network array with only RU sociologists
+fcolnet <- function(data = scholars, university = "RU", discipline = "sociology", waves = list(c(2015,
+    2018), c(2019, 2023)), type = c("first")) {
+
+    # step 1
+    demographics <- do.call(rbind.data.frame, data$demographics)
+    demographics <- demographics %>%
+        mutate(Universiteit1.22 = replace(Universiteit1.22, is.na(Universiteit1.22), ""), Universiteit2.22 = replace(Universiteit2.22,
+            is.na(Universiteit2.22), ""), Universiteit1.24 = replace(Universiteit1.24, is.na(Universiteit1.24),
+            ""), Universiteit2.24 = replace(Universiteit2.24, is.na(Universiteit2.24), ""), discipline.22 = replace(discipline.22,
+            is.na(discipline.22), ""), discipline.24 = replace(discipline.24, is.na(discipline.24), ""))
+
+    sample <- which((demographics$Universiteit1.22 %in% university | demographics$Universiteit2.22 %in%
+        university | demographics$Universiteit1.24 %in% university | demographics$Universiteit2.24 %in%
+        university) & (demographics$discipline.22 %in% discipline | demographics$discipline.24 %in% discipline))
+
+    demographics_soc <- demographics[sample, ]
+    scholars_sel <- lapply(scholars, "[", sample)
+
+    # step 2
+    ids <- demographics_soc$au_id
+    nwaves <- length(waves)
+    nets <- array(0, dim = c(nwaves, length(ids), length(ids)), dimnames = list(wave = 1:nwaves, ids,
+        ids))
+    dimnames(nets)
+
+    # step 3
+    df_works <- tibble(works_id = unlist(lapply(scholars_sel$work, function(l) l$id)), works_author = unlist(lapply(scholars_sel$work,
+        function(l) l$author), recursive = FALSE), works_year = unlist(lapply(scholars_sel$work, function(l) l$publication_year),
+        recursive = FALSE))
+
+    df_works <- df_works[!duplicated(df_works), ]
+
+    # step 4
+    if (type == "first") {
+        for (j in 1:nwaves) {
+            df_works_w <- df_works[df_works$works_year >= waves[[j]][1] & df_works$works_year <= waves[[j]][2],
+                ]
+            for (i in 1:nrow(df_works_w)) {
+                ego <- df_works_w$works_author[i][[1]]$au_id[1]
+                alters <- df_works_w$works_author[i][[1]]$au_id[-1]
+                if (sum(ids %in% ego) > 0 & sum(ids %in% alters) > 0) {
+                  nets[j, which(ids %in% ego), which(ids %in% alters)] <- 1
+                }
+            }
+        }
+    }
+
+    if (type == "last") {
+        for (j in 1:nwaves) {
+            df_works_w <- df_works[df_works$works_year >= waves[[j]][1] & df_works$works_year <= waves[[j]][2],
+                ]
+            for (i in 1:nrow(df_works_w)) {
+                ego <- rev(df_works_w$works_author[i][[1]]$au_id)[1]
+                alters <- rev(df_works_w$works_author[i][[1]]$au_id)[-1]
+                if (sum(ids %in% ego) > 0 & sum(ids %in% alters) > 0) {
+                  nets[j, which(ids %in% ego), which(ids %in% alters)] <- 1
+                }
+            }
+        }
+    }
+
+    if (type == "all") {
+        for (j in 1:nwaves) {
+            df_works_w <- df_works[df_works$works_year >= waves[[j]][1] & df_works$works_year <= waves[[j]][2],
+                ]
+            for (i in 1:nrow(df_works_w)) {
+                egos <- df_works_w$works_author[i][[1]]$au_id
+                if (sum(ids %in% egos) > 0) {
+                  nets[j, which(ids %in% egos), which(ids %in% egos)] <- 1
+                }
+            }
+        }
+    }
+    output <- list()
+    output$data <- scholars_sel
+    output$nets <- nets
+    return(output)
+}
+RUsoctest <- fcolnet(data = scholars, 
+                university = "RU", 
+                discipline = "sociology", 
+                waves = list(c(2015, 2018), c(2019, 2023)), 
+                type = c("first"))
+
+testwave1<-RUsoctest$nets[1,,]
+testwave2<-RUsoctest$nets[2,,]
+
+#Now to move onto checking whether the data is suitable for RSiena
+#!!!THESE ARE IMPORTANT TO REMEMBER FOR WHEN YOU USE RSIENA, CHECK IT!!!
+dim(testwave1)
+dim(testwave2)
+sum(is.na(testwave1))
+sum(is.na(testwave2))
+sum(diag(testwave1)==0)
+sum(diag(testwave2)==0)
+
+#Making array
+RUarray <- array(data = c(testwave1, testwave2), dim = c(dim(testwave1), 2))
+RUnet <- sienaDependent(RUarray)
+#Variable construction
+df<-RUsoctest$data
+df_ego<-do.call(rbind.data.frame,df$demographics)
+df_ego$Functie.22[is.na(df_ego$Functie.22)]<-""
+df_ego$Functie.22[is.na(df_ego$Functie.24)]<-""
+df_ego$functie<-ifelse(df_ego$Functie.22=="Hoogleraar",1,0)
+df_ego$functie<-ifelse(df_ego$Functie.24=="Hoogleraar",1,df_ego$functie)
+table(df_ego$functie, useNA="always")
+functie<-coCovar(df_ego$functie)
+
+#Making the array and variable one object for RSiena
+RUtestdata<-sienaDataCreate(RUnet, functie)
+RUtesteff<-getEffects(RUtestdata)
+effectsDocumentation(RUtesteff)
+RUtesteff
+
+#The next steps, or something
+print01Report(RUtestdata, modelname = "RSienatestreport")
+set.seed(42)
+myAlgorithm <- sienaAlgorithmCreate(projname = "RSienatestreport")
+ansM1 <- siena07(myAlgorithm, data = RUtestdata, effects = RUtesteff, returnDeps = TRUE)
+# if necessary estimate again!  ansM1 <- siena07(myAlgorithm, data = mydata, effects = myeff,
+# prevAns = ansM1, returnDeps=TRUE)
+ansM1
+
+```

@@ -1,0 +1,331 @@
+							************************
+									 RSienatestreport.txt
+							************************
+
+Filename is RSienatestreport.txt.
+
+This file contains primary output for SIENA project <<RSienatestreport>>.
+
+Date and time: 03/10/2025 14:32:35 
+
+RSiena version 1.5.0 (06 07 2025)
+
+
+@1
+Data input.
+===========
+
+2 observations,
+50 actors,
+1 dependent network variables,
+0 dependent bipartite variables,
+0 dependent discrete behavior variables,
+0 dependent continuous behavior variables,
+1 constant actor covariates,
+0 exogenous changing actor covariates,
+0 constant dyadic covariates,
+0 exogenous changing dyadic covariates,
+0 no files with times of composition change.
+
+
+@2
+Reading network variables.
+--------------------------
+
+Name of network variable: RUnet.
+oneMode network.
+For observation moment 1, degree distributions are as follows:
+Nodes
+ 1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 
+21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 
+41 42 43 44 45 46 47 48 49 50
+out-degrees
+ 0  1  0  0  0  0  0  0  1  2  2  1  0  0  3  3  5  2  2  1 
+ 0  4  0  2  0  0  0  0  0  0  0  0  0  0  0  0  1  0  0  1 
+ 2  0  2  1  0  2  0  1  0  0
+in-degrees
+ 0  2  0  1  0  0  2  3  0  0  0  0  0  0  6  2  1  7  2  1 
+ 1  0  4  0  0  0  0  0  0  1  0  0  0  0  0  0  0  0  0  0 
+ 1  0  0  1  0  4  0  0  0  0
+
+No missing data for observation 1.
+
+For observation moment 2, degree distributions are as follows:
+Nodes
+ 1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 
+21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 
+41 42 43 44 45 46 47 48 49 50
+out-degrees
+ 0  0  1  0  1  4  0  2  4  4  1  2  0  0  0  2  2  0  3  1 
+ 1  2  0  2  0  2  2  3  2  1  2  2  2  0  4  3  4  2  3  1 
+ 1  1  1  2  3  2  0  0  1  0
+in-degrees
+ 0  2  0  0  0  1  1  4  3  3  1  2  1  0 11  2  3 10  9  2 
+ 4  3  2  0  0  0  0  0  0  0  0  0  0  0  0  1  0  1  0  0 
+ 0  0  0  1  1  8  0  0  0  0
+
+No missing data for observation 2.
+
+
+
+
+@2
+Reading constant actor covariates.
+----------------------------------
+
+1 variable, named:
+functie         
+
+A total of 1 non-changing individual covariate.
+
+Number of missing cases:
+functie         0 	( 0.0 %)
+
+Information about covariates:
+              minimum  maximum	  mean  centered 
+functie         0.0     1.0      0.160    Y 
+The mean value is subtracted from the centered covariate.
+
+
+
+The mean structural dissimilarity value subtracted in the
+balance calculations is         0.0300.
+
+For the similarity variable calculated from each actor covariate,
+the mean is subtracted.
+These means are:
+Similarity functie                  :       0.7257 
+
+
+
+@1
+Initial data description.
+=========================
+
+
+@2
+Change in networks:
+-------------------
+
+For the following statistics, missing values (if any) are not counted.
+
+Network density indicators:
+observation time              1      2
+density                    0.016  0.031
+average degree             0.780  1.520
+number of ties                39     76
+missing fraction           0.000  0.000
+
+The average degree is 1.15 
+
+
+Tie changes between subsequent observations:
+ periods        0 =>  0   0 =>  1   1 =>  0   1 =>  1   Distance Jaccard   Missing
+  1 ==>   2      2354        57        20        19        77     0.198         0 (0%)
+
+Directed dyad Counts:
+ observation    total    mutual    asymm.     null
+     1.          2450        8        62      2380
+     2.          2450       12       128      2310
+
+Standard values for initial parameter values
+-------------------------------------------------
+
+basic rate parameter RUnet              3.1457 
+outdegree (density)                               -1.5385 
+
+Initialisation of project <<RSienatestreport>> executed succesfully.
+
+
+-----------------------------------
+New Analysis started.
+Date and time: 03/10/2025 14:42:17
+New results follow.
+-----------------------------------
+
+RSiena version 1.5.0 (06 jul 25)
+
+
+@1
+Estimation by stochastic approximation algorithm.
+=================================================
+
+Random initialization of random number stream.
+Current random number seed is 811718.
+Effects object used: RUtesteff 
+Model Type:
+ Standard actor-oriented model 
+Estimation method: conditional moment estimation.
+Conditioning variable is the total number of observed changes ("distance") 
+in the network variable.
+Distance for simulations is   77 .
+Standard errors are estimated with the likelihood ratio method.
+Dolby method (regression on scores) is used.
+Initial value of gain parameter is  0.2000000.
+Reduction factor for gain parameter is  0.5000000.
+Number of subphases in Phase 2 is 4.
+
+Initial parameter values are 
+  0. Rate parameter                           3.1457
+  1. eval:  outdegree (density)                            -1.5385
+  2. eval:  reciprocity                                     0.0000
+
+
+Values of target statistics are
+  1. Number of ties                                                      76.0000
+  2. Number of reciprocated ties                                         12.0000
+These were calculated from the data.
+
+ 2 parameters, 2 statistics
+
+Estimation of derivatives by the LR method (type 1).
+
+
+@2
+End of stochastic approximation algorithm, phase 3.
+---------------------------------------------------
+
+Total of 2208 iterations.
+Parameter estimates based on 1208 iterations,
+basic rate parameter as well as 
+convergence diagnostics, covariance and derivative matrices based on 1000 iterations.
+
+Information for convergence diagnosis.
+Averages, standard deviations, and t-ratios for deviations from targets:
+  1.   0.1500   5.9720   0.0251 
+  2.   0.0800   4.3631   0.0183 
+
+Good convergence is indicated by the t-ratios being close to zero.
+
+Overall maximum convergence ratio =  0.0264 .
+
+
+
+@2
+Estimation Results.
+-------------------
+
+Regular end of estimation algorithm.
+Total of 2208 iteration steps.
+
+
+@3
+Estimates and standard errors
+                             
+Rate parameters:
+ 0. Rate parameter                            3.0821  (   0.5349)
+
+Other parameters:
+ 1. eval:  outdegree (density)                                    -1.8447  (   0.1351)
+ 2. eval:  reciprocity                                             1.1664  (   0.3844)
+
+
+@3
+Covariance matrices
+                   
+Covariance matrix of estimates (correlations below diagonal):
+     0.018     -0.016
+    -0.305      0.148
+
+Derivative matrix of expected statistics X by parameters and
+covariance/correlation matrix of X can be found using
+summary(ans) within R, or by using the 'verbose' option in Siena07.
+ 
+Total computation time 5.46 seconds.
+
+
+-----------------------------------
+New Analysis started.
+Date and time: 03/10/2025 14:45:16
+New results follow.
+-----------------------------------
+
+RSiena version 1.5.0 (06 jul 25)
+
+
+@1
+Estimation by stochastic approximation algorithm.
+=================================================
+
+Random initialization of random number stream.
+Current random number seed is 945066.
+Effects object used: RUtesteff 
+Model Type:
+ Standard actor-oriented model 
+Estimation method: conditional moment estimation.
+Conditioning variable is the total number of observed changes ("distance") 
+in the network variable.
+Distance for simulations is   77 .
+Standard errors are estimated with the likelihood ratio method.
+Dolby method (regression on scores) is used.
+Initial value of gain parameter is  0.2000000.
+Reduction factor for gain parameter is  0.5000000.
+Number of subphases in Phase 2 is 4.
+
+Initial parameter values are 
+  0. Rate parameter                           3.1457
+  1. eval:  outdegree (density)                            -1.5385
+  2. eval:  reciprocity                                     0.0000
+
+
+Values of target statistics are
+  1. Number of ties                                                      76.0000
+  2. Number of reciprocated ties                                         12.0000
+These were calculated from the data.
+
+ 2 parameters, 2 statistics
+
+Estimation of derivatives by the LR method (type 1).
+
+
+@2
+End of stochastic approximation algorithm, phase 3.
+---------------------------------------------------
+
+Total of 2074 iterations.
+Parameter estimates based on 1074 iterations,
+basic rate parameter as well as 
+convergence diagnostics, covariance and derivative matrices based on 1000 iterations.
+
+Information for convergence diagnosis.
+Averages, standard deviations, and t-ratios for deviations from targets:
+  1.   0.2680   6.1127   0.0438 
+  2.   0.3500   4.2497   0.0824 
+
+Good convergence is indicated by the t-ratios being close to zero.
+
+Overall maximum convergence ratio =  0.0829 .
+
+
+
+@2
+Estimation Results.
+-------------------
+
+Regular end of estimation algorithm.
+Total of 2074 iteration steps.
+
+
+@3
+Estimates and standard errors
+                             
+Rate parameters:
+ 0. Rate parameter                             3.075  (   0.5328)
+
+Other parameters:
+ 1. eval:  outdegree (density)                                    -1.8422  (   0.1290)
+ 2. eval:  reciprocity                                             1.1707  (   0.3958)
+
+
+@3
+Covariance matrices
+                   
+Covariance matrix of estimates (correlations below diagonal):
+     0.017     -0.014
+    -0.276      0.157
+
+Derivative matrix of expected statistics X by parameters and
+covariance/correlation matrix of X can be found using
+summary(ans) within R, or by using the 'verbose' option in Siena07.
+ 
+Total computation time 3.27 seconds.

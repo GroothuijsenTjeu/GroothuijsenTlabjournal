@@ -1,0 +1,150 @@
+---
+title: "the 'fun' in function"
+author: "Tjeu Groothuijsen"
+date: "2025-10-10"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+---
+Next step is to finish adding grad school affiliation to the sociologists dataset and then try analyzing sociologists
+with RSiena. First let's make all the names in full lower case to prevent mismatches due to R's case sensitivity.
+---
+```{r,eval=FALSE}
+#Dataframe with all the ICS alumni
+icsgrad<-read_html("https://ics-graduateschool.nl/alumni-projects/")
+icsgrad<-icsgrad %>%
+  html_nodes("body") %>%
+  xml_find_all("//tbody") %>%
+  html_table()
+icsgrad<-bind_rows(icsgrad)
+ics<-as.data.frame(icsgrad$X2)
+ics$ics<-1
+names(ics)<-c("Naam","ICS")
+ics<-ics[-c(1),]
+```
+
+```{r,eval=FALSE}
+#Matching the alumni list to demographics
+ics$Naam<-tolower(ics$Naam)
+#sociologists$demographics$Naam<-tolower(sociologists$demographics$Naam) deze maakt gwn een nieuwe rij: "Naam", nou!
+#then i will use a separate node characteristics file initially
+demographics_soc$Naam<-tolower(demographics_soc$Naam)
+```
+
+```{r,eval=FALSE}
+#lets remove dashes and spaces from demographics_soc and ics, then merge and subset again
+ics2<-ics
+ics2$Naam<-gsub('-','',ics2$Naam)
+ics2$Naam<-gsub(' ','',ics2$Naam)
+#it worked! now demographics_soc
+demo1<-demographics_soc
+demo1$Naam<-gsub('-','',demo1$Naam)
+demo1$Naam<-gsub(' ','',demo1$Naam)
+#so theres that, im also removing all the accents, just to be sure i dont have to return to this
+ics2$Naam<-gsub('è|é|ë|ê','e',ics2$Naam)
+ics2$Naam<-gsub('à|á|ä|â','a',ics2$Naam)
+ics2$Naam<-gsub('ì|í|ï|î','i',ics2$Naam)
+ics2$Naam<-gsub('ò|ó|ö|ô','o',ics2$Naam)
+ics2$Naam<-gsub('ù|ú|ü|û','u',ics2$Naam)
+ics2$Naam<-gsub('ç','c',ics2$Naam)
+ics2$Naam<-gsub("'|,",'',ics2$Naam)
+```
+
+---
+Jochems quick rsiena tutorial intermezzo
+---
+```{r,eval=FALSE}
+require(RSiena)
+mynet1 <- sienaDependent(array(c(s501, s502, s503), dim=c(50, 50, 3)))
+mybeh <- sienaDependent(s50a, type="behavior")
+drink<-varCovar(s50a)
+smoke<-varCovar(s50s)
+test2data<-sienaDataCreate(mynet1,drink,smoke)
+print01Report(test2data)
+testeffects<-getEffects(test2data)
+testeffects
+testeffects<-includeEffects(testeffects,unequalX,name='mynet1',interaction1='smoke')
+testeffects<-includeEffects(testeffects,unequalX,name='mynet1',interaction1='drink')
+testalgo<-sienaAlgorithmCreate()
+test2estimate<-siena07(testalgo,data=test2data,effects=testeffects)
+test2estimate
+```
+
+---
+Back to pulling the strings
+---
+```{r,eval=FALSE}
+#now for demographics. or I could challenge myself and make this into a function :)
+#homemade string uniforming function, crudely makes all strings into lower case text only without spaces
+fstring_nuker <- function(input, numbers = TRUE) {
+  string <- tolower(input)
+  string <- gsub("-", "", string)
+  string <- gsub(" ", "", string)
+  string <- gsub("è|é|ë|ê", "e", string)
+  string <- gsub("à|á|ä|â", "a", string)
+  string <- gsub("ì|í|ï|î", "i", string)
+  string <- gsub("ò|ó|ö|ô", "o", string)
+  string <- gsub("ù|ú|ü|û", "u", string)
+  string <- gsub("ç", "c", string)
+  string <- gsub("ß", "ss", string)
+  string <- gsub("[[:punct:]]", "", string)
+  string <- gsub("[^[:alnum:]]", "", string)
+  if (numbers) string <- gsub("[0-9]", "", string)
+    return(string)
+}
+
+#tests with the string nuker
+strtest1<-"groi  gF^``Oo^Sä$ù$ÄIH #Vdn%43 2çÇ89mï~eèâkvl ^(s):; ;S3294"
+fstring_nuker(strtest1)
+
+#Jochem informed me that this is really inefficient and incomplete, still fun to figure out though
+```
+
+```{r,eval=FALSE}
+#to make the function better, im making a version that converts everything to ascii instead, still with options
+
+funiform_string <- function(input, numbers=TRUE, punct=TRUE, spaces=TRUE, caps=TRUE){
+  string <- iconv(input, from = "UTF-8", to = "ASCII//TRANSLIT")
+  if (numbers) string <- gsub('[0-9]','',string)
+  if (punct) string <- gsub('[:punct:]','',string)
+  if (spaces) string <- gsub(' ','',string)
+  if (caps) string <- tolower(string)
+  return(string)
+}
+
+#now to test the new function
+strtest1<-"groi  gF^``-_=+Oo^S.-=.ä$ù,,$ÄIH #V-dn.%43 2çÇ89mï-~eèâkvl ^(s):; ;S3294"
+funiform_string(strtest1, numbers=T, punct=T, spaces=T, caps=T)
+#works quite well, feel free to try the variations
+```
+
+```{r,eval=FALSE}
+#see if funiform_string works on the demo1 file
+
+demo1$Naam<-funiform_string(demo1$Naam)
+#no error at least...
+demo1$Naam
+#seems good, using it on ics2 as well to be sure
+ics2$Naam<-funiform_string(ics2$Naam)
+
+```
+
+```{r,eval=FALSE}
+#lets get back to what im supposed to be doing 
+
+demsoc1<-merge(demo1, ics2, all = TRUE, by = "Naam")
+demsoc2<-demsoc1[c('Naam','Universiteit.22','Functie.22','discipline.22','Universiteit1.22','Universiteit2.22',
+                  'Universiteit.24','Functie.24','discipline.24','Universiteit1.24','Universiteit2.24','no_oa_id',
+                  'au_id','ICS')]
+naamlist1<-as.list(demsoc2$Naam)
+naamdupcheck1<-duplicated(naamlist1)
+
+#so we have no exact duplicates, very nice
+#but i did notice some people whose names were not recognised because of dashes and such, back to start!
+#returned to this after all the functions, tried again
+
+```

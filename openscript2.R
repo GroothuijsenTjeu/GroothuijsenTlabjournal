@@ -185,7 +185,22 @@ plot(test_w1,
      vertex.label = NA,
      vertex.size = 5,
      edge.width = 0.2,
-     edge.arrow.size =0.2)
+     edge.arrow.size =0.2,
+     mode="undirected",
+     )
+
+noisolates <- rowSums(atmnet1_un, na.rm = T) > 0
+# length(noisolates) sum(noisolates) if you select, select both correct nomination network as ego
+# characteristics
+atmnet1_un_sel <- atmnet1_un[noisolates, noisolates]
+# if you are going to use the dataset keyf to add characteristics to the plot later, make sure to
+# run the correct selection as well!!!
+keyf_sel <- keyf[noisolates, ]
+
+G2_sel <- graph_from_adjacency_matrix(atmnet1_un_sel, mode = "undirected", weighted = NULL, diag = TRUE,
+                                      add.colnames = NA, add.rownames = NA)
+G2_sel <- simplify(G2_sel)
+plot(G2_sel, mode = "undirected")
 
 #now to add the grad school affiliations, starting with ics
 ics<-as.data.frame(icsgrad$X2)

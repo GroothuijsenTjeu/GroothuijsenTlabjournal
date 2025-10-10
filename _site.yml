@@ -22,6 +22,8 @@ navbar:
         href: week3scrape.html
       - text: "Network: first attempt"
         href: week4network.html
+      - text: "The 'fun' in function"
+        href: week6function.html
         
         # here, other .Rmds can be added
 
