@@ -1,0 +1,1029 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Tjeu Groothuijsen" />
+
+<meta name="date" content="2025-10-17" />
+
+<title>DataprepFinal</title>
+
+<script src="site_libs/header-attrs-2.29/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<script src="site_libs/navigation-1.1/sourceembed.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-6.5.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+<style type="text/css">
+#rmd-source-code {
+  display: none;
+}
+</style>
+
+
+<link rel="stylesheet" href="tweaks.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html"></a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+  </a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    My journal
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="lab1.html">Example</a>
+    </li>
+    <li>
+      <a href="week1hw.html">Research questions</a>
+    </li>
+    <li>
+      <a href="week2class.html">Introduction</a>
+    </li>
+    <li>
+      <a href="week3scrape.html">First data</a>
+    </li>
+    <li>
+      <a href="week4network.html">Network: first attempt</a>
+    </li>
+    <li>
+      <a href="week6function.html">The 'fun' in function</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/GroothuijsenTjeu/GroothuijsenTlabjournal">
+    <span class="fab fa-github"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+<li role="separator" class="divider"></li>
+<li><a id="rmd-download-source" href="#">Download Rmd</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">DataprepFinal</h1>
+<h4 class="author">Tjeu Groothuijsen</h4>
+<h4 class="date">2025-10-17</h4>
+
+</div>
+
+
+<hr />
+<p>This page documents the preparation of the data for use in the final
+assignment. The following steps are taken to make the data suitable for
+assessing whether clustering in the collaboration network of
+sociologists in the Netherlands occurs due to preferential attachment to
+colleagues who attended the same graduate school. For now, I am only
+distinguishing ICS instead of including all graduate schools. This is
+because the ICS data is easily obtained and includes a large proportion
+of sociologists. If the proportion of sociologists affiliated with ICS
+turns out to be too low, more data will be sought.</p>
+<p>Plan: 1. Loading neccesary packages and functions 2. Webscrape data
+about graduates and affiliates from the ICS website, make these into a
+list of names 3. Load ‘scholars’ data containing the sociologists and
+collaborations, remove polisci and irrelevant variables 4. Match list of
+ICS affiliates to scholars data using names 5. Make merged dataset
+suitable for analysis with RSiena 6. Analyse descriptive statistics</p>
+<pre class="r"><code>#Loading in the necessary packages and defining functions
+
+#Empties your environment, remove hash only if you are sure everything important is saved!
+#rm(list = ls())
+
+#Defining custom functions
+
+#Jochems functions
+#fpackage.check: Check if packages are installed (and install if not) in R
+fpackage.check &lt;- function(packages) {
+    lapply(packages, FUN = function(x) {
+        if (!require(x, character.only = TRUE)) {
+            install.packages(x, dependencies = TRUE)
+            library(x, character.only = TRUE)
+        }
+    })
+}
+
+#fsave: Save to processed data in repository
+fsave &lt;- function(x, file = NULL, location = &quot;./data/processed/&quot;) {
+    ifelse(!dir.exists(&quot;data&quot;), dir.create(&quot;data&quot;), FALSE)
+    ifelse(!dir.exists(&quot;data/processed&quot;), dir.create(&quot;data/processed&quot;), FALSE)
+    if (is.null(file))
+        file = deparse(substitute(x))
+    datename &lt;- substr(gsub(&quot;[:-]&quot;, &quot;&quot;, Sys.time()), 1, 8)
+    totalname &lt;- paste(location, datename, file, &quot;.rda&quot;, sep = &quot;&quot;)
+    save(x, file = totalname)  #need to fix if file is reloaded as input name, not as x. 
+}
+
+#fload: To load the files back after an fsave
+fload &lt;- function(filename) {
+    load(filename)
+    get(ls()[ls() != &quot;filename&quot;])
+}
+
+#fshowdf: To print objects (tibbles / data.frame) nicely on screen in .rmd
+fshowdf &lt;- function(x, ...) {
+    knitr::kable(x, digits = 2, &quot;html&quot;, ...) %&gt;%
+        kableExtra::kable_styling(bootstrap_options = c(&quot;striped&quot;, &quot;hover&quot;)) %&gt;%
+        kableExtra::scroll_box(width = &quot;100%&quot;, height = &quot;300px&quot;)
+}
+
+#Network data helper function
+fcolnet = function(data = scholars, university = c(&quot;RU&quot;, &#39;UU&#39;), discipline = &quot;Sociologie&quot;, waves = list(c(2015,
+    2018), c(2019, 2023), c(2024, 2025)), type = c(&quot;first&quot;)) {
+
+    university = paste0(&#39;(&#39;, paste0(university, collapse=&#39;|&#39; ), &#39;)&#39;)
+    discipline = paste0(&#39;(&#39;, paste0(discipline, collapse=&#39;|&#39; ), &#39;)&#39;)
+
+    # step 1
+    demographics = data$demographics
+    sample = which(
+        (str_detect(demographics$universiteit.22, university)
+            | str_detect(demographics$universiteit.24, university)
+            | str_detect(demographics$universiteit.25, university)
+        ) &amp; (
+            str_detect(demographics$discipline.22, discipline)
+            | str_detect(demographics$discipline.24, discipline)
+            | str_detect(demographics$discipline.25, discipline)
+        ) |&gt; replace_na(FALSE))
+
+    demographics_soc = demographics[sample, ] |&gt; drop_na(id)
+
+    # step 2
+    ids = demographics_soc$id |&gt; unique()
+
+    scholars_sel = list() 
+    for (id_ in ids){
+        scholars_sel[[id_]] = bind_rows(scholars$works) |&gt;
+            filter(author_id == id_)
+    }
+    scholars_sel = bind_rows(scholars$works) 
+    
+
+    nwaves = length(waves)
+    nets = array(0, dim = c(nwaves, length(ids), length(ids)), dimnames = list(wave = 1:nwaves, ids,
+        ids))
+    dimnames(nets)
+
+    # step 3
+    df_works = tibble(
+            works_id = scholars_sel$id, 
+            works_author = scholars_sel$authorships, 
+            works_year = scholars_sel$publication_year
+        )
+
+    df_works = df_works[!duplicated(df_works), ]
+
+    # step 4
+    if (type == &quot;first&quot;) {
+        for (j in 1:length(waves)) {
+            df_works_w = df_works[df_works$works_year &gt;= waves[[j]][1] &amp; df_works$works_year &lt;= waves[[j]][2],
+                ]
+            for (i in 1:nrow(df_works_w)) {
+                ego = df_works_w$works_author[i][[1]]$id[1]
+                alters = df_works_w$works_author[i][[1]]$id[-1]
+                if (sum(ids %in% ego) &gt; 0 &amp; sum(ids %in% alters) &gt; 0) {
+                  nets[j, which(ids %in% ego), which(ids %in% alters)] = 1
+                }
+            }
+        }
+    }
+
+    if (type == &quot;last&quot;) {
+        for (j in 1:length(waves)) {
+            df_works_w = df_works[df_works$works_year &gt;= waves[[j]][1] &amp; df_works$works_year &lt;= waves[[j]][2],
+                ]
+            for (i in 1:nrow(df_works_w)) {
+                ego = rev(df_works_w$works_author[i][[1]]$id[1])
+                alters = rev(df_works_w$works_author[i][[1]]$id[-1])
+                if (sum(ids %in% ego) &gt; 0 &amp; sum(ids %in% alters) &gt; 0) {
+                  nets[j, which(ids %in% ego), which(ids %in% alters)] = 1
+                }
+            }
+        }
+    }
+    if (type == &quot;all&quot;) {
+        for (j in 1:length(waves)) {
+            df_works_w = df_works[df_works$works_year &gt;= waves[[j]][1] &amp; df_works$works_year &lt;= waves[[j]][2],
+                ]
+            for (i in 1:nrow(df_works_w)) {
+                egos = df_works_w$works_author[i][[1]]$id
+                if (sum(ids %in% egos) &gt; 0) {
+                  nets[j, which(ids %in% egos), which(ids %in% egos)] = 1
+                }
+            }
+            diag(nets[j,,]) = 0
+        }
+    }
+
+    output = list()
+    output$data = demographics_soc
+    output$nets = nets
+    return(output)
+}
+
+#String uniforming function
+funiform_string &lt;- function(input, numbers=TRUE, spaces=TRUE, caps=TRUE){
+  string &lt;- iconv(input, from = &quot;UTF-8&quot;, to = &quot;ASCII//TRANSLIT&quot;)
+  string &lt;- gsub(&#39;-&#39;,&#39;&#39;,string)
+  if (numbers) string &lt;- gsub(&#39;[0-9]&#39;,&#39;&#39;,string)
+  if (spaces) string &lt;- gsub(&#39; &#39;,&#39;&#39;,string)
+  if (caps) string &lt;- tolower(string)
+  return(string)
+}
+
+#Checking for required packages
+packages = c(&quot;RSiena&quot;, &quot;devtools&quot;, &quot;igraph&quot;, &quot;tidyverse&quot;, &quot;xml2&quot;, &quot;rvest&quot;, &quot;dplyr&quot;, &quot;stringr&quot;)
+fpackage.check(packages)</code></pre>
+<pre class="r"><code>#First step is to scrape the ICS website for graduates and affiliates
+#We want to have a list of names and two dummy variables, one for graduation and one for affiliation
+#Being able to distinguish between the two will allow us to capture older sociologists who are within
+  #the scope of the theory, but could not have studied at ICS because it did not exist yet
+
+#First we get the affiliates tables from https://ics-graduateschool.nl/
+
+#Faculty 
+icsfac&lt;-read_html(&quot;https://ics-graduateschool.nl/faculty/&quot;) 
+icsfac&lt;-icsfac %&gt;% html_nodes(&quot;body&quot;) %&gt;% xml_find_all(&quot;//tbody&quot;) %&gt;% html_table() 
+icsfac&lt;-bind_rows(icsfac) 
+icsfac$X5&lt;-&quot;Faculty&quot;
+
+#Postdocs 
+icspost&lt;-read_html(&quot;https://ics-graduateschool.nl/postdocs/&quot;) 
+icspost&lt;-icspost %&gt;% html_nodes(&quot;body&quot;) %&gt;% xml_find_all(&quot;//tbody&quot;) %&gt;% html_table() 
+icspost&lt;-bind_rows(icspost) 
+icspost$X5&lt;-&quot;Postdoc&quot;
+
+#PhDs 
+icsphd&lt;-read_html(&quot;https://ics-graduateschool.nl/phds/&quot;) 
+icsphd&lt;-icsphd %&gt;% html_nodes(&quot;body&quot;) %&gt;% xml_find_all(&quot;//tbody&quot;) %&gt;% html_table() 
+icsphd&lt;-bind_rows(icsphd) 
+icsphd$X5&lt;-&quot;PhD&quot;
+
+#Merging into one table 
+icsA&lt;-rbind(icsfac,icspost) 
+icsA&lt;-rbind(icsA,icsphd)
+icsA$icsAffiliate&lt;-1
+
+#Making first and last names into ID variable for matching
+icsA$Naam&lt;-paste(icsA$X1,icsA$X2)
+icsA$Naam&lt;-funiform_string(icsA$Naam)
+
+#Then we get the list of graduates from the same website
+icsG&lt;-read_html(&quot;https://ics-graduateschool.nl/alumni-projects/&quot;)
+icsG&lt;-icsG %&gt;%
+  html_nodes(&quot;body&quot;) %&gt;%
+  xml_find_all(&quot;//tbody&quot;) %&gt;%
+  html_table()
+icsG&lt;-bind_rows(icsG)
+icsG$icsGraduate&lt;-1
+icsG$Naam&lt;-funiform_string(icsG$X2)
+
+#Merging the ICS affiliates and graduates tables
+icsC&lt;-merge(icsA, icsG, all = TRUE, by = &quot;Naam&quot;)
+icsC$unaam&lt;-icsC$Naam
+icsF&lt;-icsC[c(&#39;unaam&#39;,&#39;icsAffiliate&#39;,&#39;icsGraduate&#39;)]
+icsF$icsAny&lt;-1
+icsF[is.na(icsF)]&lt;-0</code></pre>
+<pre class="r"><code>#Second step is to load and transform the collaboration network data and merge it with the ICS data
+
+#Loading the data
+scholars&lt;-fload(&#39;C://Users/groot/Documents/RDirectory/20251016scholars.rda&#39;)
+
+#Selecting for sociologists and transforming using the network data helper function
+sndata1 = fcolnet(scholars, university = c(&#39;RU&#39;, &#39;UU&#39;, &#39;UvA&#39;, &#39;RUG&#39;, &#39;VU&#39;, &#39;UvT&#39;, &#39;EUR&#39;))
+df_ego1 = bind_rows(sndata1$data)
+
+#Adding uniformed author names to the ego level data
+df_ego1$unaam&lt;-funiform_string(df_ego1$naam)
+
+#Merging the ICS variables into the ego level data
+df_ego2&lt;-merge(x=df_ego1,y=icsF,all.x=TRUE)
+
+#Replacing missings on the ICS variables with 0 to complete the dummies
+df_ego2$icsAffiliate[is.na(df_ego2$icsAffiliate)]&lt;-0
+df_ego2$icsGraduate[is.na(df_ego2$icsGraduate)]&lt;-0
+df_ego2$icsAny[is.na(df_ego2$icsAny)]&lt;-0</code></pre>
+<pre class="r"><code>#The third step is to make the network data ready for analysis with RSiena
+
+#Making waves
+wave1 = sndata1$nets[1,,]
+wave2 = sndata1$nets[2,,]
+wave3 = sndata1$nets[3,,]
+
+#Making the waves back into a single file
+nets = array(
+    data = c(wave1, wave2, wave3),
+    dim = c(dim(wave2), 2))
+
+#Making the RSiena nomination matrix
+net = sienaDependent(nets)</code></pre>
+<pre class="r"><code>#Before transforming the ego level variables into their RSiena ready form, 
+#some descriptive statistics are required to ensure that strange and missing values are not carried over
+
+#VARIABELEN DIE IK WIL: functie(ordinaal maken), universiteit, gender, ics dingen, 
+
+#First of, the &#39;universiteit&#39; variables for each year
+#These variables indicate for each sociologist in the data at which university they worked in each year
+
+#Calling frequency tables
+table(df_ego2$universiteit.22,useNA=&#39;always&#39;)
+table(df_ego2$universiteit.24,useNA=&#39;always&#39;)
+table(df_ego2$universiteit.25,useNA=&#39;always&#39;)
+
+#The frequency tables show that there are several sociologist who work at two universities
+#Some of these work at a Dutch university and a foreign one, 
+#those cases are now recoded to include only the Dutch university
+df_ego3&lt;-df_ego2
+df_ego3$universiteit.22&lt;-gsub(&#39;EUR/Boston University&#39;, &#39;EUR&#39;, df_ego3$universiteit.22)
+df_ego3$universiteit.24&lt;-gsub(&#39;EUR/Boston University&#39;, &#39;EUR&#39;, df_ego3$universiteit.24)
+df_ego3$universiteit.22&lt;-gsub(&#39;RUG/TU Delft&#39;, &#39;RUG&#39;, df_ego3$universiteit.22)
+df_ego3$universiteit.24&lt;-gsub(&#39;RUG/TU Delft&#39;, &#39;RUG&#39;, df_ego3$universiteit.24)
+df_ego3$universiteit.22&lt;-gsub(&#39;RUG/Universiteit Stockholm&#39;, &#39;RUG&#39;, df_ego3$universiteit.22)
+df_ego3$universiteit.24&lt;-gsub(&#39;RUG/Universiteit Stockholm&#39;, &#39;RUG&#39;, df_ego3$universiteit.24)
+df_ego3$universiteit.22&lt;-gsub(&#39;RUG/University Linköping&#39;, &#39;RUG&#39;, df_ego3$universiteit.22)
+df_ego3$universiteit.24&lt;-gsub(&#39;RUG/University Linköping&#39;, &#39;RUG&#39;, df_ego3$universiteit.24)
+df_ego3$universiteit.22&lt;-gsub(&#39;RUG/University of Turku&#39;, &#39;RUG&#39;, df_ego3$universiteit.22)
+df_ego3$universiteit.24&lt;-gsub(&#39;RUG/University of Turku&#39;, &#39;RUG&#39;, df_ego3$universiteit.24)
+df_ego3$universiteit.22&lt;-gsub(&#39;UvA/Frankfurt School of Finance &amp; Management&#39;, &#39;UvA&#39;, df_ego3$universiteit.22)
+df_ego3$universiteit.24&lt;-gsub(&#39;UvA/Frankfurt School of Finance &amp; Management&#39;, &#39;UvA&#39;, df_ego3$universiteit.24)
+df_ego3$universiteit.22&lt;-gsub(&#39;UvA/University of Lausanne&#39;, &#39;UvA&#39;, df_ego3$universiteit.22)
+df_ego3$universiteit.24&lt;-gsub(&#39;UvA/University of Lausanne&#39;, &#39;UvA&#39;, df_ego3$universiteit.24)
+df_ego3$universiteit.22&lt;-gsub(&#39;UvT/Trento University&#39;, &#39;UvT&#39;, df_ego3$universiteit.22)
+df_ego3$universiteit.24&lt;-gsub(&#39;UvT/Trento University&#39;, &#39;UvT&#39;, df_ego3$universiteit.24)
+df_ego3$universiteit.22&lt;-gsub(&#39;VU/UvH&#39;, &#39;VU&#39;, df_ego3$universiteit.22)
+df_ego3$universiteit.24&lt;-gsub(&#39;VU/UvH&#39;, &#39;VU&#39;, df_ego3$universiteit.24)
+df_ego3$universiteit.24&lt;-gsub(&#39;RUG/University of Leipzig&#39;, &#39;RUG&#39;, df_ego3$universiteit.24)
+
+#And make only foreign university into NA and remove question marks
+df_ego3$universiteit.24&lt;-gsub(&#39;University of Cologne&#39;, NA, df_ego3$universiteit.24)
+df_ego3$universiteit.24&lt;-gsub(&#39;[?]&#39;, &#39;&#39;, df_ego3$universiteit.24)
+
+#Checking the frequencies again
+table(df_ego3$universiteit.22,useNA=&#39;always&#39;)
+table(df_ego3$universiteit.24,useNA=&#39;always&#39;)
+table(df_ego3$universiteit.25,useNA=&#39;always&#39;)
+
+#Now most of the cases are fine, except for the few that have two universities
+#For these cases the first of the two reported universities is taken as primary,
+#and is thus selected as the value of the university variable
+#Loss of information was accepted in this case because adding a &#39;second university&#39; variable for 5 sociologists
+#would mean changing the analysis quite substantially for what is likely to be no significant difference
+df_ego3$universiteit.22&lt;-gsub(&#39;RU/RUG&#39;, &#39;RU&#39;, df_ego3$universiteit.22)
+df_ego3$universiteit.24&lt;-gsub(&#39;RU/RUG&#39;, &#39;RU&#39;, df_ego3$universiteit.24)
+df_ego3$universiteit.22&lt;-gsub(&#39;RUG/RU&#39;, &#39;RUG&#39;, df_ego3$universiteit.22)
+df_ego3$universiteit.24&lt;-gsub(&#39;RUG/RU&#39;, &#39;RUG&#39;, df_ego3$universiteit.24)
+df_ego3$universiteit.22&lt;-gsub(&#39;RUG/Tilburg&#39;, &#39;RUG&#39;, df_ego3$universiteit.22)
+df_ego3$universiteit.24&lt;-gsub(&#39;RUG/Tilburg&#39;, &#39;RUG&#39;, df_ego3$universiteit.24)
+df_ego3$universiteit.22&lt;-gsub(&#39;UvA/EUR&#39;, &#39;UvA&#39;, df_ego3$universiteit.22)
+df_ego3$universiteit.22&lt;-gsub(&#39;UU/UvA&#39;, &#39;UU&#39;, df_ego3$universiteit.22)
+df_ego3$universiteit.24&lt;-gsub(&#39;UU/UvA&#39;, &#39;UU&#39;, df_ego3$universiteit.24)
+
+#Checking frequencies again
+table(df_ego3$universiteit.22,useNA=&#39;always&#39;)
+table(df_ego3$universiteit.24,useNA=&#39;always&#39;)
+table(df_ego3$universiteit.25,useNA=&#39;always&#39;)
+
+#There are no more strange values for the &#39;universiteit&#39; variables
+#Now on to the &#39;functie&#39; variables, these show the sociologists&#39; job titles
+table(df_ego3$functie.22,useNA=&#39;always&#39;)
+table(df_ego3$functie.24,useNA=&#39;always&#39;)
+table(df_ego3$functie.25,useNA=&#39;always&#39;)
+
+#There is one slightly nondescript value here, namely &#39;staff&#39;
+#For the few people with this value, 
+#I decided to first see if a more informative title is given in another year, 
+#then check university websites and social media
+#Nine sociologist were given more informative values for the function variable this way
+df_ego3$funcsub&lt;-df_ego3$functie.22
+df_ego3[86,&#39;funcsub&#39;]&lt;-&#39;PhD Candidate&#39;
+df_ego3[89,&#39;funcsub&#39;]&lt;-&#39;Researcher&#39;
+df_ego3[143,&#39;funcsub&#39;]&lt;-&#39;Assistant Professor&#39;
+df_ego3[190,&#39;funcsub&#39;]&lt;-&#39;Lecturer&#39;
+df_ego3[284,&#39;funcsub&#39;]&lt;-&#39;Lecturer&#39;
+df_ego3[385,&#39;funcsub&#39;]&lt;-&#39;Researcher&#39;
+df_ego3[418,&#39;funcsub&#39;]&lt;-&#39;Full Professor&#39;
+df_ego3[419,&#39;funcsub&#39;]&lt;-&#39;Researcher&#39;
+df_ego3[431,&#39;funcsub&#39;]&lt;-&#39;Lecturer&#39;
+
+#Check distribution
+table(df_ego3$funcsub,useNA=&#39;always&#39;)
+
+#Lastly there is the gender variable, which has five missings
+table(df_ego3$gender,useNA=&#39;always&#39;)
+
+#These missings were imputed by googling their name and the university they work at
+#A picture was found for all five, gender was inferred based on gender signifiers seen in the pictures
+#Main signifiers used were length of hair and presence of prominent facial hair
+df_ego3[123,&#39;gender&#39;]&lt;-&#39;female&#39;
+df_ego3[237,&#39;gender&#39;]&lt;-&#39;male&#39;
+df_ego3[375,&#39;gender&#39;]&lt;-&#39;female&#39;
+df_ego3[412,&#39;gender&#39;]&lt;-&#39;male&#39;
+df_ego3[462,&#39;gender&#39;]&lt;-&#39;female&#39;
+
+#Checking to make sure there are no more missings for gender
+table(df_ego3$gender,useNA=&#39;always&#39;)
+
+#And now the variables are ready for transformation into the form that will be used in analysis</code></pre>
+<pre class="r"><code>#Now to transform the three ego level variables from the original data
+
+#Starting with &#39;university&#39;
+#I want there to be one variable indicating the university each sociologist is most affiliated with
+#By most affiliated I mainly mean how long they were affiliated with a university, so where they would have
+#spent the most time and presumably, as is most relevant, collaborated most
+#As such, the basis for the &#39;university&#39; variable will be the &#39;universiteit.22&#39; variable, with any missing
+#values on this variable being supplemented first with &#39;universiteit.24&#39; and then &#39;universiteit.25&#39; if needed
+
+#In order to do this, the universities with three letter abbreviations are abbreviated to two letters
+#2022
+df_ego3$uni22&lt;-df_ego3$universiteit.22
+df_ego3$uni22&lt;-gsub(&#39;EUR&#39;,&#39;EU&#39;,df_ego3$uni22)
+df_ego3$uni22&lt;-gsub(&#39;RUG&#39;,&#39;UG&#39;,df_ego3$uni22)
+df_ego3$uni22&lt;-gsub(&#39;UvA&#39;,&#39;UA&#39;,df_ego3$uni22)
+df_ego3$uni22&lt;-gsub(&#39;UvT&#39;,&#39;UT&#39;,df_ego3$uni22)
+
+#2024
+df_ego3$uni24&lt;-df_ego3$universiteit.24
+df_ego3$uni24&lt;-gsub(&#39;EUR&#39;,&#39;EU&#39;,df_ego3$uni24)
+df_ego3$uni24&lt;-gsub(&#39;RUG&#39;,&#39;UG&#39;,df_ego3$uni24)
+df_ego3$uni24&lt;-gsub(&#39;UvA&#39;,&#39;UA&#39;,df_ego3$uni24)
+df_ego3$uni24&lt;-gsub(&#39;UvT&#39;,&#39;UT&#39;,df_ego3$uni24)
+
+#2025
+df_ego3$uni25&lt;-df_ego3$universiteit.25
+df_ego3$uni25&lt;-gsub(&#39;EUR&#39;,&#39;EU&#39;,df_ego3$uni25)
+df_ego3$uni25&lt;-gsub(&#39;RUG&#39;,&#39;UG&#39;,df_ego3$uni25)
+df_ego3$uni25&lt;-gsub(&#39;UvA&#39;,&#39;UA&#39;,df_ego3$uni25)
+df_ego3$uni25&lt;-gsub(&#39;UvT&#39;,&#39;UT&#39;,df_ego3$uni25)
+
+#Check if this worked
+table(df_ego3$uni22,df_ego3$universiteit.22,useNA=&#39;always&#39;)
+table(df_ego3$uni24,df_ego3$universiteit.24,useNA=&#39;always&#39;)
+table(df_ego3$uni25,df_ego3$universiteit.25,useNA=&#39;always&#39;)
+
+#This worked, all universities now use two letter abbreviations
+#Now to make one variable which includes only the earliest university available for each sociologist
+df_ego3$university&lt;-paste(df_ego3$uni22,df_ego3$uni24,df_ego3$uni25)
+df_ego3$university&lt;-gsub(&#39;NA&#39;,&#39;&#39;,df_ego3$university)
+df_ego3$university&lt;-gsub(&#39; &#39;,&#39;&#39;,df_ego3$university)
+df_ego3$university&lt;-substr(df_ego3$university,start=1,stop=2)
+
+#Check if this worked by inspecting a list
+universityCheck&lt;-cbind.data.frame(df_ego3$uni22,df_ego3$uni24,df_ego3$uni25,df_ego3$university)
+view(universityCheck)
+rm(universityCheck)
+
+#Distribution of the new &#39;university&#39; variable
+table(df_ego3$university,useNA=&#39;always&#39;)
+
+#Now as a final transformation, the variable will be made numeric for use in RSiena
+df_ego3$universityN&lt;-df_ego3$university
+df_ego3$universityN&lt;-gsub(&#39;EU&#39;,0,df_ego3$universityN)
+df_ego3$universityN&lt;-gsub(&#39;RU&#39;,1,df_ego3$universityN)
+df_ego3$universityN&lt;-gsub(&#39;UA&#39;,2,df_ego3$universityN)
+df_ego3$universityN&lt;-gsub(&#39;UG&#39;,3,df_ego3$universityN)
+df_ego3$universityN&lt;-gsub(&#39;UT&#39;,4,df_ego3$universityN)
+df_ego3$universityN&lt;-gsub(&#39;UU&#39;,5,df_ego3$universityN)
+df_ego3$universityN&lt;-gsub(&#39;VU&#39;,6,df_ego3$universityN)
+
+#Final check
+table(df_ego3$university,df_ego3$universityN)</code></pre>
+<pre class="r"><code>#The next variable to transform is &#39;function&#39;
+#The same logic is applied here, the goal is one variable which indicates which function each sociologist had
+#The 2022 function is preferred to 2024 and 2025 functions, again with the argument that any changes in function
+#which occured this year (2025) or last year (2024) compared to 2022 would have had less of an effect on the 
+#publication record and collaborations of each sociologist than the function they had in 2022.
+
+#Because of the more heterogenous string length of the function variables as compared to the university 
+#variables, they are first made into numbers, then combined, then the first is selected, which is then
+#transformed back into the original string
+
+#Making the function variables into numbers
+#2022 (funcsub is used because it has the imputed missings)
+df_ego3$func22&lt;-df_ego3$funcsub
+df_ego3$func22&lt;-gsub(&#39;PhD Candidate&#39;,&#39;0&#39;,df_ego3$func22)
+df_ego3$func22&lt;-gsub(&#39;Postdoctoral Researcher&#39;,&#39;1&#39;,df_ego3$func22)
+df_ego3$func22&lt;-gsub(&#39;Lecturer&#39;,&#39;2&#39;,df_ego3$func22)
+df_ego3$func22&lt;-gsub(&#39;Researcher&#39;,&#39;3&#39;,df_ego3$func22)
+df_ego3$func22&lt;-gsub(&#39;Assistant Professor&#39;,&#39;4&#39;,df_ego3$func22)
+df_ego3$func22&lt;-gsub(&#39;Associate Professor&#39;,&#39;5&#39;,df_ego3$func22)
+df_ego3$func22&lt;-gsub(&#39;Full Professor&#39;,&#39;6&#39;,df_ego3$func22)
+
+#2024
+df_ego3$func24&lt;-df_ego3$functie.24
+df_ego3$func24&lt;-gsub(&#39;PhD Candidate&#39;,&#39;0&#39;,df_ego3$func24)
+df_ego3$func24&lt;-gsub(&#39;Postdoctoral Researcher&#39;,&#39;1&#39;,df_ego3$func24)
+df_ego3$func24&lt;-gsub(&#39;Lecturer&#39;,&#39;2&#39;,df_ego3$func24)
+df_ego3$func24&lt;-gsub(&#39;Researcher&#39;,&#39;3&#39;,df_ego3$func24)
+df_ego3$func24&lt;-gsub(&#39;Assistant Professor&#39;,&#39;4&#39;,df_ego3$func24)
+df_ego3$func24&lt;-gsub(&#39;Associate Professor&#39;,&#39;5&#39;,df_ego3$func24)
+df_ego3$func24&lt;-gsub(&#39;Full Professor&#39;,&#39;6&#39;,df_ego3$func24)
+
+#2025
+df_ego3$func25&lt;-df_ego3$functie.25
+df_ego3$func25&lt;-gsub(&#39;PhD Candidate&#39;,&#39;0&#39;,df_ego3$func25)
+df_ego3$func25&lt;-gsub(&#39;Postdoctoral Researcher&#39;,&#39;1&#39;,df_ego3$func25)
+df_ego3$func25&lt;-gsub(&#39;Lecturer&#39;,&#39;2&#39;,df_ego3$func25)
+df_ego3$func25&lt;-gsub(&#39;Researcher&#39;,&#39;3&#39;,df_ego3$func25)
+df_ego3$func25&lt;-gsub(&#39;Assistant Professor&#39;,&#39;4&#39;,df_ego3$func25)
+df_ego3$func25&lt;-gsub(&#39;Associate Professor&#39;,&#39;5&#39;,df_ego3$func25)
+df_ego3$func25&lt;-gsub(&#39;Full Professor&#39;,&#39;6&#39;,df_ego3$func25)
+
+#Check values if the values correspond
+functionCheck&lt;-cbind.data.frame(
+  df_ego3$funcsub,df_ego3$func22,df_ego3$functie.24,df_ego3$func24,df_ego3$functie.25,df_ego3$func25)
+view(functionCheck)
+rm(functionCheck)
+
+#The values are as intended, now to merge the numbers, extract the first and make it back into a word
+df_ego3$functionN&lt;-paste(df_ego3$func22,df_ego3$func24,df_ego3$func25)
+df_ego3$functionN&lt;-gsub(&#39;NA&#39;,&#39;&#39;,df_ego3$functionN)
+df_ego3$functionN&lt;-gsub(&#39; &#39;,&#39;&#39;,df_ego3$functionN)
+df_ego3$functionN&lt;-substr(df_ego3$functionN,start=1,stop=1)
+table(df_ego3$functionN,useNA=&#39;always&#39;)
+
+#Now to make the variable actually numeric
+df_ego3$functionN&lt;-gsub(&#39;0&#39;,0,df_ego3$functionN)
+df_ego3$functionN&lt;-gsub(&#39;1&#39;,1,df_ego3$functionN)
+df_ego3$functionN&lt;-gsub(&#39;2&#39;,2,df_ego3$functionN)
+df_ego3$functionN&lt;-gsub(&#39;3&#39;,3,df_ego3$functionN)
+df_ego3$functionN&lt;-gsub(&#39;4&#39;,4,df_ego3$functionN)
+df_ego3$functionN&lt;-gsub(&#39;5&#39;,5,df_ego3$functionN)
+df_ego3$functionN&lt;-gsub(&#39;6&#39;,6,df_ego3$functionN)
+table(df_ego3$functionN,useNA=&#39;always&#39;)
+
+#And create a string version for easy reference
+df_ego3$functionS&lt;-df_ego3$functionN
+df_ego3$functionS&lt;-gsub(&#39;0&#39;,&#39;PhD Candidate&#39;,df_ego3$functionS)
+df_ego3$functionS&lt;-gsub(&#39;1&#39;,&#39;Postdoctoral Researcher&#39;,df_ego3$functionS)
+df_ego3$functionS&lt;-gsub(&#39;2&#39;,&#39;Lecturer&#39;,df_ego3$functionS)
+df_ego3$functionS&lt;-gsub(&#39;3&#39;,&#39;Researcher&#39;,df_ego3$functionS)
+df_ego3$functionS&lt;-gsub(&#39;4&#39;,&#39;Assistant Professor&#39;,df_ego3$functionS)
+df_ego3$functionS&lt;-gsub(&#39;5&#39;,&#39;Associate Professor&#39;,df_ego3$functionS)
+df_ego3$functionS&lt;-gsub(&#39;6&#39;,&#39;Full Professor&#39;,df_ego3$functionS)
+table(df_ego3$functionS,useNA=&#39;always&#39;)
+
+#Check if the values are correct
+functionCheck&lt;-cbind.data.frame(
+  df_ego3$funcsub,df_ego3$func22,df_ego3$functie.24,df_ego3$func24,df_ego3$functie.25,df_ego3$func25,
+  df_ego3$functionN,df_ego3$functionS)
+view(functionCheck)
+rm(functionCheck)
+
+#Turns out there are still 13 missings, these are marked NA
+df_ego3[46,&#39;functionN&#39;]&lt;-NA
+df_ego3[46,&#39;functionS&#39;]&lt;-NA
+df_ego3[125,&#39;functionN&#39;]&lt;-NA
+df_ego3[125,&#39;functionS&#39;]&lt;-NA
+df_ego3[174,&#39;functionN&#39;]&lt;-NA
+df_ego3[174,&#39;functionS&#39;]&lt;-NA
+df_ego3[188,&#39;functionN&#39;]&lt;-NA
+df_ego3[188,&#39;functionS&#39;]&lt;-NA
+df_ego3[195,&#39;functionN&#39;]&lt;-NA
+df_ego3[195,&#39;functionS&#39;]&lt;-NA
+df_ego3[237,&#39;functionN&#39;]&lt;-NA
+df_ego3[237,&#39;functionS&#39;]&lt;-NA
+df_ego3[248,&#39;functionN&#39;]&lt;-NA
+df_ego3[248,&#39;functionS&#39;]&lt;-NA
+df_ego3[274,&#39;functionN&#39;]&lt;-NA
+df_ego3[274,&#39;functionS&#39;]&lt;-NA
+df_ego3[324,&#39;functionN&#39;]&lt;-NA
+df_ego3[324,&#39;functionS&#39;]&lt;-NA
+df_ego3[355,&#39;functionN&#39;]&lt;-NA
+df_ego3[355,&#39;functionS&#39;]&lt;-NA
+df_ego3[375,&#39;functionN&#39;]&lt;-NA
+df_ego3[375,&#39;functionS&#39;]&lt;-NA
+df_ego3[403,&#39;functionN&#39;]&lt;-NA
+df_ego3[403,&#39;functionS&#39;]&lt;-NA
+df_ego3[457,&#39;functionN&#39;]&lt;-NA
+df_ego3[457,&#39;functionS&#39;]&lt;-NA
+
+#Check again
+table(df_ego3$functionN,df_ego3$functionS,useNA=&#39;always&#39;)
+
+#Now the string and numeric function variables are as intended</code></pre>
+<pre class="r"><code>#Lastly the gender variable was made into a dummy
+df_ego3$genderN&lt;-df_ego3$gender
+df_ego3$genderN&lt;-gsub(&#39;female&#39;,0,df_ego3$genderN)
+df_ego3$genderN&lt;-gsub(&#39;male&#39;,1,df_ego3$genderN)
+
+#Check if the values correspond to the original variable
+table(df_ego3$gender,df_ego3$genderN,useNA=&#39;always&#39;)
+
+#They do the gender dummy is made</code></pre>
+
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIkRhdGFwcmVwRmluYWwiDQphdXRob3I6ICJUamV1IEdyb290aHVpanNlbiINCmRhdGU6ICIyMDI1LTEwLTE3Ig0Kb3V0cHV0OiBodG1sX2RvY3VtZW50DQotLS0NCg0KYGBge3Igc2V0dXAsIGluY2x1ZGU9RkFMU0V9DQprbml0cjo6b3B0c19jaHVuayRzZXQoZWNobyA9IFRSVUUpDQpgYGANCi0tLQ0KVGhpcyBwYWdlIGRvY3VtZW50cyB0aGUgcHJlcGFyYXRpb24gb2YgdGhlIGRhdGEgZm9yIHVzZSBpbiB0aGUgZmluYWwgYXNzaWdubWVudC4NClRoZSBmb2xsb3dpbmcgc3RlcHMgYXJlIHRha2VuIHRvIG1ha2UgdGhlIGRhdGEgc3VpdGFibGUgZm9yIGFzc2Vzc2luZyB3aGV0aGVyIGNsdXN0ZXJpbmcgaW4gdGhlDQpjb2xsYWJvcmF0aW9uIG5ldHdvcmsgb2Ygc29jaW9sb2dpc3RzIGluIHRoZSBOZXRoZXJsYW5kcyBvY2N1cnMgZHVlIHRvIHByZWZlcmVudGlhbCBhdHRhY2htZW50DQp0byBjb2xsZWFndWVzIHdobyBhdHRlbmRlZCB0aGUgc2FtZSBncmFkdWF0ZSBzY2hvb2wuIA0KRm9yIG5vdywgSSBhbSBvbmx5IGRpc3Rpbmd1aXNoaW5nIElDUyBpbnN0ZWFkIG9mIGluY2x1ZGluZyBhbGwgZ3JhZHVhdGUgc2Nob29scy4NClRoaXMgaXMgYmVjYXVzZSB0aGUgSUNTIGRhdGEgaXMgZWFzaWx5IG9idGFpbmVkIGFuZCBpbmNsdWRlcyBhIGxhcmdlIHByb3BvcnRpb24gb2Ygc29jaW9sb2dpc3RzLg0KSWYgdGhlIHByb3BvcnRpb24gb2Ygc29jaW9sb2dpc3RzIGFmZmlsaWF0ZWQgd2l0aCBJQ1MgdHVybnMgb3V0IHRvIGJlIHRvbyBsb3csIG1vcmUgZGF0YSB3aWxsIGJlIHNvdWdodC4NCg0KUGxhbjoNCjEuIExvYWRpbmcgbmVjY2VzYXJ5IHBhY2thZ2VzIGFuZCBmdW5jdGlvbnMNCjIuIFdlYnNjcmFwZSBkYXRhIGFib3V0IGdyYWR1YXRlcyBhbmQgYWZmaWxpYXRlcyBmcm9tIHRoZSBJQ1Mgd2Vic2l0ZSwgbWFrZSB0aGVzZSBpbnRvIGEgbGlzdCBvZiBuYW1lcw0KMy4gTG9hZCAnc2Nob2xhcnMnIGRhdGEgY29udGFpbmluZyB0aGUgc29jaW9sb2dpc3RzIGFuZCBjb2xsYWJvcmF0aW9ucywgcmVtb3ZlIHBvbGlzY2kgYW5kIGlycmVsZXZhbnQgdmFyaWFibGVzDQo0LiBNYXRjaCBsaXN0IG9mIElDUyBhZmZpbGlhdGVzIHRvIHNjaG9sYXJzIGRhdGEgdXNpbmcgbmFtZXMNCjUuIE1ha2UgbWVyZ2VkIGRhdGFzZXQgc3VpdGFibGUgZm9yIGFuYWx5c2lzIHdpdGggUlNpZW5hDQo2LiBBbmFseXNlIGRlc2NyaXB0aXZlIHN0YXRpc3RpY3MNCg0KYGBge3IsZXZhbD1GfQ0KI0xvYWRpbmcgaW4gdGhlIG5lY2Vzc2FyeSBwYWNrYWdlcyBhbmQgZGVmaW5pbmcgZnVuY3Rpb25zDQoNCiNFbXB0aWVzIHlvdXIgZW52aXJvbm1lbnQsIHJlbW92ZSBoYXNoIG9ubHkgaWYgeW91IGFyZSBzdXJlIGV2ZXJ5dGhpbmcgaW1wb3J0YW50IGlzIHNhdmVkIQ0KI3JtKGxpc3QgPSBscygpKQ0KDQojRGVmaW5pbmcgY3VzdG9tIGZ1bmN0aW9ucw0KDQojSm9jaGVtcyBmdW5jdGlvbnMNCiNmcGFja2FnZS5jaGVjazogQ2hlY2sgaWYgcGFja2FnZXMgYXJlIGluc3RhbGxlZCAoYW5kIGluc3RhbGwgaWYgbm90KSBpbiBSDQpmcGFja2FnZS5jaGVjayA8LSBmdW5jdGlvbihwYWNrYWdlcykgew0KICAgIGxhcHBseShwYWNrYWdlcywgRlVOID0gZnVuY3Rpb24oeCkgew0KICAgICAgICBpZiAoIXJlcXVpcmUoeCwgY2hhcmFjdGVyLm9ubHkgPSBUUlVFKSkgew0KICAgICAgICAgICAgaW5zdGFsbC5wYWNrYWdlcyh4LCBkZXBlbmRlbmNpZXMgPSBUUlVFKQ0KICAgICAgICAgICAgbGlicmFyeSh4LCBjaGFyYWN0ZXIub25seSA9IFRSVUUpDQogICAgICAgIH0NCiAgICB9KQ0KfQ0KDQojZnNhdmU6IFNhdmUgdG8gcHJvY2Vzc2VkIGRhdGEgaW4gcmVwb3NpdG9yeQ0KZnNhdmUgPC0gZnVuY3Rpb24oeCwgZmlsZSA9IE5VTEwsIGxvY2F0aW9uID0gIi4vZGF0YS9wcm9jZXNzZWQvIikgew0KICAgIGlmZWxzZSghZGlyLmV4aXN0cygiZGF0YSIpLCBkaXIuY3JlYXRlKCJkYXRhIiksIEZBTFNFKQ0KICAgIGlmZWxzZSghZGlyLmV4aXN0cygiZGF0YS9wcm9jZXNzZWQiKSwgZGlyLmNyZWF0ZSgiZGF0YS9wcm9jZXNzZWQiKSwgRkFMU0UpDQogICAgaWYgKGlzLm51bGwoZmlsZSkpDQogICAgICAgIGZpbGUgPSBkZXBhcnNlKHN1YnN0aXR1dGUoeCkpDQogICAgZGF0ZW5hbWUgPC0gc3Vic3RyKGdzdWIoIls6LV0iLCAiIiwgU3lzLnRpbWUoKSksIDEsIDgpDQogICAgdG90YWxuYW1lIDwtIHBhc3RlKGxvY2F0aW9uLCBkYXRlbmFtZSwgZmlsZSwgIi5yZGEiLCBzZXAgPSAiIikNCiAgICBzYXZlKHgsIGZpbGUgPSB0b3RhbG5hbWUpICAjbmVlZCB0byBmaXggaWYgZmlsZSBpcyByZWxvYWRlZCBhcyBpbnB1dCBuYW1lLCBub3QgYXMgeC4gDQp9DQoNCiNmbG9hZDogVG8gbG9hZCB0aGUgZmlsZXMgYmFjayBhZnRlciBhbiBmc2F2ZQ0KZmxvYWQgPC0gZnVuY3Rpb24oZmlsZW5hbWUpIHsNCiAgICBsb2FkKGZpbGVuYW1lKQ0KICAgIGdldChscygpW2xzKCkgIT0gImZpbGVuYW1lIl0pDQp9DQoNCiNmc2hvd2RmOiBUbyBwcmludCBvYmplY3RzICh0aWJibGVzIC8gZGF0YS5mcmFtZSkgbmljZWx5IG9uIHNjcmVlbiBpbiAucm1kDQpmc2hvd2RmIDwtIGZ1bmN0aW9uKHgsIC4uLikgew0KICAgIGtuaXRyOjprYWJsZSh4LCBkaWdpdHMgPSAyLCAiaHRtbCIsIC4uLikgJT4lDQogICAgICAgIGthYmxlRXh0cmE6OmthYmxlX3N0eWxpbmcoYm9vdHN0cmFwX29wdGlvbnMgPSBjKCJzdHJpcGVkIiwgImhvdmVyIikpICU+JQ0KICAgICAgICBrYWJsZUV4dHJhOjpzY3JvbGxfYm94KHdpZHRoID0gIjEwMCUiLCBoZWlnaHQgPSAiMzAwcHgiKQ0KfQ0KDQojTmV0d29yayBkYXRhIGhlbHBlciBmdW5jdGlvbg0KZmNvbG5ldCA9IGZ1bmN0aW9uKGRhdGEgPSBzY2hvbGFycywgdW5pdmVyc2l0eSA9IGMoIlJVIiwgJ1VVJyksIGRpc2NpcGxpbmUgPSAiU29jaW9sb2dpZSIsIHdhdmVzID0gbGlzdChjKDIwMTUsDQogICAgMjAxOCksIGMoMjAxOSwgMjAyMyksIGMoMjAyNCwgMjAyNSkpLCB0eXBlID0gYygiZmlyc3QiKSkgew0KDQogICAgdW5pdmVyc2l0eSA9IHBhc3RlMCgnKCcsIHBhc3RlMCh1bml2ZXJzaXR5LCBjb2xsYXBzZT0nfCcgKSwgJyknKQ0KICAgIGRpc2NpcGxpbmUgPSBwYXN0ZTAoJygnLCBwYXN0ZTAoZGlzY2lwbGluZSwgY29sbGFwc2U9J3wnICksICcpJykNCg0KICAgICMgc3RlcCAxDQogICAgZGVtb2dyYXBoaWNzID0gZGF0YSRkZW1vZ3JhcGhpY3MNCiAgICBzYW1wbGUgPSB3aGljaCgNCiAgICAgICAgKHN0cl9kZXRlY3QoZGVtb2dyYXBoaWNzJHVuaXZlcnNpdGVpdC4yMiwgdW5pdmVyc2l0eSkNCiAgICAgICAgICAgIHwgc3RyX2RldGVjdChkZW1vZ3JhcGhpY3MkdW5pdmVyc2l0ZWl0LjI0LCB1bml2ZXJzaXR5KQ0KICAgICAgICAgICAgfCBzdHJfZGV0ZWN0KGRlbW9ncmFwaGljcyR1bml2ZXJzaXRlaXQuMjUsIHVuaXZlcnNpdHkpDQogICAgICAgICkgJiAoDQogICAgICAgICAgICBzdHJfZGV0ZWN0KGRlbW9ncmFwaGljcyRkaXNjaXBsaW5lLjIyLCBkaXNjaXBsaW5lKQ0KICAgICAgICAgICAgfCBzdHJfZGV0ZWN0KGRlbW9ncmFwaGljcyRkaXNjaXBsaW5lLjI0LCBkaXNjaXBsaW5lKQ0KICAgICAgICAgICAgfCBzdHJfZGV0ZWN0KGRlbW9ncmFwaGljcyRkaXNjaXBsaW5lLjI1LCBkaXNjaXBsaW5lKQ0KICAgICAgICApIHw+IHJlcGxhY2VfbmEoRkFMU0UpKQ0KDQogICAgZGVtb2dyYXBoaWNzX3NvYyA9IGRlbW9ncmFwaGljc1tzYW1wbGUsIF0gfD4gZHJvcF9uYShpZCkNCg0KICAgICMgc3RlcCAyDQogICAgaWRzID0gZGVtb2dyYXBoaWNzX3NvYyRpZCB8PiB1bmlxdWUoKQ0KDQoNCiAgICBzY2hvbGFyc19zZWwgPSBsaXN0KCkgDQogICAgZm9yIChpZF8gaW4gaWRzKXsNCiAgICAgICAgc2Nob2xhcnNfc2VsW1tpZF9dXSA9IGJpbmRfcm93cyhzY2hvbGFycyR3b3JrcykgfD4NCiAgICAgICAgICAgIGZpbHRlcihhdXRob3JfaWQgPT0gaWRfKQ0KICAgIH0NCiAgICBzY2hvbGFyc19zZWwgPSBiaW5kX3Jvd3Moc2Nob2xhcnMkd29ya3MpIA0KICAgIA0KDQogICAgbndhdmVzID0gbGVuZ3RoKHdhdmVzKQ0KICAgIG5ldHMgPSBhcnJheSgwLCBkaW0gPSBjKG53YXZlcywgbGVuZ3RoKGlkcyksIGxlbmd0aChpZHMpKSwgZGltbmFtZXMgPSBsaXN0KHdhdmUgPSAxOm53YXZlcywgaWRzLA0KICAgICAgICBpZHMpKQ0KICAgIGRpbW5hbWVzKG5ldHMpDQoNCiAgICAjIHN0ZXAgMw0KICAgIGRmX3dvcmtzID0gdGliYmxlKA0KICAgICAgICAgICAgd29ya3NfaWQgPSBzY2hvbGFyc19zZWwkaWQsIA0KICAgICAgICAgICAgd29ya3NfYXV0aG9yID0gc2Nob2xhcnNfc2VsJGF1dGhvcnNoaXBzLCANCiAgICAgICAgICAgIHdvcmtzX3llYXIgPSBzY2hvbGFyc19zZWwkcHVibGljYXRpb25feWVhcg0KICAgICAgICApDQoNCg0KICAgIGRmX3dvcmtzID0gZGZfd29ya3NbIWR1cGxpY2F0ZWQoZGZfd29ya3MpLCBdDQoNCiAgICAjIHN0ZXAgNA0KICAgIGlmICh0eXBlID09ICJmaXJzdCIpIHsNCiAgICAgICAgZm9yIChqIGluIDE6bGVuZ3RoKHdhdmVzKSkgew0KICAgICAgICAgICAgZGZfd29ya3NfdyA9IGRmX3dvcmtzW2RmX3dvcmtzJHdvcmtzX3llYXIgPj0gd2F2ZXNbW2pdXVsxXSAmIGRmX3dvcmtzJHdvcmtzX3llYXIgPD0gd2F2ZXNbW2pdXVsyXSwNCiAgICAgICAgICAgICAgICBdDQogICAgICAgICAgICBmb3IgKGkgaW4gMTpucm93KGRmX3dvcmtzX3cpKSB7DQogICAgICAgICAgICAgICAgZWdvID0gZGZfd29ya3NfdyR3b3Jrc19hdXRob3JbaV1bWzFdXSRpZFsxXQ0KICAgICAgICAgICAgICAgIGFsdGVycyA9IGRmX3dvcmtzX3ckd29ya3NfYXV0aG9yW2ldW1sxXV0kaWRbLTFdDQogICAgICAgICAgICAgICAgaWYgKHN1bShpZHMgJWluJSBlZ28pID4gMCAmIHN1bShpZHMgJWluJSBhbHRlcnMpID4gMCkgew0KICAgICAgICAgICAgICAgICAgbmV0c1tqLCB3aGljaChpZHMgJWluJSBlZ28pLCB3aGljaChpZHMgJWluJSBhbHRlcnMpXSA9IDENCiAgICAgICAgICAgICAgICB9DQogICAgICAgICAgICB9DQogICAgICAgIH0NCiAgICB9DQoNCiAgICBpZiAodHlwZSA9PSAibGFzdCIpIHsNCiAgICAgICAgZm9yIChqIGluIDE6bGVuZ3RoKHdhdmVzKSkgew0KICAgICAgICAgICAgZGZfd29ya3NfdyA9IGRmX3dvcmtzW2RmX3dvcmtzJHdvcmtzX3llYXIgPj0gd2F2ZXNbW2pdXVsxXSAmIGRmX3dvcmtzJHdvcmtzX3llYXIgPD0gd2F2ZXNbW2pdXVsyXSwNCiAgICAgICAgICAgICAgICBdDQogICAgICAgICAgICBmb3IgKGkgaW4gMTpucm93KGRmX3dvcmtzX3cpKSB7DQogICAgICAgICAgICAgICAgZWdvID0gcmV2KGRmX3dvcmtzX3ckd29ya3NfYXV0aG9yW2ldW1sxXV0kaWRbMV0pDQogICAgICAgICAgICAgICAgYWx0ZXJzID0gcmV2KGRmX3dvcmtzX3ckd29ya3NfYXV0aG9yW2ldW1sxXV0kaWRbLTFdKQ0KICAgICAgICAgICAgICAgIGlmIChzdW0oaWRzICVpbiUgZWdvKSA+IDAgJiBzdW0oaWRzICVpbiUgYWx0ZXJzKSA+IDApIHsNCiAgICAgICAgICAgICAgICAgIG5ldHNbaiwgd2hpY2goaWRzICVpbiUgZWdvKSwgd2hpY2goaWRzICVpbiUgYWx0ZXJzKV0gPSAxDQogICAgICAgICAgICAgICAgfQ0KICAgICAgICAgICAgfQ0KICAgICAgICB9DQogICAgfQ0KICAgIGlmICh0eXBlID09ICJhbGwiKSB7DQogICAgICAgIGZvciAoaiBpbiAxOmxlbmd0aCh3YXZlcykpIHsNCiAgICAgICAgICAgIGRmX3dvcmtzX3cgPSBkZl93b3Jrc1tkZl93b3JrcyR3b3Jrc195ZWFyID49IHdhdmVzW1tqXV1bMV0gJiBkZl93b3JrcyR3b3Jrc195ZWFyIDw9IHdhdmVzW1tqXV1bMl0sDQogICAgICAgICAgICAgICAgXQ0KICAgICAgICAgICAgZm9yIChpIGluIDE6bnJvdyhkZl93b3Jrc193KSkgew0KICAgICAgICAgICAgICAgIGVnb3MgPSBkZl93b3Jrc193JHdvcmtzX2F1dGhvcltpXVtbMV1dJGlkDQogICAgICAgICAgICAgICAgaWYgKHN1bShpZHMgJWluJSBlZ29zKSA+IDApIHsNCiAgICAgICAgICAgICAgICAgIG5ldHNbaiwgd2hpY2goaWRzICVpbiUgZWdvcyksIHdoaWNoKGlkcyAlaW4lIGVnb3MpXSA9IDENCiAgICAgICAgICAgICAgICB9DQogICAgICAgICAgICB9DQogICAgICAgICAgICBkaWFnKG5ldHNbaiwsXSkgPSAwDQogICAgICAgIH0NCiAgICB9DQoNCiAgICBvdXRwdXQgPSBsaXN0KCkNCiAgICBvdXRwdXQkZGF0YSA9IGRlbW9ncmFwaGljc19zb2MNCiAgICBvdXRwdXQkbmV0cyA9IG5ldHMNCiAgICByZXR1cm4ob3V0cHV0KQ0KfQ0KDQojU3RyaW5nIHVuaWZvcm1pbmcgZnVuY3Rpb24NCmZ1bmlmb3JtX3N0cmluZyA8LSBmdW5jdGlvbihpbnB1dCwgbnVtYmVycz1UUlVFLCBzcGFjZXM9VFJVRSwgY2Fwcz1UUlVFKXsNCiAgc3RyaW5nIDwtIGljb252KGlucHV0LCBmcm9tID0gIlVURi04IiwgdG8gPSAiQVNDSUkvL1RSQU5TTElUIikNCiAgc3RyaW5nIDwtIGdzdWIoJy0nLCcnLHN0cmluZykNCiAgaWYgKG51bWJlcnMpIHN0cmluZyA8LSBnc3ViKCdbMC05XScsJycsc3RyaW5nKQ0KICBpZiAoc3BhY2VzKSBzdHJpbmcgPC0gZ3N1YignICcsJycsc3RyaW5nKQ0KICBpZiAoY2Fwcykgc3RyaW5nIDwtIHRvbG93ZXIoc3RyaW5nKQ0KICByZXR1cm4oc3RyaW5nKQ0KfQ0KDQojQ2hlY2tpbmcgZm9yIHJlcXVpcmVkIHBhY2thZ2VzDQpwYWNrYWdlcyA9IGMoIlJTaWVuYSIsICJkZXZ0b29scyIsICJpZ3JhcGgiLCAidGlkeXZlcnNlIiwgInhtbDIiLCAicnZlc3QiLCAiZHBseXIiLCAic3RyaW5nciIpDQpmcGFja2FnZS5jaGVjayhwYWNrYWdlcykNCg0KYGBgDQoNCmBgYHtyLGV2YWw9Rn0NCiNGaXJzdCBzdGVwIGlzIHRvIHNjcmFwZSB0aGUgSUNTIHdlYnNpdGUgZm9yIGdyYWR1YXRlcyBhbmQgYWZmaWxpYXRlcw0KI1dlIHdhbnQgdG8gaGF2ZSBhIGxpc3Qgb2YgbmFtZXMgYW5kIHR3byBkdW1teSB2YXJpYWJsZXMsIG9uZSBmb3IgZ3JhZHVhdGlvbiBhbmQgb25lIGZvciBhZmZpbGlhdGlvbg0KI0JlaW5nIGFibGUgdG8gZGlzdGluZ3Vpc2ggYmV0d2VlbiB0aGUgdHdvIHdpbGwgYWxsb3cgdXMgdG8gY2FwdHVyZSBvbGRlciBzb2Npb2xvZ2lzdHMgd2hvIGFyZSB3aXRoaW4NCiAgI3RoZSBzY29wZSBvZiB0aGUgdGhlb3J5LCBidXQgY291bGQgbm90IGhhdmUgc3R1ZGllZCBhdCBJQ1MgYmVjYXVzZSBpdCBkaWQgbm90IGV4aXN0IHlldA0KDQojRmlyc3Qgd2UgZ2V0IHRoZSBhZmZpbGlhdGVzIHRhYmxlcyBmcm9tIGh0dHBzOi8vaWNzLWdyYWR1YXRlc2Nob29sLm5sLw0KDQojRmFjdWx0eSANCmljc2ZhYzwtcmVhZF9odG1sKCJodHRwczovL2ljcy1ncmFkdWF0ZXNjaG9vbC5ubC9mYWN1bHR5LyIpIA0KaWNzZmFjPC1pY3NmYWMgJT4lIGh0bWxfbm9kZXMoImJvZHkiKSAlPiUgeG1sX2ZpbmRfYWxsKCIvL3Rib2R5IikgJT4lIGh0bWxfdGFibGUoKSANCmljc2ZhYzwtYmluZF9yb3dzKGljc2ZhYykgDQppY3NmYWMkWDU8LSJGYWN1bHR5Ig0KDQojUG9zdGRvY3MgDQppY3Nwb3N0PC1yZWFkX2h0bWwoImh0dHBzOi8vaWNzLWdyYWR1YXRlc2Nob29sLm5sL3Bvc3Rkb2NzLyIpIA0KaWNzcG9zdDwtaWNzcG9zdCAlPiUgaHRtbF9ub2RlcygiYm9keSIpICU+JSB4bWxfZmluZF9hbGwoIi8vdGJvZHkiKSAlPiUgaHRtbF90YWJsZSgpIA0KaWNzcG9zdDwtYmluZF9yb3dzKGljc3Bvc3QpIA0KaWNzcG9zdCRYNTwtIlBvc3Rkb2MiDQoNCiNQaERzIA0KaWNzcGhkPC1yZWFkX2h0bWwoImh0dHBzOi8vaWNzLWdyYWR1YXRlc2Nob29sLm5sL3BoZHMvIikgDQppY3NwaGQ8LWljc3BoZCAlPiUgaHRtbF9ub2RlcygiYm9keSIpICU+JSB4bWxfZmluZF9hbGwoIi8vdGJvZHkiKSAlPiUgaHRtbF90YWJsZSgpIA0KaWNzcGhkPC1iaW5kX3Jvd3MoaWNzcGhkKSANCmljc3BoZCRYNTwtIlBoRCINCg0KI01lcmdpbmcgaW50byBvbmUgdGFibGUgDQppY3NBPC1yYmluZChpY3NmYWMsaWNzcG9zdCkgDQppY3NBPC1yYmluZChpY3NBLGljc3BoZCkNCmljc0EkaWNzQWZmaWxpYXRlPC0xDQoNCiNNYWtpbmcgZmlyc3QgYW5kIGxhc3QgbmFtZXMgaW50byBJRCB2YXJpYWJsZSBmb3IgbWF0Y2hpbmcNCmljc0EkTmFhbTwtcGFzdGUoaWNzQSRYMSxpY3NBJFgyKQ0KaWNzQSROYWFtPC1mdW5pZm9ybV9zdHJpbmcoaWNzQSROYWFtKQ0KDQojVGhlbiB3ZSBnZXQgdGhlIGxpc3Qgb2YgZ3JhZHVhdGVzIGZyb20gdGhlIHNhbWUgd2Vic2l0ZQ0KaWNzRzwtcmVhZF9odG1sKCJodHRwczovL2ljcy1ncmFkdWF0ZXNjaG9vbC5ubC9hbHVtbmktcHJvamVjdHMvIikNCmljc0c8LWljc0cgJT4lDQogIGh0bWxfbm9kZXMoImJvZHkiKSAlPiUNCiAgeG1sX2ZpbmRfYWxsKCIvL3Rib2R5IikgJT4lDQogIGh0bWxfdGFibGUoKQ0KaWNzRzwtYmluZF9yb3dzKGljc0cpDQppY3NHJGljc0dyYWR1YXRlPC0xDQppY3NHJE5hYW08LWZ1bmlmb3JtX3N0cmluZyhpY3NHJFgyKQ0KDQojTWVyZ2luZyB0aGUgSUNTIGFmZmlsaWF0ZXMgYW5kIGdyYWR1YXRlcyB0YWJsZXMNCmljc0M8LW1lcmdlKGljc0EsIGljc0csIGFsbCA9IFRSVUUsIGJ5ID0gIk5hYW0iKQ0KaWNzQyR1bmFhbTwtaWNzQyROYWFtDQppY3NGPC1pY3NDW2MoJ3VuYWFtJywnaWNzQWZmaWxpYXRlJywnaWNzR3JhZHVhdGUnKV0NCmljc0YkaWNzQW55PC0xDQppY3NGW2lzLm5hKGljc0YpXTwtMA0KDQpgYGANCg0KYGBge3IsZXZhbD1GfQ0KI1NlY29uZCBzdGVwIGlzIHRvIGxvYWQgYW5kIHRyYW5zZm9ybSB0aGUgY29sbGFib3JhdGlvbiBuZXR3b3JrIGRhdGEgYW5kIG1lcmdlIGl0IHdpdGggdGhlIElDUyBkYXRhDQoNCiNMb2FkaW5nIHRoZSBkYXRhDQpzY2hvbGFyczwtZmxvYWQoJ0M6Ly9Vc2Vycy9ncm9vdC9Eb2N1bWVudHMvUkRpcmVjdG9yeS8yMDI1MTAxNnNjaG9sYXJzLnJkYScpDQoNCiNTZWxlY3RpbmcgZm9yIHNvY2lvbG9naXN0cyBhbmQgdHJhbnNmb3JtaW5nIHVzaW5nIHRoZSBuZXR3b3JrIGRhdGEgaGVscGVyIGZ1bmN0aW9uDQpzbmRhdGExID0gZmNvbG5ldChzY2hvbGFycywgdW5pdmVyc2l0eSA9IGMoJ1JVJywgJ1VVJywgJ1V2QScsICdSVUcnLCAnVlUnLCAnVXZUJywgJ0VVUicpKQ0KZGZfZWdvMSA9IGJpbmRfcm93cyhzbmRhdGExJGRhdGEpDQoNCiNBZGRpbmcgdW5pZm9ybWVkIGF1dGhvciBuYW1lcyB0byB0aGUgZWdvIGxldmVsIGRhdGENCmRmX2VnbzEkdW5hYW08LWZ1bmlmb3JtX3N0cmluZyhkZl9lZ28xJG5hYW0pDQoNCiNNZXJnaW5nIHRoZSBJQ1MgdmFyaWFibGVzIGludG8gdGhlIGVnbyBsZXZlbCBkYXRhDQpkZl9lZ28yPC1tZXJnZSh4PWRmX2VnbzEseT1pY3NGLGFsbC54PVRSVUUpDQoNCiNSZXBsYWNpbmcgbWlzc2luZ3Mgb24gdGhlIElDUyB2YXJpYWJsZXMgd2l0aCAwIHRvIGNvbXBsZXRlIHRoZSBkdW1taWVzDQpkZl9lZ28yJGljc0FmZmlsaWF0ZVtpcy5uYShkZl9lZ28yJGljc0FmZmlsaWF0ZSldPC0wDQpkZl9lZ28yJGljc0dyYWR1YXRlW2lzLm5hKGRmX2VnbzIkaWNzR3JhZHVhdGUpXTwtMA0KZGZfZWdvMiRpY3NBbnlbaXMubmEoZGZfZWdvMiRpY3NBbnkpXTwtMA0KDQpgYGANCg0KYGBge3IsZXZhbD1GfQ0KI1RoZSB0aGlyZCBzdGVwIGlzIHRvIG1ha2UgdGhlIG5ldHdvcmsgZGF0YSByZWFkeSBmb3IgYW5hbHlzaXMgd2l0aCBSU2llbmENCg0KI01ha2luZyB3YXZlcw0Kd2F2ZTEgPSBzbmRhdGExJG5ldHNbMSwsXQ0Kd2F2ZTIgPSBzbmRhdGExJG5ldHNbMiwsXQ0Kd2F2ZTMgPSBzbmRhdGExJG5ldHNbMywsXQ0KDQojTWFraW5nIHRoZSB3YXZlcyBiYWNrIGludG8gYSBzaW5nbGUgZmlsZQ0KbmV0cyA9IGFycmF5KA0KICAgIGRhdGEgPSBjKHdhdmUxLCB3YXZlMiwgd2F2ZTMpLA0KICAgIGRpbSA9IGMoZGltKHdhdmUyKSwgMikpDQoNCiNNYWtpbmcgdGhlIFJTaWVuYSBub21pbmF0aW9uIG1hdHJpeA0KbmV0ID0gc2llbmFEZXBlbmRlbnQobmV0cykNCg0KYGBgDQoNCmBgYHtyLGV2YWw9Rn0NCiNCZWZvcmUgdHJhbnNmb3JtaW5nIHRoZSBlZ28gbGV2ZWwgdmFyaWFibGVzIGludG8gdGhlaXIgUlNpZW5hIHJlYWR5IGZvcm0sIA0KI3NvbWUgZGVzY3JpcHRpdmUgc3RhdGlzdGljcyBhcmUgcmVxdWlyZWQgdG8gZW5zdXJlIHRoYXQgc3RyYW5nZSBhbmQgbWlzc2luZyB2YWx1ZXMgYXJlIG5vdCBjYXJyaWVkIG92ZXINCg0KI1ZBUklBQkVMRU4gRElFIElLIFdJTDogZnVuY3RpZShvcmRpbmFhbCBtYWtlbiksIHVuaXZlcnNpdGVpdCwgZ2VuZGVyLCBpY3MgZGluZ2VuLCANCg0KI0ZpcnN0IG9mLCB0aGUgJ3VuaXZlcnNpdGVpdCcgdmFyaWFibGVzIGZvciBlYWNoIHllYXINCiNUaGVzZSB2YXJpYWJsZXMgaW5kaWNhdGUgZm9yIGVhY2ggc29jaW9sb2dpc3QgaW4gdGhlIGRhdGEgYXQgd2hpY2ggdW5pdmVyc2l0eSB0aGV5IHdvcmtlZCBpbiBlYWNoIHllYXINCg0KI0NhbGxpbmcgZnJlcXVlbmN5IHRhYmxlcw0KdGFibGUoZGZfZWdvMiR1bml2ZXJzaXRlaXQuMjIsdXNlTkE9J2Fsd2F5cycpDQp0YWJsZShkZl9lZ28yJHVuaXZlcnNpdGVpdC4yNCx1c2VOQT0nYWx3YXlzJykNCnRhYmxlKGRmX2VnbzIkdW5pdmVyc2l0ZWl0LjI1LHVzZU5BPSdhbHdheXMnKQ0KDQojVGhlIGZyZXF1ZW5jeSB0YWJsZXMgc2hvdyB0aGF0IHRoZXJlIGFyZSBzZXZlcmFsIHNvY2lvbG9naXN0IHdobyB3b3JrIGF0IHR3byB1bml2ZXJzaXRpZXMNCiNTb21lIG9mIHRoZXNlIHdvcmsgYXQgYSBEdXRjaCB1bml2ZXJzaXR5IGFuZCBhIGZvcmVpZ24gb25lLCANCiN0aG9zZSBjYXNlcyBhcmUgbm93IHJlY29kZWQgdG8gaW5jbHVkZSBvbmx5IHRoZSBEdXRjaCB1bml2ZXJzaXR5DQpkZl9lZ28zPC1kZl9lZ28yDQpkZl9lZ28zJHVuaXZlcnNpdGVpdC4yMjwtZ3N1YignRVVSL0Jvc3RvbiBVbml2ZXJzaXR5JywgJ0VVUicsIGRmX2VnbzMkdW5pdmVyc2l0ZWl0LjIyKQ0KZGZfZWdvMyR1bml2ZXJzaXRlaXQuMjQ8LWdzdWIoJ0VVUi9Cb3N0b24gVW5pdmVyc2l0eScsICdFVVInLCBkZl9lZ28zJHVuaXZlcnNpdGVpdC4yNCkNCmRmX2VnbzMkdW5pdmVyc2l0ZWl0LjIyPC1nc3ViKCdSVUcvVFUgRGVsZnQnLCAnUlVHJywgZGZfZWdvMyR1bml2ZXJzaXRlaXQuMjIpDQpkZl9lZ28zJHVuaXZlcnNpdGVpdC4yNDwtZ3N1YignUlVHL1RVIERlbGZ0JywgJ1JVRycsIGRmX2VnbzMkdW5pdmVyc2l0ZWl0LjI0KQ0KZGZfZWdvMyR1bml2ZXJzaXRlaXQuMjI8LWdzdWIoJ1JVRy9Vbml2ZXJzaXRlaXQgU3RvY2tob2xtJywgJ1JVRycsIGRmX2VnbzMkdW5pdmVyc2l0ZWl0LjIyKQ0KZGZfZWdvMyR1bml2ZXJzaXRlaXQuMjQ8LWdzdWIoJ1JVRy9Vbml2ZXJzaXRlaXQgU3RvY2tob2xtJywgJ1JVRycsIGRmX2VnbzMkdW5pdmVyc2l0ZWl0LjI0KQ0KZGZfZWdvMyR1bml2ZXJzaXRlaXQuMjI8LWdzdWIoJ1JVRy9Vbml2ZXJzaXR5IExpbmvDtnBpbmcnLCAnUlVHJywgZGZfZWdvMyR1bml2ZXJzaXRlaXQuMjIpDQpkZl9lZ28zJHVuaXZlcnNpdGVpdC4yNDwtZ3N1YignUlVHL1VuaXZlcnNpdHkgTGlua8O2cGluZycsICdSVUcnLCBkZl9lZ28zJHVuaXZlcnNpdGVpdC4yNCkNCmRmX2VnbzMkdW5pdmVyc2l0ZWl0LjIyPC1nc3ViKCdSVUcvVW5pdmVyc2l0eSBvZiBUdXJrdScsICdSVUcnLCBkZl9lZ28zJHVuaXZlcnNpdGVpdC4yMikNCmRmX2VnbzMkdW5pdmVyc2l0ZWl0LjI0PC1nc3ViKCdSVUcvVW5pdmVyc2l0eSBvZiBUdXJrdScsICdSVUcnLCBkZl9lZ28zJHVuaXZlcnNpdGVpdC4yNCkNCmRmX2VnbzMkdW5pdmVyc2l0ZWl0LjIyPC1nc3ViKCdVdkEvRnJhbmtmdXJ0IFNjaG9vbCBvZiBGaW5hbmNlICYgTWFuYWdlbWVudCcsICdVdkEnLCBkZl9lZ28zJHVuaXZlcnNpdGVpdC4yMikNCmRmX2VnbzMkdW5pdmVyc2l0ZWl0LjI0PC1nc3ViKCdVdkEvRnJhbmtmdXJ0IFNjaG9vbCBvZiBGaW5hbmNlICYgTWFuYWdlbWVudCcsICdVdkEnLCBkZl9lZ28zJHVuaXZlcnNpdGVpdC4yNCkNCmRmX2VnbzMkdW5pdmVyc2l0ZWl0LjIyPC1nc3ViKCdVdkEvVW5pdmVyc2l0eSBvZiBMYXVzYW5uZScsICdVdkEnLCBkZl9lZ28zJHVuaXZlcnNpdGVpdC4yMikNCmRmX2VnbzMkdW5pdmVyc2l0ZWl0LjI0PC1nc3ViKCdVdkEvVW5pdmVyc2l0eSBvZiBMYXVzYW5uZScsICdVdkEnLCBkZl9lZ28zJHVuaXZlcnNpdGVpdC4yNCkNCmRmX2VnbzMkdW5pdmVyc2l0ZWl0LjIyPC1nc3ViKCdVdlQvVHJlbnRvIFVuaXZlcnNpdHknLCAnVXZUJywgZGZfZWdvMyR1bml2ZXJzaXRlaXQuMjIpDQpkZl9lZ28zJHVuaXZlcnNpdGVpdC4yNDwtZ3N1YignVXZUL1RyZW50byBVbml2ZXJzaXR5JywgJ1V2VCcsIGRmX2VnbzMkdW5pdmVyc2l0ZWl0LjI0KQ0KZGZfZWdvMyR1bml2ZXJzaXRlaXQuMjI8LWdzdWIoJ1ZVL1V2SCcsICdWVScsIGRmX2VnbzMkdW5pdmVyc2l0ZWl0LjIyKQ0KZGZfZWdvMyR1bml2ZXJzaXRlaXQuMjQ8LWdzdWIoJ1ZVL1V2SCcsICdWVScsIGRmX2VnbzMkdW5pdmVyc2l0ZWl0LjI0KQ0KZGZfZWdvMyR1bml2ZXJzaXRlaXQuMjQ8LWdzdWIoJ1JVRy9Vbml2ZXJzaXR5IG9mIExlaXB6aWcnLCAnUlVHJywgZGZfZWdvMyR1bml2ZXJzaXRlaXQuMjQpDQoNCiNBbmQgbWFrZSBvbmx5IGZvcmVpZ24gdW5pdmVyc2l0eSBpbnRvIE5BIGFuZCByZW1vdmUgcXVlc3Rpb24gbWFya3MNCmRmX2VnbzMkdW5pdmVyc2l0ZWl0LjI0PC1nc3ViKCdVbml2ZXJzaXR5IG9mIENvbG9nbmUnLCBOQSwgZGZfZWdvMyR1bml2ZXJzaXRlaXQuMjQpDQpkZl9lZ28zJHVuaXZlcnNpdGVpdC4yNDwtZ3N1YignWz9dJywgJycsIGRmX2VnbzMkdW5pdmVyc2l0ZWl0LjI0KQ0KDQojQ2hlY2tpbmcgdGhlIGZyZXF1ZW5jaWVzIGFnYWluDQp0YWJsZShkZl9lZ28zJHVuaXZlcnNpdGVpdC4yMix1c2VOQT0nYWx3YXlzJykNCnRhYmxlKGRmX2VnbzMkdW5pdmVyc2l0ZWl0LjI0LHVzZU5BPSdhbHdheXMnKQ0KdGFibGUoZGZfZWdvMyR1bml2ZXJzaXRlaXQuMjUsdXNlTkE9J2Fsd2F5cycpDQoNCiNOb3cgbW9zdCBvZiB0aGUgY2FzZXMgYXJlIGZpbmUsIGV4Y2VwdCBmb3IgdGhlIGZldyB0aGF0IGhhdmUgdHdvIHVuaXZlcnNpdGllcw0KI0ZvciB0aGVzZSBjYXNlcyB0aGUgZmlyc3Qgb2YgdGhlIHR3byByZXBvcnRlZCB1bml2ZXJzaXRpZXMgaXMgdGFrZW4gYXMgcHJpbWFyeSwNCiNhbmQgaXMgdGh1cyBzZWxlY3RlZCBhcyB0aGUgdmFsdWUgb2YgdGhlIHVuaXZlcnNpdHkgdmFyaWFibGUNCiNMb3NzIG9mIGluZm9ybWF0aW9uIHdhcyBhY2NlcHRlZCBpbiB0aGlzIGNhc2UgYmVjYXVzZSBhZGRpbmcgYSAnc2Vjb25kIHVuaXZlcnNpdHknIHZhcmlhYmxlIGZvciA1IHNvY2lvbG9naXN0cw0KI3dvdWxkIG1lYW4gY2hhbmdpbmcgdGhlIGFuYWx5c2lzIHF1aXRlIHN1YnN0YW50aWFsbHkgZm9yIHdoYXQgaXMgbGlrZWx5IHRvIGJlIG5vIHNpZ25pZmljYW50IGRpZmZlcmVuY2UNCmRmX2VnbzMkdW5pdmVyc2l0ZWl0LjIyPC1nc3ViKCdSVS9SVUcnLCAnUlUnLCBkZl9lZ28zJHVuaXZlcnNpdGVpdC4yMikNCmRmX2VnbzMkdW5pdmVyc2l0ZWl0LjI0PC1nc3ViKCdSVS9SVUcnLCAnUlUnLCBkZl9lZ28zJHVuaXZlcnNpdGVpdC4yNCkNCmRmX2VnbzMkdW5pdmVyc2l0ZWl0LjIyPC1nc3ViKCdSVUcvUlUnLCAnUlVHJywgZGZfZWdvMyR1bml2ZXJzaXRlaXQuMjIpDQpkZl9lZ28zJHVuaXZlcnNpdGVpdC4yNDwtZ3N1YignUlVHL1JVJywgJ1JVRycsIGRmX2VnbzMkdW5pdmVyc2l0ZWl0LjI0KQ0KZGZfZWdvMyR1bml2ZXJzaXRlaXQuMjI8LWdzdWIoJ1JVRy9UaWxidXJnJywgJ1JVRycsIGRmX2VnbzMkdW5pdmVyc2l0ZWl0LjIyKQ0KZGZfZWdvMyR1bml2ZXJzaXRlaXQuMjQ8LWdzdWIoJ1JVRy9UaWxidXJnJywgJ1JVRycsIGRmX2VnbzMkdW5pdmVyc2l0ZWl0LjI0KQ0KZGZfZWdvMyR1bml2ZXJzaXRlaXQuMjI8LWdzdWIoJ1V2QS9FVVInLCAnVXZBJywgZGZfZWdvMyR1bml2ZXJzaXRlaXQuMjIpDQpkZl9lZ28zJHVuaXZlcnNpdGVpdC4yMjwtZ3N1YignVVUvVXZBJywgJ1VVJywgZGZfZWdvMyR1bml2ZXJzaXRlaXQuMjIpDQpkZl9lZ28zJHVuaXZlcnNpdGVpdC4yNDwtZ3N1YignVVUvVXZBJywgJ1VVJywgZGZfZWdvMyR1bml2ZXJzaXRlaXQuMjQpDQoNCiNDaGVja2luZyBmcmVxdWVuY2llcyBhZ2Fpbg0KdGFibGUoZGZfZWdvMyR1bml2ZXJzaXRlaXQuMjIsdXNlTkE9J2Fsd2F5cycpDQp0YWJsZShkZl9lZ28zJHVuaXZlcnNpdGVpdC4yNCx1c2VOQT0nYWx3YXlzJykNCnRhYmxlKGRmX2VnbzMkdW5pdmVyc2l0ZWl0LjI1LHVzZU5BPSdhbHdheXMnKQ0KDQojVGhlcmUgYXJlIG5vIG1vcmUgc3RyYW5nZSB2YWx1ZXMgZm9yIHRoZSAndW5pdmVyc2l0ZWl0JyB2YXJpYWJsZXMNCiNOb3cgb24gdG8gdGhlICdmdW5jdGllJyB2YXJpYWJsZXMsIHRoZXNlIHNob3cgdGhlIHNvY2lvbG9naXN0cycgam9iIHRpdGxlcw0KdGFibGUoZGZfZWdvMyRmdW5jdGllLjIyLHVzZU5BPSdhbHdheXMnKQ0KdGFibGUoZGZfZWdvMyRmdW5jdGllLjI0LHVzZU5BPSdhbHdheXMnKQ0KdGFibGUoZGZfZWdvMyRmdW5jdGllLjI1LHVzZU5BPSdhbHdheXMnKQ0KDQojVGhlcmUgaXMgb25lIHNsaWdodGx5IG5vbmRlc2NyaXB0IHZhbHVlIGhlcmUsIG5hbWVseSAnc3RhZmYnDQojRm9yIHRoZSBmZXcgcGVvcGxlIHdpdGggdGhpcyB2YWx1ZSwgDQojSSBkZWNpZGVkIHRvIGZpcnN0IHNlZSBpZiBhIG1vcmUgaW5mb3JtYXRpdmUgdGl0bGUgaXMgZ2l2ZW4gaW4gYW5vdGhlciB5ZWFyLCANCiN0aGVuIGNoZWNrIHVuaXZlcnNpdHkgd2Vic2l0ZXMgYW5kIHNvY2lhbCBtZWRpYQ0KI05pbmUgc29jaW9sb2dpc3Qgd2VyZSBnaXZlbiBtb3JlIGluZm9ybWF0aXZlIHZhbHVlcyBmb3IgdGhlIGZ1bmN0aW9uIHZhcmlhYmxlIHRoaXMgd2F5DQpkZl9lZ28zJGZ1bmNzdWI8LWRmX2VnbzMkZnVuY3RpZS4yMg0KZGZfZWdvM1s4NiwnZnVuY3N1YiddPC0nUGhEIENhbmRpZGF0ZScNCmRmX2VnbzNbODksJ2Z1bmNzdWInXTwtJ1Jlc2VhcmNoZXInDQpkZl9lZ28zWzE0MywnZnVuY3N1YiddPC0nQXNzaXN0YW50IFByb2Zlc3NvcicNCmRmX2VnbzNbMTkwLCdmdW5jc3ViJ108LSdMZWN0dXJlcicNCmRmX2VnbzNbMjg0LCdmdW5jc3ViJ108LSdMZWN0dXJlcicNCmRmX2VnbzNbMzg1LCdmdW5jc3ViJ108LSdSZXNlYXJjaGVyJw0KZGZfZWdvM1s0MTgsJ2Z1bmNzdWInXTwtJ0Z1bGwgUHJvZmVzc29yJw0KZGZfZWdvM1s0MTksJ2Z1bmNzdWInXTwtJ1Jlc2VhcmNoZXInDQpkZl9lZ28zWzQzMSwnZnVuY3N1YiddPC0nTGVjdHVyZXInDQoNCiNDaGVjayBkaXN0cmlidXRpb24NCnRhYmxlKGRmX2VnbzMkZnVuY3N1Yix1c2VOQT0nYWx3YXlzJykNCg0KI0xhc3RseSB0aGVyZSBpcyB0aGUgZ2VuZGVyIHZhcmlhYmxlLCB3aGljaCBoYXMgZml2ZSBtaXNzaW5ncw0KdGFibGUoZGZfZWdvMyRnZW5kZXIsdXNlTkE9J2Fsd2F5cycpDQoNCiNUaGVzZSBtaXNzaW5ncyB3ZXJlIGltcHV0ZWQgYnkgZ29vZ2xpbmcgdGhlaXIgbmFtZSBhbmQgdGhlIHVuaXZlcnNpdHkgdGhleSB3b3JrIGF0DQojQSBwaWN0dXJlIHdhcyBmb3VuZCBmb3IgYWxsIGZpdmUsIGdlbmRlciB3YXMgaW5mZXJyZWQgYmFzZWQgb24gZ2VuZGVyIHNpZ25pZmllcnMgc2VlbiBpbiB0aGUgcGljdHVyZXMNCiNNYWluIHNpZ25pZmllcnMgdXNlZCB3ZXJlIGxlbmd0aCBvZiBoYWlyIGFuZCBwcmVzZW5jZSBvZiBwcm9taW5lbnQgZmFjaWFsIGhhaXINCmRmX2VnbzNbMTIzLCdnZW5kZXInXTwtJ2ZlbWFsZScNCmRmX2VnbzNbMjM3LCdnZW5kZXInXTwtJ21hbGUnDQpkZl9lZ28zWzM3NSwnZ2VuZGVyJ108LSdmZW1hbGUnDQpkZl9lZ28zWzQxMiwnZ2VuZGVyJ108LSdtYWxlJw0KZGZfZWdvM1s0NjIsJ2dlbmRlciddPC0nZmVtYWxlJw0KDQojQ2hlY2tpbmcgdG8gbWFrZSBzdXJlIHRoZXJlIGFyZSBubyBtb3JlIG1pc3NpbmdzIGZvciBnZW5kZXINCnRhYmxlKGRmX2VnbzMkZ2VuZGVyLHVzZU5BPSdhbHdheXMnKQ0KDQojQW5kIG5vdyB0aGUgdmFyaWFibGVzIGFyZSByZWFkeSBmb3IgdHJhbnNmb3JtYXRpb24gaW50byB0aGUgZm9ybSB0aGF0IHdpbGwgYmUgdXNlZCBpbiBhbmFseXNpcw0KYGBgDQoNCmBgYHtyLGV2YWw9Rn0NCiNOb3cgdG8gdHJhbnNmb3JtIHRoZSB0aHJlZSBlZ28gbGV2ZWwgdmFyaWFibGVzIGZyb20gdGhlIG9yaWdpbmFsIGRhdGENCg0KI1N0YXJ0aW5nIHdpdGggJ3VuaXZlcnNpdHknDQojSSB3YW50IHRoZXJlIHRvIGJlIG9uZSB2YXJpYWJsZSBpbmRpY2F0aW5nIHRoZSB1bml2ZXJzaXR5IGVhY2ggc29jaW9sb2dpc3QgaXMgbW9zdCBhZmZpbGlhdGVkIHdpdGgNCiNCeSBtb3N0IGFmZmlsaWF0ZWQgSSBtYWlubHkgbWVhbiBob3cgbG9uZyB0aGV5IHdlcmUgYWZmaWxpYXRlZCB3aXRoIGEgdW5pdmVyc2l0eSwgc28gd2hlcmUgdGhleSB3b3VsZCBoYXZlDQojc3BlbnQgdGhlIG1vc3QgdGltZSBhbmQgcHJlc3VtYWJseSwgYXMgaXMgbW9zdCByZWxldmFudCwgY29sbGFib3JhdGVkIG1vc3QNCiNBcyBzdWNoLCB0aGUgYmFzaXMgZm9yIHRoZSAndW5pdmVyc2l0eScgdmFyaWFibGUgd2lsbCBiZSB0aGUgJ3VuaXZlcnNpdGVpdC4yMicgdmFyaWFibGUsIHdpdGggYW55IG1pc3NpbmcNCiN2YWx1ZXMgb24gdGhpcyB2YXJpYWJsZSBiZWluZyBzdXBwbGVtZW50ZWQgZmlyc3Qgd2l0aCAndW5pdmVyc2l0ZWl0LjI0JyBhbmQgdGhlbiAndW5pdmVyc2l0ZWl0LjI1JyBpZiBuZWVkZWQNCg0KI0luIG9yZGVyIHRvIGRvIHRoaXMsIHRoZSB1bml2ZXJzaXRpZXMgd2l0aCB0aHJlZSBsZXR0ZXIgYWJicmV2aWF0aW9ucyBhcmUgYWJicmV2aWF0ZWQgdG8gdHdvIGxldHRlcnMNCiMyMDIyDQpkZl9lZ28zJHVuaTIyPC1kZl9lZ28zJHVuaXZlcnNpdGVpdC4yMg0KZGZfZWdvMyR1bmkyMjwtZ3N1YignRVVSJywnRVUnLGRmX2VnbzMkdW5pMjIpDQpkZl9lZ28zJHVuaTIyPC1nc3ViKCdSVUcnLCdVRycsZGZfZWdvMyR1bmkyMikNCmRmX2VnbzMkdW5pMjI8LWdzdWIoJ1V2QScsJ1VBJyxkZl9lZ28zJHVuaTIyKQ0KZGZfZWdvMyR1bmkyMjwtZ3N1YignVXZUJywnVVQnLGRmX2VnbzMkdW5pMjIpDQoNCiMyMDI0DQpkZl9lZ28zJHVuaTI0PC1kZl9lZ28zJHVuaXZlcnNpdGVpdC4yNA0KZGZfZWdvMyR1bmkyNDwtZ3N1YignRVVSJywnRVUnLGRmX2VnbzMkdW5pMjQpDQpkZl9lZ28zJHVuaTI0PC1nc3ViKCdSVUcnLCdVRycsZGZfZWdvMyR1bmkyNCkNCmRmX2VnbzMkdW5pMjQ8LWdzdWIoJ1V2QScsJ1VBJyxkZl9lZ28zJHVuaTI0KQ0KZGZfZWdvMyR1bmkyNDwtZ3N1YignVXZUJywnVVQnLGRmX2VnbzMkdW5pMjQpDQoNCiMyMDI1DQpkZl9lZ28zJHVuaTI1PC1kZl9lZ28zJHVuaXZlcnNpdGVpdC4yNQ0KZGZfZWdvMyR1bmkyNTwtZ3N1YignRVVSJywnRVUnLGRmX2VnbzMkdW5pMjUpDQpkZl9lZ28zJHVuaTI1PC1nc3ViKCdSVUcnLCdVRycsZGZfZWdvMyR1bmkyNSkNCmRmX2VnbzMkdW5pMjU8LWdzdWIoJ1V2QScsJ1VBJyxkZl9lZ28zJHVuaTI1KQ0KZGZfZWdvMyR1bmkyNTwtZ3N1YignVXZUJywnVVQnLGRmX2VnbzMkdW5pMjUpDQoNCiNDaGVjayBpZiB0aGlzIHdvcmtlZA0KdGFibGUoZGZfZWdvMyR1bmkyMixkZl9lZ28zJHVuaXZlcnNpdGVpdC4yMix1c2VOQT0nYWx3YXlzJykNCnRhYmxlKGRmX2VnbzMkdW5pMjQsZGZfZWdvMyR1bml2ZXJzaXRlaXQuMjQsdXNlTkE9J2Fsd2F5cycpDQp0YWJsZShkZl9lZ28zJHVuaTI1LGRmX2VnbzMkdW5pdmVyc2l0ZWl0LjI1LHVzZU5BPSdhbHdheXMnKQ0KDQojVGhpcyB3b3JrZWQsIGFsbCB1bml2ZXJzaXRpZXMgbm93IHVzZSB0d28gbGV0dGVyIGFiYnJldmlhdGlvbnMNCiNOb3cgdG8gbWFrZSBvbmUgdmFyaWFibGUgd2hpY2ggaW5jbHVkZXMgb25seSB0aGUgZWFybGllc3QgdW5pdmVyc2l0eSBhdmFpbGFibGUgZm9yIGVhY2ggc29jaW9sb2dpc3QNCmRmX2VnbzMkdW5pdmVyc2l0eTwtcGFzdGUoZGZfZWdvMyR1bmkyMixkZl9lZ28zJHVuaTI0LGRmX2VnbzMkdW5pMjUpDQpkZl9lZ28zJHVuaXZlcnNpdHk8LWdzdWIoJ05BJywnJyxkZl9lZ28zJHVuaXZlcnNpdHkpDQpkZl9lZ28zJHVuaXZlcnNpdHk8LWdzdWIoJyAnLCcnLGRmX2VnbzMkdW5pdmVyc2l0eSkNCmRmX2VnbzMkdW5pdmVyc2l0eTwtc3Vic3RyKGRmX2VnbzMkdW5pdmVyc2l0eSxzdGFydD0xLHN0b3A9MikNCg0KI0NoZWNrIGlmIHRoaXMgd29ya2VkIGJ5IGluc3BlY3RpbmcgYSBsaXN0DQp1bml2ZXJzaXR5Q2hlY2s8LWNiaW5kLmRhdGEuZnJhbWUoZGZfZWdvMyR1bmkyMixkZl9lZ28zJHVuaTI0LGRmX2VnbzMkdW5pMjUsZGZfZWdvMyR1bml2ZXJzaXR5KQ0Kdmlldyh1bml2ZXJzaXR5Q2hlY2spDQpybSh1bml2ZXJzaXR5Q2hlY2spDQoNCiNEaXN0cmlidXRpb24gb2YgdGhlIG5ldyAndW5pdmVyc2l0eScgdmFyaWFibGUNCnRhYmxlKGRmX2VnbzMkdW5pdmVyc2l0eSx1c2VOQT0nYWx3YXlzJykNCg0KI05vdyBhcyBhIGZpbmFsIHRyYW5zZm9ybWF0aW9uLCB0aGUgdmFyaWFibGUgd2lsbCBiZSBtYWRlIG51bWVyaWMgZm9yIHVzZSBpbiBSU2llbmENCmRmX2VnbzMkdW5pdmVyc2l0eU48LWRmX2VnbzMkdW5pdmVyc2l0eQ0KZGZfZWdvMyR1bml2ZXJzaXR5TjwtZ3N1YignRVUnLDAsZGZfZWdvMyR1bml2ZXJzaXR5TikNCmRmX2VnbzMkdW5pdmVyc2l0eU48LWdzdWIoJ1JVJywxLGRmX2VnbzMkdW5pdmVyc2l0eU4pDQpkZl9lZ28zJHVuaXZlcnNpdHlOPC1nc3ViKCdVQScsMixkZl9lZ28zJHVuaXZlcnNpdHlOKQ0KZGZfZWdvMyR1bml2ZXJzaXR5TjwtZ3N1YignVUcnLDMsZGZfZWdvMyR1bml2ZXJzaXR5TikNCmRmX2VnbzMkdW5pdmVyc2l0eU48LWdzdWIoJ1VUJyw0LGRmX2VnbzMkdW5pdmVyc2l0eU4pDQpkZl9lZ28zJHVuaXZlcnNpdHlOPC1nc3ViKCdVVScsNSxkZl9lZ28zJHVuaXZlcnNpdHlOKQ0KZGZfZWdvMyR1bml2ZXJzaXR5TjwtZ3N1YignVlUnLDYsZGZfZWdvMyR1bml2ZXJzaXR5TikNCg0KI0ZpbmFsIGNoZWNrDQp0YWJsZShkZl9lZ28zJHVuaXZlcnNpdHksZGZfZWdvMyR1bml2ZXJzaXR5TikNCg0KYGBgDQoNCmBgYHtyLGV2YWw9Rn0NCiNUaGUgbmV4dCB2YXJpYWJsZSB0byB0cmFuc2Zvcm0gaXMgJ2Z1bmN0aW9uJw0KI1RoZSBzYW1lIGxvZ2ljIGlzIGFwcGxpZWQgaGVyZSwgdGhlIGdvYWwgaXMgb25lIHZhcmlhYmxlIHdoaWNoIGluZGljYXRlcyB3aGljaCBmdW5jdGlvbiBlYWNoIHNvY2lvbG9naXN0IGhhZA0KI1RoZSAyMDIyIGZ1bmN0aW9uIGlzIHByZWZlcnJlZCB0byAyMDI0IGFuZCAyMDI1IGZ1bmN0aW9ucywgYWdhaW4gd2l0aCB0aGUgYXJndW1lbnQgdGhhdCBhbnkgY2hhbmdlcyBpbiBmdW5jdGlvbg0KI3doaWNoIG9jY3VyZWQgdGhpcyB5ZWFyICgyMDI1KSBvciBsYXN0IHllYXIgKDIwMjQpIGNvbXBhcmVkIHRvIDIwMjIgd291bGQgaGF2ZSBoYWQgbGVzcyBvZiBhbiBlZmZlY3Qgb24gdGhlIA0KI3B1YmxpY2F0aW9uIHJlY29yZCBhbmQgY29sbGFib3JhdGlvbnMgb2YgZWFjaCBzb2Npb2xvZ2lzdCB0aGFuIHRoZSBmdW5jdGlvbiB0aGV5IGhhZCBpbiAyMDIyLg0KDQojQmVjYXVzZSBvZiB0aGUgbW9yZSBoZXRlcm9nZW5vdXMgc3RyaW5nIGxlbmd0aCBvZiB0aGUgZnVuY3Rpb24gdmFyaWFibGVzIGFzIGNvbXBhcmVkIHRvIHRoZSB1bml2ZXJzaXR5IA0KI3ZhcmlhYmxlcywgdGhleSBhcmUgZmlyc3QgbWFkZSBpbnRvIG51bWJlcnMsIHRoZW4gY29tYmluZWQsIHRoZW4gdGhlIGZpcnN0IGlzIHNlbGVjdGVkLCB3aGljaCBpcyB0aGVuDQojdHJhbnNmb3JtZWQgYmFjayBpbnRvIHRoZSBvcmlnaW5hbCBzdHJpbmcNCg0KI01ha2luZyB0aGUgZnVuY3Rpb24gdmFyaWFibGVzIGludG8gbnVtYmVycw0KIzIwMjIgKGZ1bmNzdWIgaXMgdXNlZCBiZWNhdXNlIGl0IGhhcyB0aGUgaW1wdXRlZCBtaXNzaW5ncykNCmRmX2VnbzMkZnVuYzIyPC1kZl9lZ28zJGZ1bmNzdWINCmRmX2VnbzMkZnVuYzIyPC1nc3ViKCdQaEQgQ2FuZGlkYXRlJywnMCcsZGZfZWdvMyRmdW5jMjIpDQpkZl9lZ28zJGZ1bmMyMjwtZ3N1YignUG9zdGRvY3RvcmFsIFJlc2VhcmNoZXInLCcxJyxkZl9lZ28zJGZ1bmMyMikNCmRmX2VnbzMkZnVuYzIyPC1nc3ViKCdMZWN0dXJlcicsJzInLGRmX2VnbzMkZnVuYzIyKQ0KZGZfZWdvMyRmdW5jMjI8LWdzdWIoJ1Jlc2VhcmNoZXInLCczJyxkZl9lZ28zJGZ1bmMyMikNCmRmX2VnbzMkZnVuYzIyPC1nc3ViKCdBc3Npc3RhbnQgUHJvZmVzc29yJywnNCcsZGZfZWdvMyRmdW5jMjIpDQpkZl9lZ28zJGZ1bmMyMjwtZ3N1YignQXNzb2NpYXRlIFByb2Zlc3NvcicsJzUnLGRmX2VnbzMkZnVuYzIyKQ0KZGZfZWdvMyRmdW5jMjI8LWdzdWIoJ0Z1bGwgUHJvZmVzc29yJywnNicsZGZfZWdvMyRmdW5jMjIpDQoNCiMyMDI0DQpkZl9lZ28zJGZ1bmMyNDwtZGZfZWdvMyRmdW5jdGllLjI0DQpkZl9lZ28zJGZ1bmMyNDwtZ3N1YignUGhEIENhbmRpZGF0ZScsJzAnLGRmX2VnbzMkZnVuYzI0KQ0KZGZfZWdvMyRmdW5jMjQ8LWdzdWIoJ1Bvc3Rkb2N0b3JhbCBSZXNlYXJjaGVyJywnMScsZGZfZWdvMyRmdW5jMjQpDQpkZl9lZ28zJGZ1bmMyNDwtZ3N1YignTGVjdHVyZXInLCcyJyxkZl9lZ28zJGZ1bmMyNCkNCmRmX2VnbzMkZnVuYzI0PC1nc3ViKCdSZXNlYXJjaGVyJywnMycsZGZfZWdvMyRmdW5jMjQpDQpkZl9lZ28zJGZ1bmMyNDwtZ3N1YignQXNzaXN0YW50IFByb2Zlc3NvcicsJzQnLGRmX2VnbzMkZnVuYzI0KQ0KZGZfZWdvMyRmdW5jMjQ8LWdzdWIoJ0Fzc29jaWF0ZSBQcm9mZXNzb3InLCc1JyxkZl9lZ28zJGZ1bmMyNCkNCmRmX2VnbzMkZnVuYzI0PC1nc3ViKCdGdWxsIFByb2Zlc3NvcicsJzYnLGRmX2VnbzMkZnVuYzI0KQ0KDQojMjAyNQ0KZGZfZWdvMyRmdW5jMjU8LWRmX2VnbzMkZnVuY3RpZS4yNQ0KZGZfZWdvMyRmdW5jMjU8LWdzdWIoJ1BoRCBDYW5kaWRhdGUnLCcwJyxkZl9lZ28zJGZ1bmMyNSkNCmRmX2VnbzMkZnVuYzI1PC1nc3ViKCdQb3N0ZG9jdG9yYWwgUmVzZWFyY2hlcicsJzEnLGRmX2VnbzMkZnVuYzI1KQ0KZGZfZWdvMyRmdW5jMjU8LWdzdWIoJ0xlY3R1cmVyJywnMicsZGZfZWdvMyRmdW5jMjUpDQpkZl9lZ28zJGZ1bmMyNTwtZ3N1YignUmVzZWFyY2hlcicsJzMnLGRmX2VnbzMkZnVuYzI1KQ0KZGZfZWdvMyRmdW5jMjU8LWdzdWIoJ0Fzc2lzdGFudCBQcm9mZXNzb3InLCc0JyxkZl9lZ28zJGZ1bmMyNSkNCmRmX2VnbzMkZnVuYzI1PC1nc3ViKCdBc3NvY2lhdGUgUHJvZmVzc29yJywnNScsZGZfZWdvMyRmdW5jMjUpDQpkZl9lZ28zJGZ1bmMyNTwtZ3N1YignRnVsbCBQcm9mZXNzb3InLCc2JyxkZl9lZ28zJGZ1bmMyNSkNCg0KI0NoZWNrIHZhbHVlcyBpZiB0aGUgdmFsdWVzIGNvcnJlc3BvbmQNCmZ1bmN0aW9uQ2hlY2s8LWNiaW5kLmRhdGEuZnJhbWUoDQogIGRmX2VnbzMkZnVuY3N1YixkZl9lZ28zJGZ1bmMyMixkZl9lZ28zJGZ1bmN0aWUuMjQsZGZfZWdvMyRmdW5jMjQsZGZfZWdvMyRmdW5jdGllLjI1LGRmX2VnbzMkZnVuYzI1KQ0KdmlldyhmdW5jdGlvbkNoZWNrKQ0Kcm0oZnVuY3Rpb25DaGVjaykNCg0KI1RoZSB2YWx1ZXMgYXJlIGFzIGludGVuZGVkLCBub3cgdG8gbWVyZ2UgdGhlIG51bWJlcnMsIGV4dHJhY3QgdGhlIGZpcnN0IGFuZCBtYWtlIGl0IGJhY2sgaW50byBhIHdvcmQNCmRmX2VnbzMkZnVuY3Rpb25OPC1wYXN0ZShkZl9lZ28zJGZ1bmMyMixkZl9lZ28zJGZ1bmMyNCxkZl9lZ28zJGZ1bmMyNSkNCmRmX2VnbzMkZnVuY3Rpb25OPC1nc3ViKCdOQScsJycsZGZfZWdvMyRmdW5jdGlvbk4pDQpkZl9lZ28zJGZ1bmN0aW9uTjwtZ3N1YignICcsJycsZGZfZWdvMyRmdW5jdGlvbk4pDQpkZl9lZ28zJGZ1bmN0aW9uTjwtc3Vic3RyKGRmX2VnbzMkZnVuY3Rpb25OLHN0YXJ0PTEsc3RvcD0xKQ0KdGFibGUoZGZfZWdvMyRmdW5jdGlvbk4sdXNlTkE9J2Fsd2F5cycpDQoNCiNOb3cgdG8gbWFrZSB0aGUgdmFyaWFibGUgYWN0dWFsbHkgbnVtZXJpYw0KZGZfZWdvMyRmdW5jdGlvbk48LWdzdWIoJzAnLDAsZGZfZWdvMyRmdW5jdGlvbk4pDQpkZl9lZ28zJGZ1bmN0aW9uTjwtZ3N1YignMScsMSxkZl9lZ28zJGZ1bmN0aW9uTikNCmRmX2VnbzMkZnVuY3Rpb25OPC1nc3ViKCcyJywyLGRmX2VnbzMkZnVuY3Rpb25OKQ0KZGZfZWdvMyRmdW5jdGlvbk48LWdzdWIoJzMnLDMsZGZfZWdvMyRmdW5jdGlvbk4pDQpkZl9lZ28zJGZ1bmN0aW9uTjwtZ3N1YignNCcsNCxkZl9lZ28zJGZ1bmN0aW9uTikNCmRmX2VnbzMkZnVuY3Rpb25OPC1nc3ViKCc1Jyw1LGRmX2VnbzMkZnVuY3Rpb25OKQ0KZGZfZWdvMyRmdW5jdGlvbk48LWdzdWIoJzYnLDYsZGZfZWdvMyRmdW5jdGlvbk4pDQp0YWJsZShkZl9lZ28zJGZ1bmN0aW9uTix1c2VOQT0nYWx3YXlzJykNCg0KI0FuZCBjcmVhdGUgYSBzdHJpbmcgdmVyc2lvbiBmb3IgZWFzeSByZWZlcmVuY2UNCmRmX2VnbzMkZnVuY3Rpb25TPC1kZl9lZ28zJGZ1bmN0aW9uTg0KZGZfZWdvMyRmdW5jdGlvblM8LWdzdWIoJzAnLCdQaEQgQ2FuZGlkYXRlJyxkZl9lZ28zJGZ1bmN0aW9uUykNCmRmX2VnbzMkZnVuY3Rpb25TPC1nc3ViKCcxJywnUG9zdGRvY3RvcmFsIFJlc2VhcmNoZXInLGRmX2VnbzMkZnVuY3Rpb25TKQ0KZGZfZWdvMyRmdW5jdGlvblM8LWdzdWIoJzInLCdMZWN0dXJlcicsZGZfZWdvMyRmdW5jdGlvblMpDQpkZl9lZ28zJGZ1bmN0aW9uUzwtZ3N1YignMycsJ1Jlc2VhcmNoZXInLGRmX2VnbzMkZnVuY3Rpb25TKQ0KZGZfZWdvMyRmdW5jdGlvblM8LWdzdWIoJzQnLCdBc3Npc3RhbnQgUHJvZmVzc29yJyxkZl9lZ28zJGZ1bmN0aW9uUykNCmRmX2VnbzMkZnVuY3Rpb25TPC1nc3ViKCc1JywnQXNzb2NpYXRlIFByb2Zlc3NvcicsZGZfZWdvMyRmdW5jdGlvblMpDQpkZl9lZ28zJGZ1bmN0aW9uUzwtZ3N1YignNicsJ0Z1bGwgUHJvZmVzc29yJyxkZl9lZ28zJGZ1bmN0aW9uUykNCnRhYmxlKGRmX2VnbzMkZnVuY3Rpb25TLHVzZU5BPSdhbHdheXMnKQ0KDQojQ2hlY2sgaWYgdGhlIHZhbHVlcyBhcmUgY29ycmVjdA0KZnVuY3Rpb25DaGVjazwtY2JpbmQuZGF0YS5mcmFtZSgNCiAgZGZfZWdvMyRmdW5jc3ViLGRmX2VnbzMkZnVuYzIyLGRmX2VnbzMkZnVuY3RpZS4yNCxkZl9lZ28zJGZ1bmMyNCxkZl9lZ28zJGZ1bmN0aWUuMjUsZGZfZWdvMyRmdW5jMjUsDQogIGRmX2VnbzMkZnVuY3Rpb25OLGRmX2VnbzMkZnVuY3Rpb25TKQ0KdmlldyhmdW5jdGlvbkNoZWNrKQ0Kcm0oZnVuY3Rpb25DaGVjaykNCg0KI1R1cm5zIG91dCB0aGVyZSBhcmUgc3RpbGwgMTMgbWlzc2luZ3MsIHRoZXNlIGFyZSBtYXJrZWQgTkENCmRmX2VnbzNbNDYsJ2Z1bmN0aW9uTiddPC1OQQ0KZGZfZWdvM1s0NiwnZnVuY3Rpb25TJ108LU5BDQpkZl9lZ28zWzEyNSwnZnVuY3Rpb25OJ108LU5BDQpkZl9lZ28zWzEyNSwnZnVuY3Rpb25TJ108LU5BDQpkZl9lZ28zWzE3NCwnZnVuY3Rpb25OJ108LU5BDQpkZl9lZ28zWzE3NCwnZnVuY3Rpb25TJ108LU5BDQpkZl9lZ28zWzE4OCwnZnVuY3Rpb25OJ108LU5BDQpkZl9lZ28zWzE4OCwnZnVuY3Rpb25TJ108LU5BDQpkZl9lZ28zWzE5NSwnZnVuY3Rpb25OJ108LU5BDQpkZl9lZ28zWzE5NSwnZnVuY3Rpb25TJ108LU5BDQpkZl9lZ28zWzIzNywnZnVuY3Rpb25OJ108LU5BDQpkZl9lZ28zWzIzNywnZnVuY3Rpb25TJ108LU5BDQpkZl9lZ28zWzI0OCwnZnVuY3Rpb25OJ108LU5BDQpkZl9lZ28zWzI0OCwnZnVuY3Rpb25TJ108LU5BDQpkZl9lZ28zWzI3NCwnZnVuY3Rpb25OJ108LU5BDQpkZl9lZ28zWzI3NCwnZnVuY3Rpb25TJ108LU5BDQpkZl9lZ28zWzMyNCwnZnVuY3Rpb25OJ108LU5BDQpkZl9lZ28zWzMyNCwnZnVuY3Rpb25TJ108LU5BDQpkZl9lZ28zWzM1NSwnZnVuY3Rpb25OJ108LU5BDQpkZl9lZ28zWzM1NSwnZnVuY3Rpb25TJ108LU5BDQpkZl9lZ28zWzM3NSwnZnVuY3Rpb25OJ108LU5BDQpkZl9lZ28zWzM3NSwnZnVuY3Rpb25TJ108LU5BDQpkZl9lZ28zWzQwMywnZnVuY3Rpb25OJ108LU5BDQpkZl9lZ28zWzQwMywnZnVuY3Rpb25TJ108LU5BDQpkZl9lZ28zWzQ1NywnZnVuY3Rpb25OJ108LU5BDQpkZl9lZ28zWzQ1NywnZnVuY3Rpb25TJ108LU5BDQoNCiNDaGVjayBhZ2Fpbg0KdGFibGUoZGZfZWdvMyRmdW5jdGlvbk4sZGZfZWdvMyRmdW5jdGlvblMsdXNlTkE9J2Fsd2F5cycpDQoNCiNOb3cgdGhlIHN0cmluZyBhbmQgbnVtZXJpYyBmdW5jdGlvbiB2YXJpYWJsZXMgYXJlIGFzIGludGVuZGVkDQpgYGANCg0KYGBge3IsZXZhbD1GfQ0KI0xhc3RseSB0aGUgZ2VuZGVyIHZhcmlhYmxlIHdhcyBtYWRlIGludG8gYSBkdW1teQ0KZGZfZWdvMyRnZW5kZXJOPC1kZl9lZ28zJGdlbmRlcg0KZGZfZWdvMyRnZW5kZXJOPC1nc3ViKCdmZW1hbGUnLDAsZGZfZWdvMyRnZW5kZXJOKQ0KZGZfZWdvMyRnZW5kZXJOPC1nc3ViKCdtYWxlJywxLGRmX2VnbzMkZ2VuZGVyTikNCg0KI0NoZWNrIGlmIHRoZSB2YWx1ZXMgY29ycmVzcG9uZCB0byB0aGUgb3JpZ2luYWwgdmFyaWFibGUNCnRhYmxlKGRmX2VnbzMkZ2VuZGVyLGRmX2VnbzMkZ2VuZGVyTix1c2VOQT0nYWx3YXlzJykNCg0KI1RoZXkgZG8gdGhlIGdlbmRlciBkdW1teSBpcyBtYWRlDQpgYGANCg0K</div>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeSourceEmbed("FinalDataPrep.Rmd");
+  window.initializeCodeFolding("show" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

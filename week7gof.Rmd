@@ -1,0 +1,59 @@
+---
+title: "week7gof"
+author: "Tjeu Groothuijsen"
+date: "2025-10-17"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Getting to know goodness of fit in RSiena
+
+```{r, eval=F}
+#making the test data again
+
+require(RSiena)
+mynet1 <- sienaDependent(array(c(s501, s502, s503), dim=c(50, 50, 3)))
+mybeh <- sienaDependent(s50a, type="behavior")
+drink<-varCovar(s50a)
+smoke<-varCovar(s50s)
+test2data<-sienaDataCreate(mynet1,drink,smoke)
+print01Report(test2data)
+testeffects<-getEffects(test2data)
+testeffects
+testeffects<-includeEffects(testeffects,unequalX,name='mynet1',interaction1='smoke')
+testalgo<-sienaAlgorithmCreate()
+test2estimate<-siena07(testalgo,data=test2data,effects=testeffects, returnDeps=TRUE)
+test2estimate
+
+```
+
+```{r,eval=F}
+#GOF
+
+ofi0 <- sienaGOF(test2estimate, IndegreeDistribution, verbose = FALSE, join = TRUE, varName = "mynet1")
+ofi0
+plot(ofi0)
+gofo0 <- sienaGOF(ansM1, OutdegreeDistribution, verbose = FALSE, join = TRUE, levls = c(0:10, 15, 20),
+                  varName = "net")
+gof0.gd <- sienaGOF(ansM1, GeodesicDistribution, cumulative = FALSE, verbose = FALSE, join = TRUE, varName 
+                    ="net")
+
+#GOF with Relative Influence, cool graphs
+
+RI <- RSiena:::sienaRI(data = test2data, ans = test2estimate)
+class(RI)
+RSiena:::plot.sienaRI(RI, addPieChart = TRUE, legendColumns = 3)
+
+
+```
+
+```{r,eval=F}
+#I want to test the ABM approach to GOF, manipulating the parameters to see if predictions from the simulations
+#change when specific variables are included or
+
+
+
+```

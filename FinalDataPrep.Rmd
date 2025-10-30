@@ -1,0 +1,588 @@
+---
+title: "DataprepFinal"
+author: "Tjeu Groothuijsen"
+date: "2025-10-17"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+---
+This page documents the preparation of the data for use in the final assignment.
+The following steps are taken to make the data suitable for assessing whether clustering in the
+collaboration network of sociologists in the Netherlands occurs due to preferential attachment
+to colleagues who attended the same graduate school. 
+For now, I am only distinguishing ICS instead of including all graduate schools.
+This is because the ICS data is easily obtained and includes a large proportion of sociologists.
+If the proportion of sociologists affiliated with ICS turns out to be too low, more data will be sought.
+
+Plan:
+1. Loading neccesary packages and functions
+2. Webscrape data about graduates and affiliates from the ICS website, make these into a list of names
+3. Load 'scholars' data containing the sociologists and collaborations, remove polisci and irrelevant variables
+4. Match list of ICS affiliates to scholars data using names
+5. Make merged dataset suitable for analysis with RSiena
+6. Analyse descriptive statistics
+
+```{r,eval=F}
+#Loading in the necessary packages and defining functions
+
+#Empties your environment, remove hash only if you are sure everything important is saved!
+#rm(list = ls())
+
+#Defining custom functions
+
+#Jochems functions
+#fpackage.check: Check if packages are installed (and install if not) in R
+fpackage.check <- function(packages) {
+    lapply(packages, FUN = function(x) {
+        if (!require(x, character.only = TRUE)) {
+            install.packages(x, dependencies = TRUE)
+            library(x, character.only = TRUE)
+        }
+    })
+}
+
+#fsave: Save to processed data in repository
+fsave <- function(x, file = NULL, location = "./data/processed/") {
+    ifelse(!dir.exists("data"), dir.create("data"), FALSE)
+    ifelse(!dir.exists("data/processed"), dir.create("data/processed"), FALSE)
+    if (is.null(file))
+        file = deparse(substitute(x))
+    datename <- substr(gsub("[:-]", "", Sys.time()), 1, 8)
+    totalname <- paste(location, datename, file, ".rda", sep = "")
+    save(x, file = totalname)  #need to fix if file is reloaded as input name, not as x. 
+}
+
+#fload: To load the files back after an fsave
+fload <- function(filename) {
+    load(filename)
+    get(ls()[ls() != "filename"])
+}
+
+#fshowdf: To print objects (tibbles / data.frame) nicely on screen in .rmd
+fshowdf <- function(x, ...) {
+    knitr::kable(x, digits = 2, "html", ...) %>%
+        kableExtra::kable_styling(bootstrap_options = c("striped", "hover")) %>%
+        kableExtra::scroll_box(width = "100%", height = "300px")
+}
+
+#Network data helper function
+fcolnet = function(data = scholars, university = c("RU", 'UU'), discipline = "Sociologie", waves = list(c(2015,
+    2018), c(2019, 2023), c(2024, 2025)), type = c("first")) {
+
+    university = paste0('(', paste0(university, collapse='|' ), ')')
+    discipline = paste0('(', paste0(discipline, collapse='|' ), ')')
+
+    # step 1
+    demographics = data$demographics
+    sample = which(
+        (str_detect(demographics$universiteit.22, university)
+            | str_detect(demographics$universiteit.24, university)
+            | str_detect(demographics$universiteit.25, university)
+        ) & (
+            str_detect(demographics$discipline.22, discipline)
+            | str_detect(demographics$discipline.24, discipline)
+            | str_detect(demographics$discipline.25, discipline)
+        ) |> replace_na(FALSE))
+
+    demographics_soc = demographics[sample, ] |> drop_na(id)
+
+    # step 2
+    ids = demographics_soc$id |> unique()
+
+
+    scholars_sel = list() 
+    for (id_ in ids){
+        scholars_sel[[id_]] = bind_rows(scholars$works) |>
+            filter(author_id == id_)
+    }
+    scholars_sel = bind_rows(scholars$works) 
+    
+
+    nwaves = length(waves)
+    nets = array(0, dim = c(nwaves, length(ids), length(ids)), dimnames = list(wave = 1:nwaves, ids,
+        ids))
+    dimnames(nets)
+
+    # step 3
+    df_works = tibble(
+            works_id = scholars_sel$id, 
+            works_author = scholars_sel$authorships, 
+            works_year = scholars_sel$publication_year
+        )
+
+
+    df_works = df_works[!duplicated(df_works), ]
+
+    # step 4
+    if (type == "first") {
+        for (j in 1:length(waves)) {
+            df_works_w = df_works[df_works$works_year >= waves[[j]][1] & df_works$works_year <= waves[[j]][2],
+                ]
+            for (i in 1:nrow(df_works_w)) {
+                ego = df_works_w$works_author[i][[1]]$id[1]
+                alters = df_works_w$works_author[i][[1]]$id[-1]
+                if (sum(ids %in% ego) > 0 & sum(ids %in% alters) > 0) {
+                  nets[j, which(ids %in% ego), which(ids %in% alters)] = 1
+                }
+            }
+        }
+    }
+
+    if (type == "last") {
+        for (j in 1:length(waves)) {
+            df_works_w = df_works[df_works$works_year >= waves[[j]][1] & df_works$works_year <= waves[[j]][2],
+                ]
+            for (i in 1:nrow(df_works_w)) {
+                ego = rev(df_works_w$works_author[i][[1]]$id[1])
+                alters = rev(df_works_w$works_author[i][[1]]$id[-1])
+                if (sum(ids %in% ego) > 0 & sum(ids %in% alters) > 0) {
+                  nets[j, which(ids %in% ego), which(ids %in% alters)] = 1
+                }
+            }
+        }
+    }
+    if (type == "all") {
+        for (j in 1:length(waves)) {
+            df_works_w = df_works[df_works$works_year >= waves[[j]][1] & df_works$works_year <= waves[[j]][2],
+                ]
+            for (i in 1:nrow(df_works_w)) {
+                egos = df_works_w$works_author[i][[1]]$id
+                if (sum(ids %in% egos) > 0) {
+                  nets[j, which(ids %in% egos), which(ids %in% egos)] = 1
+                }
+            }
+            diag(nets[j,,]) = 0
+        }
+    }
+
+    output = list()
+    output$data = demographics_soc
+    output$nets = nets
+    return(output)
+}
+
+#String uniforming function
+funiform_string <- function(input, numbers=TRUE, spaces=TRUE, caps=TRUE){
+  string <- iconv(input, from = "UTF-8", to = "ASCII//TRANSLIT")
+  string <- gsub('-','',string)
+  if (numbers) string <- gsub('[0-9]','',string)
+  if (spaces) string <- gsub(' ','',string)
+  if (caps) string <- tolower(string)
+  return(string)
+}
+
+#Checking for required packages
+packages = c("RSiena", "devtools", "igraph", "tidyverse", "xml2", "rvest", "dplyr", "stringr")
+fpackage.check(packages)
+
+```
+
+```{r,eval=F}
+#First step is to scrape the ICS website for graduates and affiliates
+#We want to have a list of names and two dummy variables, one for graduation and one for affiliation
+#Being able to distinguish between the two will allow us to capture older sociologists who are within
+  #the scope of the theory, but could not have studied at ICS because it did not exist yet
+
+#First we get the affiliates tables from https://ics-graduateschool.nl/
+
+#Faculty 
+icsfac<-read_html("https://ics-graduateschool.nl/faculty/") 
+icsfac<-icsfac %>% html_nodes("body") %>% xml_find_all("//tbody") %>% html_table() 
+icsfac<-bind_rows(icsfac) 
+icsfac$X5<-"Faculty"
+
+#Postdocs 
+icspost<-read_html("https://ics-graduateschool.nl/postdocs/") 
+icspost<-icspost %>% html_nodes("body") %>% xml_find_all("//tbody") %>% html_table() 
+icspost<-bind_rows(icspost) 
+icspost$X5<-"Postdoc"
+
+#PhDs 
+icsphd<-read_html("https://ics-graduateschool.nl/phds/") 
+icsphd<-icsphd %>% html_nodes("body") %>% xml_find_all("//tbody") %>% html_table() 
+icsphd<-bind_rows(icsphd) 
+icsphd$X5<-"PhD"
+
+#Merging into one table 
+icsA<-rbind(icsfac,icspost) 
+icsA<-rbind(icsA,icsphd)
+icsA$icsAffiliate<-1
+
+#Making first and last names into ID variable for matching
+icsA$Naam<-paste(icsA$X1,icsA$X2)
+icsA$Naam<-funiform_string(icsA$Naam)
+
+#Then we get the list of graduates from the same website
+icsG<-read_html("https://ics-graduateschool.nl/alumni-projects/")
+icsG<-icsG %>%
+  html_nodes("body") %>%
+  xml_find_all("//tbody") %>%
+  html_table()
+icsG<-bind_rows(icsG)
+icsG$icsGraduate<-1
+icsG$Naam<-funiform_string(icsG$X2)
+
+#Merging the ICS affiliates and graduates tables
+icsC<-merge(icsA, icsG, all = TRUE, by = "Naam")
+icsC$unaam<-icsC$Naam
+icsF<-icsC[c('unaam','icsAffiliate','icsGraduate')]
+icsF$icsAny<-1
+icsF[is.na(icsF)]<-0
+
+```
+
+```{r,eval=F}
+#Second step is to load and transform the collaboration network data and merge it with the ICS data
+
+#Loading the data
+scholars<-fload('C://Users/groot/Documents/RDirectory/20251016scholars.rda')
+
+#Selecting for sociologists and transforming using the network data helper function
+sndata1 = fcolnet(scholars, university = c('RU', 'UU', 'UvA', 'RUG', 'VU', 'UvT', 'EUR'))
+df_ego1 = bind_rows(sndata1$data)
+
+#Adding uniformed author names to the ego level data
+df_ego1$unaam<-funiform_string(df_ego1$naam)
+
+#Merging the ICS variables into the ego level data
+df_ego2<-merge(x=df_ego1,y=icsF,all.x=TRUE)
+
+#Replacing missings on the ICS variables with 0 to complete the dummies
+df_ego2$icsAffiliate[is.na(df_ego2$icsAffiliate)]<-0
+df_ego2$icsGraduate[is.na(df_ego2$icsGraduate)]<-0
+df_ego2$icsAny[is.na(df_ego2$icsAny)]<-0
+
+```
+
+```{r,eval=F}
+#The third step is to make the network data ready for analysis with RSiena
+
+#Making waves
+wave1 = sndata1$nets[1,,]
+wave2 = sndata1$nets[2,,]
+wave3 = sndata1$nets[3,,]
+
+#Making the waves back into a single file
+nets = array(
+    data = c(wave1, wave2, wave3),
+    dim = c(dim(wave2), 2))
+
+#Making the RSiena nomination matrix
+net = sienaDependent(nets)
+
+```
+
+```{r,eval=F}
+#Before transforming the ego level variables into their RSiena ready form, 
+#some descriptive statistics are required to ensure that strange and missing values are not carried over
+
+#VARIABELEN DIE IK WIL: functie(ordinaal maken), universiteit, gender, ics dingen, 
+
+#First of, the 'universiteit' variables for each year
+#These variables indicate for each sociologist in the data at which university they worked in each year
+
+#Calling frequency tables
+table(df_ego2$universiteit.22,useNA='always')
+table(df_ego2$universiteit.24,useNA='always')
+table(df_ego2$universiteit.25,useNA='always')
+
+#The frequency tables show that there are several sociologist who work at two universities
+#Some of these work at a Dutch university and a foreign one, 
+#those cases are now recoded to include only the Dutch university
+df_ego3<-df_ego2
+df_ego3$universiteit.22<-gsub('EUR/Boston University', 'EUR', df_ego3$universiteit.22)
+df_ego3$universiteit.24<-gsub('EUR/Boston University', 'EUR', df_ego3$universiteit.24)
+df_ego3$universiteit.22<-gsub('RUG/TU Delft', 'RUG', df_ego3$universiteit.22)
+df_ego3$universiteit.24<-gsub('RUG/TU Delft', 'RUG', df_ego3$universiteit.24)
+df_ego3$universiteit.22<-gsub('RUG/Universiteit Stockholm', 'RUG', df_ego3$universiteit.22)
+df_ego3$universiteit.24<-gsub('RUG/Universiteit Stockholm', 'RUG', df_ego3$universiteit.24)
+df_ego3$universiteit.22<-gsub('RUG/University Linköping', 'RUG', df_ego3$universiteit.22)
+df_ego3$universiteit.24<-gsub('RUG/University Linköping', 'RUG', df_ego3$universiteit.24)
+df_ego3$universiteit.22<-gsub('RUG/University of Turku', 'RUG', df_ego3$universiteit.22)
+df_ego3$universiteit.24<-gsub('RUG/University of Turku', 'RUG', df_ego3$universiteit.24)
+df_ego3$universiteit.22<-gsub('UvA/Frankfurt School of Finance & Management', 'UvA', df_ego3$universiteit.22)
+df_ego3$universiteit.24<-gsub('UvA/Frankfurt School of Finance & Management', 'UvA', df_ego3$universiteit.24)
+df_ego3$universiteit.22<-gsub('UvA/University of Lausanne', 'UvA', df_ego3$universiteit.22)
+df_ego3$universiteit.24<-gsub('UvA/University of Lausanne', 'UvA', df_ego3$universiteit.24)
+df_ego3$universiteit.22<-gsub('UvT/Trento University', 'UvT', df_ego3$universiteit.22)
+df_ego3$universiteit.24<-gsub('UvT/Trento University', 'UvT', df_ego3$universiteit.24)
+df_ego3$universiteit.22<-gsub('VU/UvH', 'VU', df_ego3$universiteit.22)
+df_ego3$universiteit.24<-gsub('VU/UvH', 'VU', df_ego3$universiteit.24)
+df_ego3$universiteit.24<-gsub('RUG/University of Leipzig', 'RUG', df_ego3$universiteit.24)
+
+#And make only foreign university into NA and remove question marks
+df_ego3$universiteit.24<-gsub('University of Cologne', NA, df_ego3$universiteit.24)
+df_ego3$universiteit.24<-gsub('[?]', '', df_ego3$universiteit.24)
+
+#Checking the frequencies again
+table(df_ego3$universiteit.22,useNA='always')
+table(df_ego3$universiteit.24,useNA='always')
+table(df_ego3$universiteit.25,useNA='always')
+
+#Now most of the cases are fine, except for the few that have two universities
+#For these cases the first of the two reported universities is taken as primary,
+#and is thus selected as the value of the university variable
+#Loss of information was accepted in this case because adding a 'second university' variable for 5 sociologists
+#would mean changing the analysis quite substantially for what is likely to be no significant difference
+df_ego3$universiteit.22<-gsub('RU/RUG', 'RU', df_ego3$universiteit.22)
+df_ego3$universiteit.24<-gsub('RU/RUG', 'RU', df_ego3$universiteit.24)
+df_ego3$universiteit.22<-gsub('RUG/RU', 'RUG', df_ego3$universiteit.22)
+df_ego3$universiteit.24<-gsub('RUG/RU', 'RUG', df_ego3$universiteit.24)
+df_ego3$universiteit.22<-gsub('RUG/Tilburg', 'RUG', df_ego3$universiteit.22)
+df_ego3$universiteit.24<-gsub('RUG/Tilburg', 'RUG', df_ego3$universiteit.24)
+df_ego3$universiteit.22<-gsub('UvA/EUR', 'UvA', df_ego3$universiteit.22)
+df_ego3$universiteit.22<-gsub('UU/UvA', 'UU', df_ego3$universiteit.22)
+df_ego3$universiteit.24<-gsub('UU/UvA', 'UU', df_ego3$universiteit.24)
+
+#Checking frequencies again
+table(df_ego3$universiteit.22,useNA='always')
+table(df_ego3$universiteit.24,useNA='always')
+table(df_ego3$universiteit.25,useNA='always')
+
+#There are no more strange values for the 'universiteit' variables
+#Now on to the 'functie' variables, these show the sociologists' job titles
+table(df_ego3$functie.22,useNA='always')
+table(df_ego3$functie.24,useNA='always')
+table(df_ego3$functie.25,useNA='always')
+
+#There is one slightly nondescript value here, namely 'staff'
+#For the few people with this value, 
+#I decided to first see if a more informative title is given in another year, 
+#then check university websites and social media
+#Nine sociologist were given more informative values for the function variable this way
+df_ego3$funcsub<-df_ego3$functie.22
+df_ego3[86,'funcsub']<-'PhD Candidate'
+df_ego3[89,'funcsub']<-'Researcher'
+df_ego3[143,'funcsub']<-'Assistant Professor'
+df_ego3[190,'funcsub']<-'Lecturer'
+df_ego3[284,'funcsub']<-'Lecturer'
+df_ego3[385,'funcsub']<-'Researcher'
+df_ego3[418,'funcsub']<-'Full Professor'
+df_ego3[419,'funcsub']<-'Researcher'
+df_ego3[431,'funcsub']<-'Lecturer'
+
+#Check distribution
+table(df_ego3$funcsub,useNA='always')
+
+#Lastly there is the gender variable, which has five missings
+table(df_ego3$gender,useNA='always')
+
+#These missings were imputed by googling their name and the university they work at
+#A picture was found for all five, gender was inferred based on gender signifiers seen in the pictures
+#Main signifiers used were length of hair and presence of prominent facial hair
+df_ego3[123,'gender']<-'female'
+df_ego3[237,'gender']<-'male'
+df_ego3[375,'gender']<-'female'
+df_ego3[412,'gender']<-'male'
+df_ego3[462,'gender']<-'female'
+
+#Checking to make sure there are no more missings for gender
+table(df_ego3$gender,useNA='always')
+
+#And now the variables are ready for transformation into the form that will be used in analysis
+```
+
+```{r,eval=F}
+#Now to transform the three ego level variables from the original data
+
+#Starting with 'university'
+#I want there to be one variable indicating the university each sociologist is most affiliated with
+#By most affiliated I mainly mean how long they were affiliated with a university, so where they would have
+#spent the most time and presumably, as is most relevant, collaborated most
+#As such, the basis for the 'university' variable will be the 'universiteit.22' variable, with any missing
+#values on this variable being supplemented first with 'universiteit.24' and then 'universiteit.25' if needed
+
+#In order to do this, the universities with three letter abbreviations are abbreviated to two letters
+#2022
+df_ego3$uni22<-df_ego3$universiteit.22
+df_ego3$uni22<-gsub('EUR','EU',df_ego3$uni22)
+df_ego3$uni22<-gsub('RUG','UG',df_ego3$uni22)
+df_ego3$uni22<-gsub('UvA','UA',df_ego3$uni22)
+df_ego3$uni22<-gsub('UvT','UT',df_ego3$uni22)
+
+#2024
+df_ego3$uni24<-df_ego3$universiteit.24
+df_ego3$uni24<-gsub('EUR','EU',df_ego3$uni24)
+df_ego3$uni24<-gsub('RUG','UG',df_ego3$uni24)
+df_ego3$uni24<-gsub('UvA','UA',df_ego3$uni24)
+df_ego3$uni24<-gsub('UvT','UT',df_ego3$uni24)
+
+#2025
+df_ego3$uni25<-df_ego3$universiteit.25
+df_ego3$uni25<-gsub('EUR','EU',df_ego3$uni25)
+df_ego3$uni25<-gsub('RUG','UG',df_ego3$uni25)
+df_ego3$uni25<-gsub('UvA','UA',df_ego3$uni25)
+df_ego3$uni25<-gsub('UvT','UT',df_ego3$uni25)
+
+#Check if this worked
+table(df_ego3$uni22,df_ego3$universiteit.22,useNA='always')
+table(df_ego3$uni24,df_ego3$universiteit.24,useNA='always')
+table(df_ego3$uni25,df_ego3$universiteit.25,useNA='always')
+
+#This worked, all universities now use two letter abbreviations
+#Now to make one variable which includes only the earliest university available for each sociologist
+df_ego3$university<-paste(df_ego3$uni22,df_ego3$uni24,df_ego3$uni25)
+df_ego3$university<-gsub('NA','',df_ego3$university)
+df_ego3$university<-gsub(' ','',df_ego3$university)
+df_ego3$university<-substr(df_ego3$university,start=1,stop=2)
+
+#Check if this worked by inspecting a list
+universityCheck<-cbind.data.frame(df_ego3$uni22,df_ego3$uni24,df_ego3$uni25,df_ego3$university)
+view(universityCheck)
+rm(universityCheck)
+
+#Distribution of the new 'university' variable
+table(df_ego3$university,useNA='always')
+
+#Now as a final transformation, the variable will be made numeric for use in RSiena
+df_ego3$universityN<-df_ego3$university
+df_ego3$universityN<-gsub('EU',0,df_ego3$universityN)
+df_ego3$universityN<-gsub('RU',1,df_ego3$universityN)
+df_ego3$universityN<-gsub('UA',2,df_ego3$universityN)
+df_ego3$universityN<-gsub('UG',3,df_ego3$universityN)
+df_ego3$universityN<-gsub('UT',4,df_ego3$universityN)
+df_ego3$universityN<-gsub('UU',5,df_ego3$universityN)
+df_ego3$universityN<-gsub('VU',6,df_ego3$universityN)
+
+#Final check
+table(df_ego3$university,df_ego3$universityN)
+
+```
+
+```{r,eval=F}
+#The next variable to transform is 'function'
+#The same logic is applied here, the goal is one variable which indicates which function each sociologist had
+#The 2022 function is preferred to 2024 and 2025 functions, again with the argument that any changes in function
+#which occured this year (2025) or last year (2024) compared to 2022 would have had less of an effect on the 
+#publication record and collaborations of each sociologist than the function they had in 2022.
+
+#Because of the more heterogenous string length of the function variables as compared to the university 
+#variables, they are first made into numbers, then combined, then the first is selected, which is then
+#transformed back into the original string
+
+#Making the function variables into numbers
+#2022 (funcsub is used because it has the imputed missings)
+df_ego3$func22<-df_ego3$funcsub
+df_ego3$func22<-gsub('PhD Candidate','0',df_ego3$func22)
+df_ego3$func22<-gsub('Postdoctoral Researcher','1',df_ego3$func22)
+df_ego3$func22<-gsub('Lecturer','2',df_ego3$func22)
+df_ego3$func22<-gsub('Researcher','3',df_ego3$func22)
+df_ego3$func22<-gsub('Assistant Professor','4',df_ego3$func22)
+df_ego3$func22<-gsub('Associate Professor','5',df_ego3$func22)
+df_ego3$func22<-gsub('Full Professor','6',df_ego3$func22)
+
+#2024
+df_ego3$func24<-df_ego3$functie.24
+df_ego3$func24<-gsub('PhD Candidate','0',df_ego3$func24)
+df_ego3$func24<-gsub('Postdoctoral Researcher','1',df_ego3$func24)
+df_ego3$func24<-gsub('Lecturer','2',df_ego3$func24)
+df_ego3$func24<-gsub('Researcher','3',df_ego3$func24)
+df_ego3$func24<-gsub('Assistant Professor','4',df_ego3$func24)
+df_ego3$func24<-gsub('Associate Professor','5',df_ego3$func24)
+df_ego3$func24<-gsub('Full Professor','6',df_ego3$func24)
+
+#2025
+df_ego3$func25<-df_ego3$functie.25
+df_ego3$func25<-gsub('PhD Candidate','0',df_ego3$func25)
+df_ego3$func25<-gsub('Postdoctoral Researcher','1',df_ego3$func25)
+df_ego3$func25<-gsub('Lecturer','2',df_ego3$func25)
+df_ego3$func25<-gsub('Researcher','3',df_ego3$func25)
+df_ego3$func25<-gsub('Assistant Professor','4',df_ego3$func25)
+df_ego3$func25<-gsub('Associate Professor','5',df_ego3$func25)
+df_ego3$func25<-gsub('Full Professor','6',df_ego3$func25)
+
+#Check values if the values correspond
+functionCheck<-cbind.data.frame(
+  df_ego3$funcsub,df_ego3$func22,df_ego3$functie.24,df_ego3$func24,df_ego3$functie.25,df_ego3$func25)
+view(functionCheck)
+rm(functionCheck)
+
+#The values are as intended, now to merge the numbers, extract the first and make it back into a word
+df_ego3$functionN<-paste(df_ego3$func22,df_ego3$func24,df_ego3$func25)
+df_ego3$functionN<-gsub('NA','',df_ego3$functionN)
+df_ego3$functionN<-gsub(' ','',df_ego3$functionN)
+df_ego3$functionN<-substr(df_ego3$functionN,start=1,stop=1)
+table(df_ego3$functionN,useNA='always')
+
+#Now to make the variable actually numeric
+df_ego3$functionN<-gsub('0',0,df_ego3$functionN)
+df_ego3$functionN<-gsub('1',1,df_ego3$functionN)
+df_ego3$functionN<-gsub('2',2,df_ego3$functionN)
+df_ego3$functionN<-gsub('3',3,df_ego3$functionN)
+df_ego3$functionN<-gsub('4',4,df_ego3$functionN)
+df_ego3$functionN<-gsub('5',5,df_ego3$functionN)
+df_ego3$functionN<-gsub('6',6,df_ego3$functionN)
+table(df_ego3$functionN,useNA='always')
+
+#And create a string version for easy reference
+df_ego3$functionS<-df_ego3$functionN
+df_ego3$functionS<-gsub('0','PhD Candidate',df_ego3$functionS)
+df_ego3$functionS<-gsub('1','Postdoctoral Researcher',df_ego3$functionS)
+df_ego3$functionS<-gsub('2','Lecturer',df_ego3$functionS)
+df_ego3$functionS<-gsub('3','Researcher',df_ego3$functionS)
+df_ego3$functionS<-gsub('4','Assistant Professor',df_ego3$functionS)
+df_ego3$functionS<-gsub('5','Associate Professor',df_ego3$functionS)
+df_ego3$functionS<-gsub('6','Full Professor',df_ego3$functionS)
+table(df_ego3$functionS,useNA='always')
+
+#Check if the values are correct
+functionCheck<-cbind.data.frame(
+  df_ego3$funcsub,df_ego3$func22,df_ego3$functie.24,df_ego3$func24,df_ego3$functie.25,df_ego3$func25,
+  df_ego3$functionN,df_ego3$functionS)
+view(functionCheck)
+rm(functionCheck)
+
+#Turns out there are still 13 missings, these are marked NA
+df_ego3[46,'functionN']<-NA
+df_ego3[46,'functionS']<-NA
+df_ego3[125,'functionN']<-NA
+df_ego3[125,'functionS']<-NA
+df_ego3[174,'functionN']<-NA
+df_ego3[174,'functionS']<-NA
+df_ego3[188,'functionN']<-NA
+df_ego3[188,'functionS']<-NA
+df_ego3[195,'functionN']<-NA
+df_ego3[195,'functionS']<-NA
+df_ego3[237,'functionN']<-NA
+df_ego3[237,'functionS']<-NA
+df_ego3[248,'functionN']<-NA
+df_ego3[248,'functionS']<-NA
+df_ego3[274,'functionN']<-NA
+df_ego3[274,'functionS']<-NA
+df_ego3[324,'functionN']<-NA
+df_ego3[324,'functionS']<-NA
+df_ego3[355,'functionN']<-NA
+df_ego3[355,'functionS']<-NA
+df_ego3[375,'functionN']<-NA
+df_ego3[375,'functionS']<-NA
+df_ego3[403,'functionN']<-NA
+df_ego3[403,'functionS']<-NA
+df_ego3[457,'functionN']<-NA
+df_ego3[457,'functionS']<-NA
+
+#Check again
+table(df_ego3$functionN,df_ego3$functionS,useNA='always')
+
+#Now the string and numeric function variables are as intended
+```
+
+```{r,eval=F}
+#Lastly the gender variable was made into a dummy
+df_ego3$genderN<-df_ego3$gender
+df_ego3$genderN<-gsub('female',0,df_ego3$genderN)
+df_ego3$genderN<-gsub('male',1,df_ego3$genderN)
+
+#Check if the values correspond to the original variable
+table(df_ego3$gender,df_ego3$genderN,useNA='always')
+
+#They do, the gender dummy is made
+```
+
+```{r,eval=F}
+#The next step is to make the ego variables ready for RSiena
+
+
+```

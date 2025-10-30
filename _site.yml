@@ -24,6 +24,10 @@ navbar:
         href: week4network.html
       - text: "The 'fun' in function"
         href: week6function.html
+    - text: "Final Assignment"
+      menu:
+      -text: "Data Preparation"
+       href: FinalDataPrep.html
         
         # here, other .Rmds can be added
 
