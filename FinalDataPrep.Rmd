@@ -27,7 +27,6 @@ Plan:
 
 ```{r,eval=F}
 #Loading in the necessary packages and defining functions
-
 #Empties your environment, remove hash only if you are sure everything important is saved!
 #rm(list = ls())
 
@@ -582,7 +581,102 @@ table(df_ego3$gender,df_ego3$genderN,useNA='always')
 ```
 
 ```{r,eval=F}
-#The next step is to make the ego variables ready for RSiena
+#The last step is to ensure there are no duplicate cases in the dataset and delete any remaining missings
+table(df_ego3$unaam)
 
+#There are a few duplicates, they are removed
+df_egoF<-df_ego3[!duplicated(df_ego3[c('unaam')]), ]
+
+#Checking for missings in our key variables
+table(df_ego3$genderN,useNA='always')
+table(df_ego3$functionN,useNA='always')
+table(df_ego3$universityN,useNA='always')
+table(df_ego3$icsAffiliate,useNA='always')
+table(df_ego3$icsGraduate,useNA='always')
+table(df_ego3$icsAny,useNA='always')
+
+#There are still 13 sociologists with a missing value for the function variable, they are deleted listwise
+#df_egoF<-df_ego3[!is.na(df_ego3[c('functionN')]), ]
+#sienaDataCreate doesnt work if you delete missings listwise, function was a robustness check anyways
+
+#Now we have the final ego level variable dataframe, df_egoF
+```
+
+```{r,eval=F}
+#With the data cleaned, it can now be made into an RSiena data object
+#Some still need to be marked as numeric, which does not change the values in this case
+df_egoF$universityN<-as.numeric(df_egoF$universityN)
+universityN<-coCovar(df_egoF$universityN,centered=FALSE)
+df_egoF$functionN<-as.numeric(df_egoF$functionN)
+functionO<-coCovar(df_egoF$functionN,centered=FALSE)
+df_egoF$genderN<-as.numeric(df_egoF$genderN)
+genderD<-coCovar(df_egoF$genderN,centered=FALSE)
+icsanyD<-coCovar(df_egoF$icsAny,centered=FALSE)
+icsaffilD<-coCovar(df_egoF$icsAffiliate,centered=FALSE)
+icsgradD<-coCovar(df_egoF$icsGraduate,centered=FALSE)
+
+#Making the data object
+collabnet1<-sienaDataCreate(net, universityN, functionO, genderD, icsanyD, icsaffilD, icsgradD)
+print01Report(collabnet1)
+
+#Create main algorithm
+algoMain<-sienaAlgorithmCreate()
+
+#Now to specify the models
+
+#A first model including only icsany
+effects1<-getEffects(collabnet1)
+#Effects of ego characteristics
+  effects1<-includeEffects(effects1,sameX,name='net',interaction1='icsanyD')
+
+#Estimate model 1
+testEstimate1<-siena07(algoMain,data=collabnet1,effects=effects1,returnDeps=TRUE)
+testEstimate1
+  
+#A second model including icsany and the three controls
+effects2<-getEffects(collabnet1)
+#Effects of ego characteristics
+  effects2<-includeEffects(effects2,sameX,name='net',interaction1='genderD')
+  effects2<-includeEffects(effects2,sameX,name='net',interaction1='universityN')
+  effects2<-includeEffects(effects2,sameX,name='net',interaction1='icsanyD')
+  effects2<-includeEffects(effects2,unequalX,name='net',interaction1='functionO')
+  
+#Estimate model 2
+  testEstimate2<-siena07(algoMain,data=collabnet1,effects=effects2,returnDeps=TRUE)
+  testEstimate2
+  
+#A third model including the two separate ics variables and controls
+effects3<-getEffects(collabnet1)
+#Effects of ego characteristics
+  effects3<-includeEffects(effects3,sameX,name='net',interaction1='genderD')
+  effects3<-includeEffects(effects3,sameX,name='net',interaction1='universityN')
+  effects3<-includeEffects(effects3,sameX,name='net',interaction1='icsaffilD')
+  effects3<-includeEffects(effects3,sameX,name='net',interaction1='icsgradD')
+  effects3<-includeEffects(effects3,unequalX,name='net',interaction1='functionO')
+  
+#Estimate model 3
+  testEstimate3<-siena07(algoMain,data=collabnet1,effects=effects3,returnDeps=TRUE)
+  testEstimate3
+
+
+```
+
+```{r,eval=F}
+#Goodness of Fit of first two model attempts
+
+#Attempt 1, with only icsany
+model1gof1 <- sienaGOF(testEstimate1, IndegreeDistribution, verbose = FALSE, join = TRUE, varName = "net")
+model1gof1
+plot(model1gof1)
+
+#Attempt 2, with icsany and controls
+model2gof1 <- sienaGOF(testEstimate2, IndegreeDistribution, verbose = FALSE, join = TRUE, varName = "net")
+model2gof1
+plot(model2gof1)
+
+#Attempt 3, with separate ics variables and controls
+model3gof1 <- sienaGOF(testEstimate3, IndegreeDistribution, verbose = FALSE, join = TRUE, varName = "net")
+model3gof1
+plot(model3gof1)
 
 ```
