@@ -26,10 +26,20 @@ navbar:
         href: week6function.html
       - text: "Goodness that Fit!"
         href: week7gof.html
-    - text: "Final Assignment"
+    - text: "Data preparation"
+      href: FinalDataPrep.html
+    - text: "Final assignment"
       menu:
-      - text: "Data Preparation"
-        href: FinalDataPrep.html
+      - text: "Introduction"
+        href: finalIntro.html
+      - text: "Theory"
+        href: finalTheory.html
+      - text: "Methods"
+        href: finalMethods.html
+      - text: "Analyses"
+        href: finalAnalyses.html
+      - text: "Conclusion"
+        href: finalConclusion.html
         
         # here, other .Rmds can be added
 

@@ -1,41 +1,35 @@
 ---
-title: "DataprepFinal"
-author: "Tjeu Groothuijsen"
-date: "2025-10-17"
+title: "Methods"
+bibliography: references.bib
 output: html_document
 ---
 
+```{=html}
+<style>
+body {
+  text-align: justify;
+  font-family: Times;
+}
+
+h1, .h1, h2, .h2, h3, .h3 {
+  margin-top: 24px;
+  font-family: Times;
+}
+</style>
+```
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
----
-This page documents the preparation of the data for use in the final assignment.
-Everything is placed in order of when I did it, mostly as a reference for myself.
-All of this stuff is more neatly integrated in the final assignment pages.
 
-The following steps are taken to make the data suitable for assessing whether clustering in the
-collaboration network of sociologists in the Netherlands occurs due to preferential attachment
-to colleagues who attended the same graduate school. 
-For now, I am only distinguishing ICS instead of including all graduate schools.
-This is because the ICS data is easily obtained and includes a large proportion of sociologists.
-If the proportion of sociologists affiliated with ICS turns out to be too low, more data will be sought.
+METHODS
 
-Plan:
-1. Loading neccesary packages and functions
-2. Webscrape data about graduates and affiliates from the ICS website, make these into a list of names
-3. Load 'scholars' data containing the sociologists and collaborations, remove polisci and irrelevant variables
-4. Match list of ICS affiliates to scholars data using names
-5. Make merged dataset suitable for analysis with RSiena
-6. Analyse descriptive statistics
+In order to test these hypotheses, data from the open access platform OpenAlex (Priem, Piwowar & Orr, 2022) was used. The data includes individual level characteristics and published works of sociologists and political scientists in the Netherlands. The inclusion of the names of all coauthors of each published paper allows for the construction of collaboration networks using this data, each node is a sociologist and a tie indicates that the two connected sociologists have coauthored a paper in a given wave. Data was collected in 2022, 2024 and 2025, which resulted in some variables having separate and occasionally different values for each year. Given the scope of this study, a selection was made from the data which included only sociologists who were in any of the three available years affiliated with a university in the Netherlands. The dataset as it was used in the analyses included 458 sociologists working at seven different departments. Further descriptive statistics are given per variable.
 
+Defining custom functions
+Several user defined functions were used during the data preparation and analysis. The function ‘fcolnet’ was used make the collaboration networks based on the coauthorship data in the original dataset. Other functions are less complex, their purpose is described in short in notes, which can be found in the code below.
+
+The smaller functions
 ```{r,eval=F}
-#Loading in the necessary packages and defining functions
-#Empties your environment, remove hash only if you are sure everything important is saved!
-#rm(list = ls())
-
-#Defining custom functions
-
-#Jochems functions
 #fpackage.check: Check if packages are installed (and install if not) in R
 fpackage.check <- function(packages) {
     lapply(packages, FUN = function(x) {
@@ -70,6 +64,23 @@ fshowdf <- function(x, ...) {
         kableExtra::scroll_box(width = "100%", height = "300px")
 }
 
+#String uniforming function
+funiform_string <- function(input, numbers=TRUE, spaces=TRUE, caps=TRUE){
+  string <- iconv(input, from = "UTF-8", to = "ASCII//TRANSLIT")
+  string <- gsub('-','',string)
+  if (numbers) string <- gsub('[0-9]','',string)
+  if (spaces) string <- gsub(' ','',string)
+  if (caps) string <- tolower(string)
+  return(string)
+}
+
+#Checking for required packages
+packages = c("RSiena", "devtools", "igraph", "tidyverse", "xml2", "rvest", "dplyr", "stringr", "sna")
+fpackage.check(packages)
+```
+
+The network data creation function
+```{r,eval=F}
 #Network data helper function
 fcolnet = function(data = scholars, university = c("RU", 'UU'), discipline = "Sociologie", waves = list(c(2015,
     2018), c(2019, 2023), c(2024, 2025)), type = c("first")) {
@@ -165,29 +176,37 @@ fcolnet = function(data = scholars, university = c("RU", 'UU'), discipline = "So
     output$nets = nets
     return(output)
 }
-
-#String uniforming function
-funiform_string <- function(input, numbers=TRUE, spaces=TRUE, caps=TRUE){
-  string <- iconv(input, from = "UTF-8", to = "ASCII//TRANSLIT")
-  string <- gsub('-','',string)
-  if (numbers) string <- gsub('[0-9]','',string)
-  if (spaces) string <- gsub(' ','',string)
-  if (caps) string <- tolower(string)
-  return(string)
-}
-
-#Checking for required packages
-packages = c("RSiena", "devtools", "igraph", "tidyverse", "xml2", "rvest", "dplyr", "stringr")
-fpackage.check(packages)
-
 ```
 
+The first step in the data preparation is making the collaboration network and waves
 ```{r,eval=F}
-#First step is to scrape the ICS website for graduates and affiliates
-#We want to have a list of names and two dummy variables, one for graduation and one for affiliation
-#Being able to distinguish between the two will allow us to capture older sociologists who are within
-  #the scope of the theory, but could not have studied at ICS because it did not exist yet
 
+#Loading the data
+scholars<-fload('C://Users/groot/Documents/RDirectory/20251016scholars.rda')
+
+#Selecting for sociologists and transforming using the network data helper function
+sndata1 = fcolnet(scholars, university = c('RU', 'UU', 'UvA', 'RUG', 'VU', 'UvT', 'EUR'))
+df_ego1 = bind_rows(sndata1$data)
+
+#Making waves
+wave1 = sndata1$nets[1,,]
+wave2 = sndata1$nets[2,,]
+wave3 = sndata1$nets[3,,]
+
+#Making the waves back into a single file
+nets = array(
+    data = c(wave1, wave2, wave3),
+    dim = c(dim(wave2), 2))
+
+#Making the RSiena nomination matrix
+net = sienaDependent(nets)
+```
+
+ICS affiliation
+Affiliation with the graduate school ICS was not included by default in the dataset, the ICS affiliation variables were constructed by webscraping publicly available lists of graduates and affiliated staff members from the ICS website (ICS, 2025). This yielded lists of names which could then be matched to the names of sociologists in the main dataset, allowing the ICS affiliation variables to be merged in. There are three separate ICS affiliation variables, all three are dummy variables. The variable ‘icsGraduate’ has the value ‘1’ if a persons name appeared in the list of ICS graduates, otherwise it has the value ‘0’. The variable ‘icsAffiliate’ has the value ‘1’ if a persons name appeared in the tables of affiliated staff members on the ICS website, otherwise it has the value ‘0’. The final variable, ‘icsAny’, serves as a summary of the other two. ‘icsAny’ has the value ‘1’ if ‘icsGraduate’ or ‘icsAffiliate’ is ‘1’, otherwise it is ‘0’. Details of the variable construction can be found in the code below.	 The reason that both having graduated and being affiliated are both treated as being part of ICS is that using only the list of ICS graduates could have lead to an underestimation of the effect of graduate school affiliation, because sociologists who join ICS after their PhD may still have a preference to work with likeminded others, who can be found at ICS. The two separate ICS variables are later used to estimate an additional RSiena model as a robustness check.
+
+ICS variable construction
+```{r,eval=F}
 #First we get the affiliates tables from https://ics-graduateschool.nl/
 
 #Faculty 
@@ -234,18 +253,6 @@ icsF<-icsC[c('unaam','icsAffiliate','icsGraduate')]
 icsF$icsAny<-1
 icsF[is.na(icsF)]<-0
 
-```
-
-```{r,eval=F}
-#Second step is to load and transform the collaboration network data and merge it with the ICS data
-
-#Loading the data
-scholars<-fload('C://Users/groot/Documents/RDirectory/20251016scholars.rda')
-
-#Selecting for sociologists and transforming using the network data helper function
-sndata1 = fcolnet(scholars, university = c('RU', 'UU', 'UvA', 'RUG', 'VU', 'UvT', 'EUR'))
-df_ego1 = bind_rows(sndata1$data)
-
 #Adding uniformed author names to the ego level data
 df_ego1$unaam<-funiform_string(df_ego1$naam)
 
@@ -259,30 +266,11 @@ df_ego2$icsAny[is.na(df_ego2$icsAny)]<-0
 
 ```
 
+University
+The university where a sociologist works was included as a variable in the original dataset for each of the three years for which data is available. Since university was needed as a control variable and not a dependent variable, it was decided to make the three university variables into a single time constant variable. This was done by taking the university affiliation in 2022, if there was no affiliation for 2022, the affiliation for 2024 was taken and if that was missing as well the 2025 university affiliation was used. This way, the ‘universityS’ variable registers a single university for each sociologist. The ‘universityN’ variable was then constructed as a nominal numeric variable for inclusion in RSiena. 
+
+Transformation of the university variables
 ```{r,eval=F}
-#The third step is to make the network data ready for analysis with RSiena
-
-#Making waves
-wave1 = sndata1$nets[1,,]
-wave2 = sndata1$nets[2,,]
-wave3 = sndata1$nets[3,,]
-
-#Making the waves back into a single file
-nets = array(
-    data = c(wave1, wave2, wave3),
-    dim = c(dim(wave2), 2))
-
-#Making the RSiena nomination matrix
-net = sienaDependent(nets)
-
-```
-
-```{r,eval=F}
-#Before transforming the ego level variables into their RSiena ready form, 
-#some descriptive statistics are required to ensure that strange and missing values are not carried over
-
-#VARIABELEN DIE IK WIL: functie(ordinaal maken), universiteit, gender, ics dingen, 
-
 #First of, the 'universiteit' variables for each year
 #These variables indicate for each sociologist in the data at which university they worked in each year
 
@@ -345,52 +333,7 @@ table(df_ego3$universiteit.24,useNA='always')
 table(df_ego3$universiteit.25,useNA='always')
 
 #There are no more strange values for the 'universiteit' variables
-#Now on to the 'functie' variables, these show the sociologists' job titles
-table(df_ego3$functie.22,useNA='always')
-table(df_ego3$functie.24,useNA='always')
-table(df_ego3$functie.25,useNA='always')
 
-#There is one slightly nondescript value here, namely 'staff'
-#For the few people with this value, 
-#I decided to first see if a more informative title is given in another year, 
-#then check university websites and social media
-#Nine sociologist were given more informative values for the function variable this way
-df_ego3$funcsub<-df_ego3$functie.22
-df_ego3[86,'funcsub']<-'PhD Candidate'
-df_ego3[89,'funcsub']<-'Researcher'
-df_ego3[143,'funcsub']<-'Assistant Professor'
-df_ego3[190,'funcsub']<-'Lecturer'
-df_ego3[284,'funcsub']<-'Lecturer'
-df_ego3[385,'funcsub']<-'Researcher'
-df_ego3[418,'funcsub']<-'Full Professor'
-df_ego3[419,'funcsub']<-'Researcher'
-df_ego3[431,'funcsub']<-'Lecturer'
-
-#Check distribution
-table(df_ego3$funcsub,useNA='always')
-
-#Lastly there is the gender variable, which has five missings
-table(df_ego3$gender,useNA='always')
-
-#These missings were imputed by googling their name and the university they work at
-#A picture was found for all five, gender was inferred based on gender signifiers seen in the pictures
-#Main signifiers used were length of hair and presence of prominent facial hair
-df_ego3[123,'gender']<-'female'
-df_ego3[237,'gender']<-'male'
-df_ego3[375,'gender']<-'female'
-df_ego3[412,'gender']<-'male'
-df_ego3[462,'gender']<-'female'
-
-#Checking to make sure there are no more missings for gender
-table(df_ego3$gender,useNA='always')
-
-#And now the variables are ready for transformation into the form that will be used in analysis
-```
-
-```{r,eval=F}
-#Now to transform the three ego level variables from the original data
-
-#Starting with 'university'
 #I want there to be one variable indicating the university each sociologist is most affiliated with
 #By most affiliated I mainly mean how long they were affiliated with a university, so where they would have
 #spent the most time and presumably, as is most relevant, collaborated most
@@ -454,7 +397,35 @@ table(df_ego3$university,df_ego3$universityN)
 
 ```
 
+Function
+The function or seniority of each sociologist was also included in the original data. Working by the same logic, this variable was also transformed into the time constant variables ‘functionS’ and ‘functionN’, which are the string and numeric versions respectively. Nine sociologists had ‘staff’ as their value for the function variable, this value was deemed uninformative and as such was substituted with a function from another year where possible. When no function value other than ‘staff’ was available, the sociologist in question was given a more informative value based on their university web page or Linkedin job history. Looking people up on Linkin was deemed ethical on the grounds that Linkedin is a networking and job searching website, so the information available there is intended by the user to be accessible to others they do not personally know. 
+
+Transformation of the function variable
 ```{r,eval=F}
+#Now on to the 'functie' variables, these show the sociologists' job titles
+table(df_ego3$functie.22,useNA='always')
+table(df_ego3$functie.24,useNA='always')
+table(df_ego3$functie.25,useNA='always')
+
+#There is one slightly nondescript value here, namely 'staff'
+#For the few people with this value, 
+#I decided to first see if a more informative title is given in another year, 
+#then check university websites and social media
+#Nine sociologist were given more informative values for the function variable this way
+df_ego3$funcsub<-df_ego3$functie.22
+df_ego3[86,'funcsub']<-'PhD Candidate'
+df_ego3[89,'funcsub']<-'Researcher'
+df_ego3[143,'funcsub']<-'Assistant Professor'
+df_ego3[190,'funcsub']<-'Lecturer'
+df_ego3[284,'funcsub']<-'Lecturer'
+df_ego3[385,'funcsub']<-'Researcher'
+df_ego3[418,'funcsub']<-'Full Professor'
+df_ego3[419,'funcsub']<-'Researcher'
+df_ego3[431,'funcsub']<-'Lecturer'
+
+#Check distribution
+table(df_ego3$funcsub,useNA='always')
+
 #The next variable to transform is 'function'
 #The same logic is applied here, the goal is one variable which indicates which function each sociologist had
 #The 2022 function is preferred to 2024 and 2025 functions, again with the argument that any changes in function
@@ -569,9 +540,29 @@ df_ego3[457,'functionS']<-NA
 table(df_ego3$functionN,df_ego3$functionS,useNA='always')
 
 #Now the string and numeric function variables are as intended
+
 ```
 
+Gender
+The gender variable that was included in the dataset was constructed using an algorithm which determines a persons gender based on their first name, since most names are more common for either men or women, this leads to an estimate of the sociologists genders with reasonable accuracy. There were five sociologists with a missing value for the gender variable, this was caused by the inclusion of only their initials in the dataset instead of complete first names. The missings were handled by imputing values based on the sociologists university webpages. The gender variable was then transformed into ‘genderN’, which is a numeric dummy with ‘0’ indicating women and ‘1’ indicating men. 
+
+Transformation of the gender variable
 ```{r,eval=F}
+#Lastly there is the gender variable, which has five missings
+table(df_ego3$gender,useNA='always')
+
+#These missings were imputed by googling their name and the university they work at
+#A picture was found for all five, gender was inferred based on gender signifiers seen in the pictures
+#Main signifiers used were length of hair and presence of prominent facial hair
+df_ego3[123,'gender']<-'female'
+df_ego3[237,'gender']<-'male'
+df_ego3[375,'gender']<-'female'
+df_ego3[412,'gender']<-'male'
+df_ego3[462,'gender']<-'female'
+
+#Checking to make sure there are no more missings for gender
+table(df_ego3$gender,useNA='always')
+
 #Lastly the gender variable was made into a dummy
 df_ego3$genderN<-df_ego3$gender
 df_ego3$genderN<-gsub('female',0,df_ego3$genderN)
@@ -580,31 +571,19 @@ df_ego3$genderN<-gsub('male',1,df_ego3$genderN)
 #Check if the values correspond to the original variable
 table(df_ego3$gender,df_ego3$genderN,useNA='always')
 
-#They do, the gender dummy is made
 ```
 
-```{r,eval=F}
-#The last step is to ensure there are no duplicate cases in the dataset and delete any remaining missings
-table(df_ego3$unaam)
+Clustering coefficients
+Two indicators were used for clustering, the variable of interest in hypothesis 2. First, the transitivity was used as an indicator for clustering, this is also called the global clustering coefficient (Watts and Strogatz, 1998). The transitivity is the number of transitive triads divided by the total possible number of transitive triads. In addition to network level transitivity (transG), clustering is measured using the average of local transitivity (transA). This was done because the network level transitivity places more weight on high degree nodes, whereas the average local transitivity places more weight on low degree nodes. By analysing both metrics, a more complete picture of the extent of clustering can be shown. The values of these variables were calculated during the analysis, and are reported there.	
 
-#There are a few duplicates, they are removed
-df_egoF<-df_ego3[!duplicated(df_ego3[c('unaam')]), ]
+Analytical strategy
+Three main steps will be taken to ascertain whether sociologists tend to collaborate with colleagues affiliated with the same graduate school. First, the network will be descriptively analysed using a dyad- and triad census, several network statistics and a visualisation. This should give a first indication of the prevalence of collaborations between sociologists from different graduate schools, the amount of triads and transitive triads and the structure of the network. 
+ 	Secondly, successive Stochastic Actor Oriented Models (SAOM) are estimated using RSiena to test whether the creation and maintenance of collaboration ties between the first and second timepoint is influenced by a preference for collaboration with alters with the same graduate school affiliation. The first of these models includes only the default effects of density and reciprocity, the second model adds the ICS affiliation variable and structural effects, the third adds the control variables. The fourth model build upon the third by adding structural effects until a satisfactory goodness of fit is achieved. The fifth model serves as a robustness check, it includes the two separate ICS affiliation variables and serves to check the assumption that both variables have a similar effect, as this is assumed in the theory.	
+ 	Thirdly, simulations are used to test hypothesis two, that the preference to work with alters affiliated with the same graduate school significantly contributes to clustering in the network. The simulations fix the effects of all variables at their observed estimates from model four and uses these parameters to simulate how to observed network at wave one would change given the effects of the variables. By comparing the two transitivity scores of a simulation with the observed effect of ICS affiliation two others, one where the effect of ICS affiliation is set to zero and one where it is doubled, the simulations will be used to check whether significantly more clustering occurs if the effect of ICS affiliation is doubled and significantly less when it is absent. This way, the hypothesis regarding the network level effect of the individual preference to collaborate within ones graduate school is explicitly tested.
 
-#Checking for missings in our key variables
-table(df_ego3$genderN,useNA='always')
-table(df_ego3$functionN,useNA='always')
-table(df_ego3$universityN,useNA='always')
-table(df_ego3$icsAffiliate,useNA='always')
-table(df_ego3$icsGraduate,useNA='always')
-table(df_ego3$icsAny,useNA='always')
 
-#There are still 13 sociologists with a missing value for the function variable, they are deleted listwise
-#df_egoF<-df_ego3[!is.na(df_ego3[c('functionN')]), ]
-#sienaDataCreate doesnt work if you delete missings listwise, function was a robustness check anyways
-
-#Now we have the final ego level variable dataframe, df_egoF
-```
-
+Final data preparation steps
+The last steps in data preparation are the removal of duplicate cases and the transformation of the ego level variables into RSiena covariate objects. The default mean centering for RSiena covariates is turned off, this was done because the variables are all intended to be treated as nominal. 
 ```{r,eval=F}
 #With the data cleaned, it can now be made into an RSiena data object
 #Some still need to be marked as numeric, which does not change the values in this case
@@ -620,274 +599,7 @@ icsgradD<-coCovar(df_egoF$icsGraduate,centered=FALSE)
 
 #Making the data object
 collabnet1<-sienaDataCreate(net, universityN, functionO, genderD, icsanyD, icsaffilD, icsgradD)
-print01Report(collabnet1)
-
-#Create main algorithm
-algoMain<-sienaAlgorithmCreate()
-
-#Now to specify the models
-
-#A first model including only icsany
-effects1<-getEffects(collabnet1)
-#Effects of ego characteristics
-  effects1<-includeEffects(effects1,sameX,name='net',interaction1='icsanyD')
-
-#Estimate model 1
-testEstimate1<-siena07(algoMain,data=collabnet1,effects=effects1,returnDeps=TRUE)
-testEstimate1
-  
-#A second model including icsany and the three controls
-effects2<-getEffects(collabnet1)
-#Effects of ego characteristics
-  effects2<-includeEffects(effects2,sameX,name='net',interaction1='genderD')
-  effects2<-includeEffects(effects2,sameX,name='net',interaction1='universityN')
-  effects2<-includeEffects(effects2,sameX,name='net',interaction1='icsanyD')
-  effects2<-includeEffects(effects2,unequalX,name='net',interaction1='functionO')
-  
-#Estimate model 2
-  testEstimate2<-siena07(algoMain,data=collabnet1,effects=effects2,returnDeps=TRUE)
-  testEstimate2
-  
-#A third model including the two separate ics variables and controls
-effects3<-getEffects(collabnet1)
-#Effects of ego characteristics
-  effects3<-includeEffects(effects3,sameX,name='net',interaction1='genderD')
-  effects3<-includeEffects(effects3,sameX,name='net',interaction1='universityN')
-  effects3<-includeEffects(effects3,sameX,name='net',interaction1='icsaffilD')
-  effects3<-includeEffects(effects3,sameX,name='net',interaction1='icsgradD')
-  effects3<-includeEffects(effects3,unequalX,name='net',interaction1='functionO')
-  
-#Estimate model 3
-  testEstimate3<-siena07(algoMain,data=collabnet1,effects=effects3,returnDeps=TRUE)
-  testEstimate3
-
-
-```
-
-```{r,eval=F}
-#Goodness of Fit of first two model attempts
-
-#Attempt 1, with only icsany
-model1gof1 <- sienaGOF(testEstimate1, IndegreeDistribution, verbose = FALSE, join = TRUE, varName = "net")
-model1gof1
-plot(model1gof1)
-
-#Attempt 2, with icsany and structural effects
-model2gof1 <- sienaGOF(testEstimate2, IndegreeDistribution, verbose = FALSE, join = TRUE, varName = "net")
-model2gof1
-plot(model2gof1)
-
-#Attempt 3, with separate ics variables and controls
-model3gof1 <- sienaGOF(testEstimate3, IndegreeDistribution, verbose = FALSE, join = TRUE, varName = "net")
-model3gof1
-plot(model3gof1)
-
-```
-
-```{r,eval=F}
-#For the definitive model, a relative influence analysis is useful to compare the effects
-
-
-
-```
-
-```{r,eval=F}
-#Visualising the network
-
-#V1 With isolates
-netvis1 <- igraph::graph_from_adjacency_matrix(
-  sndata1$nets[2,,],
-  mode = c("directed"),
-  weighted = NULL,
-  diag = FALSE,
-  add.colnames = NULL,)
-
-plot(netvis1,
-  vertex.color = ifelse(dfNiso$icsAny == 1, "red", "blue"),
-  vertex.label = NA,
-  vertex.size = 5,
-  edge.width = 0.2,
-  edge.arrow.size =0.2)
-
-#V2 Without isolates
-noisolates = rowSums(sndata1$nets[2,,]) > 0
-netNiso = sndata1$nets[2,noisolates,noisolates]
-dfNiso = df_egoF[noisolates, ]
-
-netvis2 <- igraph::graph_from_adjacency_matrix(
-  netNiso,
-  mode = c("directed"),
-  weighted = NULL,
-  diag = FALSE,
-  add.colnames = NULL,)
-
-plot(netvis2,
-  vertex.color = ifelse(dfNiso$icsAny == 1, "red", "blue"),
-  vertex.label = NA,
-  vertex.size = 5,
-  edge.width = 0.2,
-  edge.arrow.size =0.2)
-
-
-```
-
-```{r,eval=F}
-#Now to test whether the network has a significant amount of clustering
-#First calculate the global clustering coefficient and transitivity ratio for our network
-#Then simulate networks without clustering
-#Then see if our values are significantly higher
-
-#Calculating the clustering coefficient
-transitivity(netvis2)
-transitivity(netvis2,type='average')
-
-#Specifying the models to simulate based on the final RSiena model
-effectsSim<-effects#
-  effectsSim<-includeEffects(effectsSim,StrEFFECT,initialValue = 
-                               MODEL$theta[which(MODEL$effects$shortName == "StrEFFECT")]))
-  effectsSim<-includeEffects(effectsSim,EgoEFFECT,interaction1='VARIABLE',initialValue = 
-                               MODEL$theta[which(MODEL$effects$shortName == "EgoEFFECT")]))
-
-#Fix effects of all variables
-effectsSim$fix[effectsSim$include == TRUE] <- TRUE
-
-#Introduce higher and no effect variations
-effectsSim0 <- effectsSimHI <- effectsSim
-
-#Adjust CONTROLLED VARIABLE effect in alt simulations
-effectsSim0 <- setEffect(effectsSim, EFFECT, initialValue = 0, fix = TRUE)
-effectsSimHI <- setEffect(effectsSim, EFFECT, initialValue = 
-                            MODEL$theta[which(MODEL$effects$shortName == "EFFECT")] * 2, fix = TRUE)
-
-#Make simulation algorithm
-iterSim<-1000
-algoSim <- sienaAlgorithmCreate(
-    projname = 'simulation',
-    cond = FALSE,
-    useStdInits = FALSE, nsub = 0,
-    n3 = iterSim, 
-    seed=242452, # seed for replication
-    simOnly = TRUE)
 
 ```
 
 
-```{r,eval=F}
-#Carrying out the simulations and storing both transitivity indices for use as clustering indicators
-#Make vector to store transitivity
-
-transSimG <- transSimG0 <- transSimGHI <- rep(0, iterSim)
-transSimA <- transSimA0 <- transSimAHI <- rep(0, iterSim)
-
-#Simulations using estimated parameters
-simObs <- siena07(algoSim,      # simulation settings
-                   data = collabnet1,      # data
-                   effects = effectsSim,# defined effects and set parameters
-                   returnDeps = TRUE)  # return simulated networks
-  
-sim0 <- siena07(algoSim,       # simulation settings
-                   data = collabnet1,      # data
-                   effects = effectsSim0,# defined effects and set parameters
-                   returnDeps = TRUE)  # return simulated networks
-  
-simHI <- siena07(algoSim,     # simulation settings
-                   data = collabnet1,      # data
-                   effects = effectsSimHI,# defined effects and set parameters
-                   returnDeps = TRUE)  # return simulated networks
-```
-
-```{r,eval=F}
-#Extract transitivity from simulation runs
-
-#Set n
-n<-length(collabnet1$nodeSets[[1]]) 
-
-#Observed model
-for (i in 1:iterSim) { 
-  #Create adjacency matrix
-  adj <- matrix(0, n, n)
-  edges <- simObs$sims[[i]][[1]][[1]][[1]]
-  adj[edges[, 1:2]] <- edges[, 3]
-  
-  #Create igraph object
-  graphSim <- igraph::graph_from_adjacency_matrix(
-  adj[2,,],
-  mode = c("directed"),
-  weighted = NULL,
-  diag = FALSE,
-  add.colnames = NULL,)
-  
-  #Calculate and store global and average transitivity
-  transSimG[i]<-transitivity(graphSim)
-  transSimA[i]<-transitivity(graphSim, type='average')
-}
-
-#No ICS sameX model
-for (i in 1:iterSim) { 
-  #Create adjacency matrix
-  adj <- matrix(0, n, n)
-  edges <- sim0$sims[[i]][[1]][[1]][[1]]
-  adj[edges[, 1:2]] <- edges[, 3]
-  
-  #Create igraph object
-  graphSim <- igraph::graph_from_adjacency_matrix(
-  adj[2,,],
-  mode = c("directed"),
-  weighted = NULL,
-  diag = FALSE,
-  add.colnames = NULL,)
-  
-  #Calculate and store global and average transitivity
-  transSimG0[i]<-transitivity(graphSim)
-  transSimA0[i]<-transitivity(graphSim, type='average')
-}
-
-
-#High ICS sameX model
-for (i in 1:iterSim) { 
-  #Create adjacency matrix
-  adj <- matrix(0, n, n)
-  edges <- simHI$sims[[i]][[1]][[1]][[1]]
-  adj[edges[, 1:2]] <- edges[, 3]
-  
-  #Create igraph object
-  graphSim <- igraph::graph_from_adjacency_matrix(
-  adj[2,,],
-  mode = c("directed"),
-  weighted = NULL,
-  diag = FALSE,
-  add.colnames = NULL,)
-  
-  #Calculate and store global and average transitivity
-  transSimGHI[i]<-transitivity(graphSim)
-  transSimAHI[i]<-transitivity(graphSim, type='average')
-}
-
-#Summarise for plotting, first global transitivity
-simDataG <- data.frame(condition = c(rep("ObsICS", iterSim), rep("0ICS", iterSim), rep("HIICS", iterSim)),
-                       transG = c(transSimG, transSimG0, transSimGHI))
-simDataG$condition <- factor(simDataG$condition, levels = c("ObsICS", "0ICS", "HIICS"))
-
-#Then average transitivity
-simDataA <- data.frame(condition = c(rep("ObsICS", iterSim), rep("0ICS", iterSim), rep("HIICS", iterSim)),
-                       transA = c(transSimA, transSimA0, transSimAHI))
-simDataA$condition <- factor(simDataA$condition, levels = c("ObsICS", "0ICS", "HIICS"))
-
-#Plotting
-transGplot <- ggplot(simDataG, aes(x = condition, y = transG)) +
-  geom_boxplot() +
-  labs(title = "Distribution of global transitivity over 1000 iterations, across simulation models",
-       x = "simulation model",
-       y = "transG") +
-  ylim(0,1) +
-  theme_minimal()
-
-transAplot <- ggplot(simDataA, aes(x = condition, y = transA)) +
-  geom_boxplot() +
-  labs(title = "Distribution of average transitivity over 1000 iterations, across simulation models",
-       x = "simulation model",
-       y = "transA") +
-  ylim(0,1) +
-  theme_minimal()
-
-```

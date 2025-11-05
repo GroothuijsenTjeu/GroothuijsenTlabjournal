@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Theory</title>
+
+<script src="site_libs/header-attrs-2.29/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<script src="site_libs/navigation-1.1/sourceembed.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-6.5.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+<style type="text/css">
+#rmd-source-code {
+  display: none;
+}
+</style>
+
+<style type="text/css">
+/* for pandoc --citeproc since 2.11 */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="tweaks.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html"></a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+  </a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    My journal
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="lab1.html">Example</a>
+    </li>
+    <li>
+      <a href="week1hw.html">Research questions</a>
+    </li>
+    <li>
+      <a href="week2class.html">Introduction</a>
+    </li>
+    <li>
+      <a href="week3scrape.html">First data</a>
+    </li>
+    <li>
+      <a href="week4network.html">Network: first attempt</a>
+    </li>
+    <li>
+      <a href="week6function.html">The 'fun' in function</a>
+    </li>
+    <li>
+      <a href="week7gof.html">Goodness that Fit!</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="FinalDataPrep.html">Data preparation</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Final assignment
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="finalIntro.html">Introduction</a>
+    </li>
+    <li>
+      <a href="finalTheory.html">Theory</a>
+    </li>
+    <li>
+      <a href="finalMethods.html">Methods</a>
+    </li>
+    <li>
+      <a href="finalAnalyses.html">Analyses</a>
+    </li>
+    <li>
+      <a href="finalConclusion.html">Conclusion</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/GroothuijsenTjeu/GroothuijsenTlabjournal">
+    <span class="fab fa-github"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+<li role="separator" class="divider"></li>
+<li><a id="rmd-download-source" href="#">Download Rmd</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Theory</h1>
+
+</div>
+
+
+<style>
+body {
+  text-align: justify;
+  font-family: Times;
+}
+
+h1, .h1, h2, .h2, h3, .h3 {
+  margin-top: 24px;
+  font-family: Times;
+}
+</style>
+<div id="theory" class="section level1" number="1">
+<h1><span class="header-section-number">1</span> Theory</h1>
+<p>In order to answer the research questions posed in the introduction,
+we first turn to previous literature on the subjects of the context of
+sociology graduate schools in the Netherlands, patterns in collaboration
+in (social) science networks, structural characteristics found in such
+networks and potential confounding effects.</p>
+<div id="context" class="section level2" number="1.1">
+<h2><span class="header-section-number">1.1</span> Context</h2>
+<p>As mentioned in the introduction, sociologists in the Netherlands can
+be categorised into two distinct overarching traditions of research,
+‘historical sociology’ and ‘explanatory sociology’, both of which have a
+graduate school explicitly associated with them, the ASSR and ICS,
+respectively <span class="citation">(Haan 2014)</span>. These traditions
+and graduate schools are also affiliated with the sociology departments
+of specific universities, with ASSR being attached to the University of
+Amsterdam, whereas ICS is a collaboration between the departments of the
+universities of Groningen, Utrecht and Nijmegen. There are also a number
+of smaller graduate schools affiliated with the other universities,
+these are often specialised in a specific topic within social science
+instead of being more generalist, which ASSR and ICS are.<br />
+Going forward, this study will use affiliation with ICS as the
+characteristic under investigation, thus distinguishing only between
+whether sociologists are or are not affiliated with ICS. This decision
+was made primarily based on the availability of data, but is
+theoretically justifiable for the following reasons. First of all, three
+out of the total seven dedicated sociology departments in the
+Netherlands are institutionally affiliated with ICS, in that PhD
+candidates at these departments partake in ICS organised courses and are
+officially ICS graduates if they finish their PhD <span
+class="citation">(ICS 2025)</span>. This also means that ICS affiliated
+sociologists looking for a colleague to collaborate with would have
+plenty of opportunity to find other ICS affiliates, whereas other
+graduate schools are considerably smaller, which makes it more difficult
+for their affiliates to find collaboration partners from the same
+school. This means that if all graduate schools were accounted for when
+studying whether or not sociologists tend to collaborate with others
+from the same school, the effect may actually be underestimated simply
+because affiliates of the smaller schools have very few opportunities to
+form collaborations within their school. A second reason to only
+distinguish between ICS and non-ICS is that the theoretical and
+methodological preferences of the sociologists making up ICS, which are
+a core part of the theoretical mechanisms potentially explaining a
+tendency towards intra graduate school collaboration, are more
+homogenous than those of sociologists affiliated with the other major
+graduate school in sociology, ASSR <span class="citation">(Haan
+2014)</span>. This would be cause to expect the tendency to form
+collaborations within a graduate school and avoid collaborations with
+colleagues from other graduate schools would be most apparent when a
+distinction is made between ICS and non-ICS, since ICS affiliates would
+generally have more difficulty working with others from a different
+graduate school than two sociologists from different non-ICS graduate
+schools would have working with each other. With this selection in mind,
+we now move on to theoretical mechanisms explaining tendencies of
+scientists for associating with similar others, which will be applied to
+the graduate school case.</p>
+</div>
+<div id="collaboration-preferences" class="section level2" number="1.2">
+<h2><span class="header-section-number">1.2</span> Collaboration
+preferences</h2>
+<p>Theoretically, the question of whether sociologists prefer to work
+with others affiliated with the same graduate school can be approached
+from multiple angles, two of which are applied here. On the one hand,
+the graduate school could be viewed as a social focus, shared courses
+and seminars may make it more likely for two affiliates of the same
+graduate school to become aware of each other, thus increasing their
+chances of forming a collaboration compared to two sociologists from
+different graduate schools. On the other hand, a graduate school can be
+considered as instilling certain shared theoretical and methodological
+preferences, which would make it easier for two affiliate of the same
+school to collaborate in the research because conflicts about the proper
+ways to conduct such research are less likely to arise. These two
+theoretical approaches are elaborated upon below, but they are treated
+as complementary in this study. The goal is not to test which of these
+theoretical approaches is a better explanation, it is to ascertain
+whether or not sociologists in the Netherlands have a tendency to
+collaborate with others from their own graduate school and if this leads
+to clustering at the network level. The theory thus serves mainly to
+illustrate why these effects could be expected, but this is not a theory
+testing study per se. Within the literature on scientific collaboration
+networks, an approach based on foci of activity emphasises the way
+organisational arrangements influence opportunities for collaboration.
+In the case of university departments, it has been found that scientists
+are more likely to collaborate with others at their department compared
+to collaborating with those outside their department <span
+class="citation">(Tobias H. Stark 2020?)</span>. One explanation offered
+for this phenomenon is that frequent physical proximity makes it both
+easier to work together and more likely to be aware of the possibility
+of working together. Departments are thus conceptualised as foci of
+activity, since their associated buildings, the coordinated times at
+which scientists work there and the other shared activities facilitated
+by working within the same organisation increase the chance of two
+scientists meeting and allow for easier communication and coordination
+during a project, which increases the chance of collaboration <span
+class="citation">(Kabo and Owen-Smith 2015)</span>. These reasons for
+why working at the same department is conducive to starting research
+collaborations can also be applied to graduate schools, though to a
+lesser extent. Affiliation with a graduate school such as ICS does not
+directly lead the same frequent physical proximity that working at the
+same department would. However, especially while studying for a PhD,
+candidates would still have some shared courses, which would be taught
+by affiliated lecturers <span class="citation">(ICS 2025)</span>. For
+this reason, a graduate school could still be considered a focus of
+activity.<br />
+The other theoretical approach under consideration views a the influence
+of being affiliated with the same graduate school on the likelihood to
+collaborate more as a matter of preference, with those who have attended
+the same graduate school potentially having more intellectual affinity
+with one another <span class="citation">(Tobias H. Stark 2020)</span>.
+Where is foci of activity approach placed emphasis on opportunities for
+tie formation and the ease of maintaining ties with those who share
+foci, the intellectual affinity approach turns attention to the
+theoretical and methodological preferences of researchers. Having
+similar theoretical and methodological preferences is more than a
+question of taste, it eases communication because collaboration partners
+have a greater proportion of shared language <span
+class="citation">(Sameer B. Srivastava 2017)</span> and coordination
+through shared criteria for good quality research, which can prevent
+disagreements about what methods to use or when a theory is convincingly
+argued <span class="citation">(Werner Raub and Gërxhani 2022)</span>.
+The link with graduate school affiliation stems from the idea that these
+theoretical and methodological preferences are not inherent to people,
+but learned. Since the graduate schools are associated with traditions
+of research, their students would likely be instilled with the ideas
+about what is good sociology that that make up part of these traditions.
+An example would be that the explanatory sociology associated with ICS
+values a methodological individualist perspective <span
+class="citation">(Haan 2014)</span>, which requires that macro level
+changes be explained through micro level behaviour. If a sociologist
+from outside ICS were to consider a collaboration with an ICS affiliate,
+they would then have to weigh whether their own beliefs about
+methodological individualism are compatible with those of their
+colleague and if this could cause friction in the collaboration. Such
+differences in preferences being associated with graduate school
+affiliations are another reason to suspect the first hypothesis:</p>
+<p>Hypothesis 1: Sociologists affiliated with ICS are more likely to
+collaborate with others also affiliated with ICS, and sociologists not
+affiliated with ICS are more likely to collaborate with others also not
+affiliated with ICS.</p>
+</div>
+<div id="network-structure" class="section level2" number="1.3">
+<h2><span class="header-section-number">1.3</span> Network
+structure</h2>
+<p>Considering these reasons to expect sociologists the have a tendency
+to form collaborations with others form the same graduate school, we
+move on to the next question: how does this this turn out in aggregate,
+at the network level? Previous research suggests that theoretical
+fragmentation and mechanisms leading to a tendency to collaborate with
+others who share a researchers topics and theoretical preferences would
+cause a clustered network <span class="citation">(Moody 2004)</span>.
+Since ties would be more likely to be formed and maintained if the two
+connected people share such preferences, this would lead to the
+formation of clearly distinct groups, with relatively few ties bridging
+them. This perspective should also be applicable to graduate school
+affiliation, since we argue that preference to work with others from the
+same graduate school works partially through similar mechanisms. The
+main outcome of interest, however, is not so much whether the
+collaboration network conforms to a clustered topology, but rather if
+any significant proportion of observed clustering is caused specifically
+by the tendency towards intra graduate school collaboration. So the
+second hypothesis is formulated as:</p>
+<p>Hypothesis 2: Sociologists’ tendency to collaborate with others who
+share their (non)affiliation with ICS will cause clustering in the
+collaboration network of sociologists at the network level.</p>
+</div>
+<div id="potential-confounders" class="section level2" number="1.4">
+<h2><span class="header-section-number">1.4</span> Potential
+confounders</h2>
+<p>The close association between graduate schools and sociology
+departments is cause for caution. The reason is the a confounding effect
+of university affiliation may be expected, since a university department
+serves as a focus for sociologists to meet and possibly collaborate.
+Thus, clustering by grad school on the surface might actually be
+clustering by department. A preference for collaborations within the
+same university should be accounted for in the analyses to prevent
+overestimation of the influence of graduate school affiliation.<br />
+Another possible confounding effect is that of seniority since PhD
+candidates typically work for tenured supervisors affiliated with the
+graduate school the PhD is also affiliated with, the analyses of
+sociologists’ hypothesised tendencies to collaborate with others
+affiliated with the same graduate school need to ensure that such
+supervisory collaborations are not treated as having been caused by a
+preference for intra graduate school collaborations.</p>
+<div id="refs" class="references csl-bib-body hanging-indent"
+entry-spacing="0">
+<div id="ref-Haan" class="csl-entry">
+Haan, Jos de. 2014. <em>Sociology in the Netherlands</em>. Routledge. <a
+href="https://www.researchgate.net/publication/302963359">https://www.researchgate.net/publication/302963359</a>.
+</div>
+<div id="ref-ICS" class="csl-entry">
+ICS. 2025. <a
+href="https://ics-graduateschool.nl/">https://ics-graduateschool.nl/</a>.
+</div>
+<div id="ref-Kabo" class="csl-entry">
+Kabo, Yongha Hwang, Felichism, and Jason Owen-Smith. 2015. <em><a
+href="">“Shared Paths to the Lab: A Sociospatial Network Analysis of
+Collaboration</a></em>. Environment; Behavior.
+</div>
+<div id="ref-Moody" class="csl-entry">
+Moody, James. 2004. <em><a href="">The Structure of a Social Science
+Collaboration Network: Disciplinary Cohesion from 1963 to 1999</a></em>.
+Ohio State University: American Sociological Review.
+</div>
+<div id="ref-Sriva" class="csl-entry">
+Sameer B. Srivastava, V. Govind Manian, Amir Goldberg. 2017. <em><a
+href="">Enculturation Trajectories: Language, Cultural Adaptation, and
+Individual Outcomes in Organizations</a></em>. MANAGEMENTSCIENCE.
+</div>
+<div id="ref-Ashwin" class="csl-entry">
+Tobias H. Stark, Daniel A. McFarland, Ashwin Rambaran. 2020. <em><a
+href="">The Meeting of Minds: Forging Social and Intellectual Networks
+Within Universities</a></em>. Sociological Science.
+</div>
+<div id="ref-Raub" class="csl-entry">
+Werner Raub, Nan Dirk de Graaf, and Klarita Gërxhani. 2022. <em><a
+href="">Rigorous Sociology</a></em>. Elgar.
+</div>
+</div>
+</div>
+</div>
+
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIlRoZW9yeSINCmJpYmxpb2dyYXBoeTogcmVmZXJlbmNlcy5iaWINCm91dHB1dDogaHRtbF9kb2N1bWVudA0KLS0tDQoNCmBgYHs9aHRtbH0NCjxzdHlsZT4NCmJvZHkgew0KICB0ZXh0LWFsaWduOiBqdXN0aWZ5Ow0KICBmb250LWZhbWlseTogVGltZXM7DQp9DQoNCmgxLCAuaDEsIGgyLCAuaDIsIGgzLCAuaDMgew0KICBtYXJnaW4tdG9wOiAyNHB4Ow0KICBmb250LWZhbWlseTogVGltZXM7DQp9DQo8L3N0eWxlPg0KYGBgDQpgYGB7ciBzZXR1cCwgaW5jbHVkZT1GQUxTRX0NCmtuaXRyOjpvcHRzX2NodW5rJHNldChlY2hvID0gVFJVRSkNCmBgYA0KDQojIFRoZW9yeQ0KDQpJbiBvcmRlciB0byBhbnN3ZXIgdGhlIHJlc2VhcmNoIHF1ZXN0aW9ucyBwb3NlZCBpbiB0aGUgaW50cm9kdWN0aW9uLCB3ZSBmaXJzdCB0dXJuIHRvIHByZXZpb3VzIGxpdGVyYXR1cmUgb24gdGhlIHN1YmplY3RzIG9mIHRoZSBjb250ZXh0IG9mIHNvY2lvbG9neSBncmFkdWF0ZSBzY2hvb2xzIGluIHRoZSBOZXRoZXJsYW5kcywgcGF0dGVybnMgaW4gY29sbGFib3JhdGlvbiBpbiAoc29jaWFsKSBzY2llbmNlIG5ldHdvcmtzLCBzdHJ1Y3R1cmFsIGNoYXJhY3RlcmlzdGljcyBmb3VuZCBpbiBzdWNoIG5ldHdvcmtzIGFuZCBwb3RlbnRpYWwgY29uZm91bmRpbmcgZWZmZWN0cy4NCg0KIyMgQ29udGV4dA0KDQpBcyBtZW50aW9uZWQgaW4gdGhlIGludHJvZHVjdGlvbiwgc29jaW9sb2dpc3RzIGluIHRoZSBOZXRoZXJsYW5kcyBjYW4gYmUgY2F0ZWdvcmlzZWQgaW50byB0d28gZGlzdGluY3Qgb3ZlcmFyY2hpbmcgdHJhZGl0aW9ucyBvZiByZXNlYXJjaCwg4oCYaGlzdG9yaWNhbCBzb2Npb2xvZ3nigJkgYW5kIOKAmGV4cGxhbmF0b3J5IHNvY2lvbG9neeKAmSwgYm90aCBvZiB3aGljaCBoYXZlIGEgZ3JhZHVhdGUgc2Nob29sIGV4cGxpY2l0bHkgYXNzb2NpYXRlZCB3aXRoIHRoZW0sIHRoZSBBU1NSIGFuZCBJQ1MsIHJlc3BlY3RpdmVseSBbQEhhYW5dLiBUaGVzZSB0cmFkaXRpb25zIGFuZCBncmFkdWF0ZSBzY2hvb2xzIGFyZSBhbHNvIGFmZmlsaWF0ZWQgd2l0aCB0aGUgc29jaW9sb2d5IGRlcGFydG1lbnRzIG9mIHNwZWNpZmljIHVuaXZlcnNpdGllcywgd2l0aCBBU1NSIGJlaW5nIGF0dGFjaGVkIHRvIHRoZSBVbml2ZXJzaXR5IG9mIEFtc3RlcmRhbSwgd2hlcmVhcyBJQ1MgaXMgYSBjb2xsYWJvcmF0aW9uIGJldHdlZW4gdGhlIGRlcGFydG1lbnRzIG9mIHRoZSB1bml2ZXJzaXRpZXMgb2YgR3JvbmluZ2VuLCBVdHJlY2h0IGFuZCBOaWptZWdlbi4gVGhlcmUgYXJlIGFsc28gYSBudW1iZXIgb2Ygc21hbGxlciBncmFkdWF0ZSBzY2hvb2xzIGFmZmlsaWF0ZWQgd2l0aCB0aGUgb3RoZXIgdW5pdmVyc2l0aWVzLCB0aGVzZSBhcmUgb2Z0ZW4gc3BlY2lhbGlzZWQgaW4gYSBzcGVjaWZpYyB0b3BpYyB3aXRoaW4gc29jaWFsIHNjaWVuY2UgaW5zdGVhZCBvZiBiZWluZyBtb3JlIGdlbmVyYWxpc3QsIHdoaWNoIEFTU1IgYW5kIElDUyBhcmUuIAkNCiAJR29pbmcgZm9yd2FyZCwgdGhpcyBzdHVkeSB3aWxsIHVzZSBhZmZpbGlhdGlvbiB3aXRoIElDUyBhcyB0aGUgY2hhcmFjdGVyaXN0aWMgdW5kZXIgaW52ZXN0aWdhdGlvbiwgdGh1cyBkaXN0aW5ndWlzaGluZyBvbmx5IGJldHdlZW4gd2hldGhlciBzb2Npb2xvZ2lzdHMgYXJlIG9yIGFyZSBub3QgYWZmaWxpYXRlZCB3aXRoIElDUy4gVGhpcyBkZWNpc2lvbiB3YXMgbWFkZSBwcmltYXJpbHkgYmFzZWQgb24gdGhlIGF2YWlsYWJpbGl0eSBvZiBkYXRhLCBidXQgaXMgdGhlb3JldGljYWxseSBqdXN0aWZpYWJsZSBmb3IgdGhlIGZvbGxvd2luZyByZWFzb25zLiBGaXJzdCBvZiBhbGwsIHRocmVlIG91dCBvZiB0aGUgdG90YWwgc2V2ZW4gZGVkaWNhdGVkIHNvY2lvbG9neSBkZXBhcnRtZW50cyBpbiB0aGUgTmV0aGVybGFuZHMgYXJlIGluc3RpdHV0aW9uYWxseSBhZmZpbGlhdGVkIHdpdGggSUNTLCBpbiB0aGF0IFBoRCBjYW5kaWRhdGVzIGF0IHRoZXNlIGRlcGFydG1lbnRzIHBhcnRha2UgaW4gSUNTIG9yZ2FuaXNlZCBjb3Vyc2VzIGFuZCBhcmUgb2ZmaWNpYWxseSBJQ1MgZ3JhZHVhdGVzIGlmIHRoZXkgZmluaXNoIHRoZWlyIFBoRCBbQElDU10uIFRoaXMgYWxzbyBtZWFucyB0aGF0IElDUyBhZmZpbGlhdGVkIHNvY2lvbG9naXN0cyBsb29raW5nIGZvciBhIGNvbGxlYWd1ZSB0byBjb2xsYWJvcmF0ZSB3aXRoIHdvdWxkIGhhdmUgcGxlbnR5IG9mIG9wcG9ydHVuaXR5IHRvIGZpbmQgb3RoZXIgSUNTIGFmZmlsaWF0ZXMsIHdoZXJlYXMgb3RoZXIgZ3JhZHVhdGUgc2Nob29scyBhcmUgY29uc2lkZXJhYmx5IHNtYWxsZXIsIHdoaWNoIG1ha2VzIGl0IG1vcmUgZGlmZmljdWx0IGZvciB0aGVpciBhZmZpbGlhdGVzIHRvIGZpbmQgY29sbGFib3JhdGlvbiBwYXJ0bmVycyBmcm9tIHRoZSBzYW1lIHNjaG9vbC4gVGhpcyBtZWFucyB0aGF0IGlmIGFsbCBncmFkdWF0ZSBzY2hvb2xzIHdlcmUgYWNjb3VudGVkIGZvciB3aGVuIHN0dWR5aW5nIHdoZXRoZXIgb3Igbm90IHNvY2lvbG9naXN0cyB0ZW5kIHRvIGNvbGxhYm9yYXRlIHdpdGggb3RoZXJzIGZyb20gdGhlIHNhbWUgc2Nob29sLCB0aGUgZWZmZWN0IG1heSBhY3R1YWxseSBiZSB1bmRlcmVzdGltYXRlZCBzaW1wbHkgYmVjYXVzZSBhZmZpbGlhdGVzIG9mIHRoZSBzbWFsbGVyIHNjaG9vbHMgaGF2ZSB2ZXJ5IGZldyBvcHBvcnR1bml0aWVzIHRvIGZvcm0gY29sbGFib3JhdGlvbnMgd2l0aGluIHRoZWlyIHNjaG9vbC4gQSBzZWNvbmQgcmVhc29uIHRvIG9ubHkgZGlzdGluZ3Vpc2ggYmV0d2VlbiBJQ1MgYW5kIG5vbi1JQ1MgaXMgdGhhdCB0aGUgdGhlb3JldGljYWwgYW5kIG1ldGhvZG9sb2dpY2FsIHByZWZlcmVuY2VzIG9mIHRoZSBzb2Npb2xvZ2lzdHMgbWFraW5nIHVwIElDUywgd2hpY2ggYXJlIGEgY29yZSBwYXJ0IG9mIHRoZSB0aGVvcmV0aWNhbCBtZWNoYW5pc21zIHBvdGVudGlhbGx5IGV4cGxhaW5pbmcgYSB0ZW5kZW5jeSB0b3dhcmRzIGludHJhIGdyYWR1YXRlIHNjaG9vbCBjb2xsYWJvcmF0aW9uLCBhcmUgbW9yZSBob21vZ2Vub3VzIHRoYW4gdGhvc2Ugb2Ygc29jaW9sb2dpc3RzIGFmZmlsaWF0ZWQgd2l0aCB0aGUgb3RoZXIgbWFqb3IgZ3JhZHVhdGUgc2Nob29sIGluIHNvY2lvbG9neSwgQVNTUiBbQEhhYW5dLiBUaGlzIHdvdWxkIGJlIGNhdXNlIHRvIGV4cGVjdCB0aGUgdGVuZGVuY3kgdG8gZm9ybSBjb2xsYWJvcmF0aW9ucyB3aXRoaW4gYSBncmFkdWF0ZSBzY2hvb2wgYW5kIGF2b2lkIGNvbGxhYm9yYXRpb25zIHdpdGggY29sbGVhZ3VlcyBmcm9tIG90aGVyIGdyYWR1YXRlIHNjaG9vbHMgd291bGQgYmUgbW9zdCBhcHBhcmVudCB3aGVuIGEgZGlzdGluY3Rpb24gaXMgbWFkZSBiZXR3ZWVuIElDUyBhbmQgbm9uLUlDUywgc2luY2UgSUNTIGFmZmlsaWF0ZXMgd291bGQgZ2VuZXJhbGx5IGhhdmUgbW9yZSBkaWZmaWN1bHR5IHdvcmtpbmcgd2l0aCBvdGhlcnMgZnJvbSBhIGRpZmZlcmVudCBncmFkdWF0ZSBzY2hvb2wgdGhhbiB0d28gc29jaW9sb2dpc3RzIGZyb20gZGlmZmVyZW50IG5vbi1JQ1MgZ3JhZHVhdGUgc2Nob29scyB3b3VsZCBoYXZlIHdvcmtpbmcgd2l0aCBlYWNoIG90aGVyLiBXaXRoIHRoaXMgc2VsZWN0aW9uIGluIG1pbmQsIHdlIG5vdyBtb3ZlIG9uIHRvIHRoZW9yZXRpY2FsIG1lY2hhbmlzbXMgZXhwbGFpbmluZyB0ZW5kZW5jaWVzIG9mIHNjaWVudGlzdHMgZm9yIGFzc29jaWF0aW5nIHdpdGggc2ltaWxhciBvdGhlcnMsIHdoaWNoIHdpbGwgYmUgYXBwbGllZCB0byB0aGUgZ3JhZHVhdGUgc2Nob29sIGNhc2UuDQoNCg0KIyMgQ29sbGFib3JhdGlvbiBwcmVmZXJlbmNlcw0KDQpUaGVvcmV0aWNhbGx5LCB0aGUgcXVlc3Rpb24gb2Ygd2hldGhlciBzb2Npb2xvZ2lzdHMgcHJlZmVyIHRvIHdvcmsgd2l0aCBvdGhlcnMgYWZmaWxpYXRlZCB3aXRoIHRoZSBzYW1lIGdyYWR1YXRlIHNjaG9vbCBjYW4gYmUgYXBwcm9hY2hlZCBmcm9tIG11bHRpcGxlIGFuZ2xlcywgdHdvIG9mIHdoaWNoIGFyZSBhcHBsaWVkIGhlcmUuIE9uIHRoZSBvbmUgaGFuZCwgdGhlIGdyYWR1YXRlIHNjaG9vbCBjb3VsZCBiZSB2aWV3ZWQgYXMgYSBzb2NpYWwgZm9jdXMsIHNoYXJlZCBjb3Vyc2VzIGFuZCBzZW1pbmFycyBtYXkgbWFrZSBpdCBtb3JlIGxpa2VseSBmb3IgdHdvIGFmZmlsaWF0ZXMgb2YgdGhlIHNhbWUgZ3JhZHVhdGUgc2Nob29sIHRvIGJlY29tZSBhd2FyZSBvZiBlYWNoIG90aGVyLCB0aHVzIGluY3JlYXNpbmcgdGhlaXIgY2hhbmNlcyBvZiBmb3JtaW5nIGEgY29sbGFib3JhdGlvbiBjb21wYXJlZCB0byB0d28gc29jaW9sb2dpc3RzIGZyb20gZGlmZmVyZW50IGdyYWR1YXRlIHNjaG9vbHMuIE9uIHRoZSBvdGhlciBoYW5kLCBhIGdyYWR1YXRlIHNjaG9vbCBjYW4gYmUgY29uc2lkZXJlZCBhcyBpbnN0aWxsaW5nIGNlcnRhaW4gc2hhcmVkIHRoZW9yZXRpY2FsIGFuZCBtZXRob2RvbG9naWNhbCBwcmVmZXJlbmNlcywgd2hpY2ggd291bGQgbWFrZSBpdCBlYXNpZXIgZm9yIHR3byBhZmZpbGlhdGUgb2YgdGhlIHNhbWUgc2Nob29sIHRvIGNvbGxhYm9yYXRlIGluIHRoZSByZXNlYXJjaCBiZWNhdXNlIGNvbmZsaWN0cyBhYm91dCB0aGUgcHJvcGVyIHdheXMgdG8gY29uZHVjdCBzdWNoIHJlc2VhcmNoIGFyZSBsZXNzIGxpa2VseSB0byBhcmlzZS4gVGhlc2UgdHdvIHRoZW9yZXRpY2FsIGFwcHJvYWNoZXMgYXJlIGVsYWJvcmF0ZWQgdXBvbiBiZWxvdywgYnV0IHRoZXkgYXJlIHRyZWF0ZWQgYXMgY29tcGxlbWVudGFyeSBpbiB0aGlzIHN0dWR5LiBUaGUgZ29hbCBpcyBub3QgdG8gdGVzdCB3aGljaCBvZiB0aGVzZSB0aGVvcmV0aWNhbCBhcHByb2FjaGVzIGlzIGEgYmV0dGVyIGV4cGxhbmF0aW9uLCBpdCBpcyB0byBhc2NlcnRhaW4gd2hldGhlciBvciBub3Qgc29jaW9sb2dpc3RzIGluIHRoZSBOZXRoZXJsYW5kcyBoYXZlIGEgdGVuZGVuY3kgdG8gY29sbGFib3JhdGUgd2l0aCBvdGhlcnMgZnJvbSB0aGVpciBvd24gZ3JhZHVhdGUgc2Nob29sIGFuZCBpZiB0aGlzIGxlYWRzIHRvIGNsdXN0ZXJpbmcgYXQgdGhlIG5ldHdvcmsgbGV2ZWwuIFRoZSB0aGVvcnkgdGh1cyBzZXJ2ZXMgbWFpbmx5IHRvIGlsbHVzdHJhdGUgd2h5IHRoZXNlIGVmZmVjdHMgY291bGQgYmUgZXhwZWN0ZWQsIGJ1dCB0aGlzIGlzIG5vdCBhIHRoZW9yeSB0ZXN0aW5nIHN0dWR5IHBlciBzZS4NCglXaXRoaW4gdGhlIGxpdGVyYXR1cmUgb24gc2NpZW50aWZpYyBjb2xsYWJvcmF0aW9uIG5ldHdvcmtzLCBhbiBhcHByb2FjaCBiYXNlZCBvbiBmb2NpIG9mIGFjdGl2aXR5IGVtcGhhc2lzZXMgdGhlIHdheSBvcmdhbmlzYXRpb25hbCBhcnJhbmdlbWVudHMgaW5mbHVlbmNlIG9wcG9ydHVuaXRpZXMgZm9yIGNvbGxhYm9yYXRpb24uIEluIHRoZSBjYXNlIG9mIHVuaXZlcnNpdHkgZGVwYXJ0bWVudHMsIGl0IGhhcyBiZWVuIGZvdW5kIHRoYXQgc2NpZW50aXN0cyBhcmUgbW9yZSBsaWtlbHkgdG8gY29sbGFib3JhdGUgd2l0aCBvdGhlcnMgYXQgdGhlaXIgZGVwYXJ0bWVudCBjb21wYXJlZCB0byBjb2xsYWJvcmF0aW5nIHdpdGggdGhvc2Ugb3V0c2lkZSB0aGVpciBkZXBhcnRtZW50IFtAQXNod2luP10uIE9uZSBleHBsYW5hdGlvbiBvZmZlcmVkIGZvciB0aGlzIHBoZW5vbWVub24gaXMgdGhhdCBmcmVxdWVudCBwaHlzaWNhbCBwcm94aW1pdHkgbWFrZXMgaXQgYm90aCBlYXNpZXIgdG8gd29yayB0b2dldGhlciBhbmQgbW9yZSBsaWtlbHkgdG8gYmUgYXdhcmUgb2YgdGhlIHBvc3NpYmlsaXR5IG9mIHdvcmtpbmcgdG9nZXRoZXIuICBEZXBhcnRtZW50cyBhcmUgdGh1cyBjb25jZXB0dWFsaXNlZCBhcyBmb2NpIG9mIGFjdGl2aXR5LCBzaW5jZSB0aGVpciBhc3NvY2lhdGVkIGJ1aWxkaW5ncywgdGhlIGNvb3JkaW5hdGVkIHRpbWVzIGF0IHdoaWNoIHNjaWVudGlzdHMgd29yayB0aGVyZSBhbmQgdGhlIG90aGVyIHNoYXJlZCBhY3Rpdml0aWVzIGZhY2lsaXRhdGVkIGJ5IHdvcmtpbmcgd2l0aGluIHRoZSBzYW1lIG9yZ2FuaXNhdGlvbiBpbmNyZWFzZSB0aGUgY2hhbmNlIG9mIHR3byBzY2llbnRpc3RzIG1lZXRpbmcgYW5kIGFsbG93IGZvciBlYXNpZXIgY29tbXVuaWNhdGlvbiBhbmQgY29vcmRpbmF0aW9uIGR1cmluZyBhIHByb2plY3QsIHdoaWNoIGluY3JlYXNlcyB0aGUgY2hhbmNlIG9mIGNvbGxhYm9yYXRpb24gW0BLYWJvXS4gVGhlc2UgcmVhc29ucyBmb3Igd2h5IHdvcmtpbmcgYXQgdGhlIHNhbWUgZGVwYXJ0bWVudCBpcyBjb25kdWNpdmUgdG8gc3RhcnRpbmcgcmVzZWFyY2ggY29sbGFib3JhdGlvbnMgY2FuIGFsc28gYmUgYXBwbGllZCB0byBncmFkdWF0ZSBzY2hvb2xzLCB0aG91Z2ggdG8gYSBsZXNzZXIgZXh0ZW50LiBBZmZpbGlhdGlvbiB3aXRoIGEgZ3JhZHVhdGUgc2Nob29sIHN1Y2ggYXMgSUNTIGRvZXMgbm90IGRpcmVjdGx5IGxlYWQgdGhlIHNhbWUgZnJlcXVlbnQgcGh5c2ljYWwgcHJveGltaXR5IHRoYXQgd29ya2luZyBhdCB0aGUgc2FtZSBkZXBhcnRtZW50IHdvdWxkLiBIb3dldmVyLCBlc3BlY2lhbGx5IHdoaWxlIHN0dWR5aW5nIGZvciBhIFBoRCwgY2FuZGlkYXRlcyB3b3VsZCBzdGlsbCBoYXZlIHNvbWUgc2hhcmVkIGNvdXJzZXMsIHdoaWNoIHdvdWxkIGJlIHRhdWdodCBieSBhZmZpbGlhdGVkIGxlY3R1cmVycyBbQElDU10uIEZvciB0aGlzIHJlYXNvbiwgYSBncmFkdWF0ZSBzY2hvb2wgY291bGQgc3RpbGwgYmUgY29uc2lkZXJlZCBhIGZvY3VzIG9mIGFjdGl2aXR5LgkgIA0KIAlUaGUgb3RoZXIgdGhlb3JldGljYWwgYXBwcm9hY2ggdW5kZXIgY29uc2lkZXJhdGlvbiB2aWV3cyBhIHRoZSBpbmZsdWVuY2Ugb2YgYmVpbmcgYWZmaWxpYXRlZCB3aXRoIHRoZSBzYW1lIGdyYWR1YXRlIHNjaG9vbCBvbiB0aGUgbGlrZWxpaG9vZCB0byBjb2xsYWJvcmF0ZSBtb3JlIGFzIGEgbWF0dGVyIG9mIHByZWZlcmVuY2UsIHdpdGggdGhvc2Ugd2hvIGhhdmUgYXR0ZW5kZWQgdGhlIHNhbWUgZ3JhZHVhdGUgc2Nob29sIHBvdGVudGlhbGx5IGhhdmluZyBtb3JlIGludGVsbGVjdHVhbCBhZmZpbml0eSB3aXRoIG9uZSBhbm90aGVyIFtAQXNod2luXS4gV2hlcmUgaXMgZm9jaSBvZiBhY3Rpdml0eSBhcHByb2FjaCBwbGFjZWQgZW1waGFzaXMgb24gb3Bwb3J0dW5pdGllcyBmb3IgdGllIGZvcm1hdGlvbiBhbmQgdGhlIGVhc2Ugb2YgbWFpbnRhaW5pbmcgdGllcyB3aXRoIHRob3NlIHdobyBzaGFyZSBmb2NpLCB0aGUgaW50ZWxsZWN0dWFsIGFmZmluaXR5IGFwcHJvYWNoIHR1cm5zIGF0dGVudGlvbiB0byB0aGUgdGhlb3JldGljYWwgYW5kIG1ldGhvZG9sb2dpY2FsIHByZWZlcmVuY2VzIG9mIHJlc2VhcmNoZXJzLiBIYXZpbmcgc2ltaWxhciB0aGVvcmV0aWNhbCBhbmQgbWV0aG9kb2xvZ2ljYWwgcHJlZmVyZW5jZXMgaXMgbW9yZSB0aGFuIGEgcXVlc3Rpb24gb2YgdGFzdGUsIGl0IGVhc2VzIGNvbW11bmljYXRpb24gYmVjYXVzZSBjb2xsYWJvcmF0aW9uIHBhcnRuZXJzIGhhdmUgYSBncmVhdGVyIHByb3BvcnRpb24gb2Ygc2hhcmVkIGxhbmd1YWdlIFtAU3JpdmFdIGFuZCBjb29yZGluYXRpb24gdGhyb3VnaCBzaGFyZWQgY3JpdGVyaWEgZm9yIGdvb2QgcXVhbGl0eSByZXNlYXJjaCwgd2hpY2ggY2FuIHByZXZlbnQgZGlzYWdyZWVtZW50cyBhYm91dCB3aGF0IG1ldGhvZHMgdG8gdXNlIG9yIHdoZW4gYSB0aGVvcnkgaXMgY29udmluY2luZ2x5IGFyZ3VlZCBbQFJhdWJdLiBUaGUgbGluayB3aXRoIGdyYWR1YXRlIHNjaG9vbCBhZmZpbGlhdGlvbiBzdGVtcyBmcm9tIHRoZSBpZGVhIHRoYXQgdGhlc2UgdGhlb3JldGljYWwgYW5kIG1ldGhvZG9sb2dpY2FsIHByZWZlcmVuY2VzIGFyZSBub3QgaW5oZXJlbnQgdG8gcGVvcGxlLCBidXQgbGVhcm5lZC4gU2luY2UgdGhlIGdyYWR1YXRlIHNjaG9vbHMgYXJlIGFzc29jaWF0ZWQgd2l0aCB0cmFkaXRpb25zIG9mIHJlc2VhcmNoLCB0aGVpciBzdHVkZW50cyB3b3VsZCBsaWtlbHkgYmUgaW5zdGlsbGVkIHdpdGggdGhlIGlkZWFzIGFib3V0IHdoYXQgaXMgZ29vZCBzb2Npb2xvZ3kgdGhhdCB0aGF0IG1ha2UgdXAgcGFydCBvZiB0aGVzZSB0cmFkaXRpb25zLiBBbiBleGFtcGxlIHdvdWxkIGJlIHRoYXQgdGhlIGV4cGxhbmF0b3J5IHNvY2lvbG9neSBhc3NvY2lhdGVkIHdpdGggSUNTIHZhbHVlcyBhIG1ldGhvZG9sb2dpY2FsIGluZGl2aWR1YWxpc3QgcGVyc3BlY3RpdmUgW0BIYWFuXSwgd2hpY2ggcmVxdWlyZXMgdGhhdCBtYWNybyBsZXZlbCBjaGFuZ2VzIGJlIGV4cGxhaW5lZCB0aHJvdWdoIG1pY3JvIGxldmVsIGJlaGF2aW91ci4gSWYgYSBzb2Npb2xvZ2lzdCBmcm9tIG91dHNpZGUgSUNTIHdlcmUgdG8gY29uc2lkZXIgYSBjb2xsYWJvcmF0aW9uIHdpdGggYW4gSUNTIGFmZmlsaWF0ZSwgdGhleSB3b3VsZCB0aGVuIGhhdmUgdG8gd2VpZ2ggd2hldGhlciB0aGVpciBvd24gYmVsaWVmcyBhYm91dCBtZXRob2RvbG9naWNhbCBpbmRpdmlkdWFsaXNtIGFyZSBjb21wYXRpYmxlIHdpdGggdGhvc2Ugb2YgdGhlaXIgY29sbGVhZ3VlIGFuZCBpZiB0aGlzIGNvdWxkIGNhdXNlIGZyaWN0aW9uIGluIHRoZSBjb2xsYWJvcmF0aW9uLiBTdWNoIGRpZmZlcmVuY2VzIGluIHByZWZlcmVuY2VzIGJlaW5nIGFzc29jaWF0ZWQgd2l0aCBncmFkdWF0ZSBzY2hvb2wgYWZmaWxpYXRpb25zIGFyZSBhbm90aGVyIHJlYXNvbiB0byBzdXNwZWN0IHRoZSBmaXJzdCBoeXBvdGhlc2lzOg0KDQoNCkh5cG90aGVzaXMgMTogDQpTb2Npb2xvZ2lzdHMgYWZmaWxpYXRlZCB3aXRoIElDUyBhcmUgbW9yZSBsaWtlbHkgdG8gY29sbGFib3JhdGUgd2l0aCBvdGhlcnMgYWxzbyBhZmZpbGlhdGVkIHdpdGggSUNTLA0KYW5kIHNvY2lvbG9naXN0cyBub3QgYWZmaWxpYXRlZCB3aXRoIElDUyBhcmUgbW9yZSBsaWtlbHkgdG8gY29sbGFib3JhdGUgd2l0aCBvdGhlcnMgYWxzbyBub3QgYWZmaWxpYXRlZCB3aXRoIElDUy4NCg0KDQojIyBOZXR3b3JrIHN0cnVjdHVyZQ0KDQpDb25zaWRlcmluZyB0aGVzZSByZWFzb25zIHRvIGV4cGVjdCBzb2Npb2xvZ2lzdHMgdGhlIGhhdmUgYSB0ZW5kZW5jeSB0byBmb3JtIGNvbGxhYm9yYXRpb25zIHdpdGggb3RoZXJzIGZvcm0gdGhlIHNhbWUgZ3JhZHVhdGUgc2Nob29sLCB3ZSBtb3ZlIG9uIHRvIHRoZSBuZXh0IHF1ZXN0aW9uOiBob3cgZG9lcyB0aGlzIHRoaXMgdHVybiBvdXQgaW4gYWdncmVnYXRlLCBhdCB0aGUgbmV0d29yayBsZXZlbD8gUHJldmlvdXMgcmVzZWFyY2ggc3VnZ2VzdHMgdGhhdCB0aGVvcmV0aWNhbCBmcmFnbWVudGF0aW9uIGFuZCBtZWNoYW5pc21zIGxlYWRpbmcgdG8gYSB0ZW5kZW5jeSB0byBjb2xsYWJvcmF0ZSB3aXRoIG90aGVycyB3aG8gc2hhcmUgYSByZXNlYXJjaGVycyB0b3BpY3MgYW5kIHRoZW9yZXRpY2FsIHByZWZlcmVuY2VzIHdvdWxkIGNhdXNlIGEgY2x1c3RlcmVkIG5ldHdvcmsgW0BNb29keV0uIFNpbmNlIHRpZXMgd291bGQgYmUgbW9yZSBsaWtlbHkgdG8gYmUgZm9ybWVkIGFuZCBtYWludGFpbmVkIGlmIHRoZSB0d28gY29ubmVjdGVkIHBlb3BsZSBzaGFyZSBzdWNoIHByZWZlcmVuY2VzLCB0aGlzIHdvdWxkIGxlYWQgdG8gdGhlIGZvcm1hdGlvbiBvZiBjbGVhcmx5IGRpc3RpbmN0IGdyb3Vwcywgd2l0aCByZWxhdGl2ZWx5IGZldyB0aWVzIGJyaWRnaW5nIHRoZW0uIFRoaXMgcGVyc3BlY3RpdmUgc2hvdWxkIGFsc28gYmUgYXBwbGljYWJsZSB0byBncmFkdWF0ZSBzY2hvb2wgYWZmaWxpYXRpb24sIHNpbmNlIHdlIGFyZ3VlIHRoYXQgcHJlZmVyZW5jZSB0byB3b3JrIHdpdGggb3RoZXJzIGZyb20gdGhlIHNhbWUgZ3JhZHVhdGUgc2Nob29sIHdvcmtzIHBhcnRpYWxseSB0aHJvdWdoIHNpbWlsYXIgbWVjaGFuaXNtcy4gVGhlIG1haW4gb3V0Y29tZSBvZiBpbnRlcmVzdCwgaG93ZXZlciwgaXMgbm90IHNvIG11Y2ggd2hldGhlciB0aGUgY29sbGFib3JhdGlvbiBuZXR3b3JrIGNvbmZvcm1zIHRvIGEgY2x1c3RlcmVkIHRvcG9sb2d5LCBidXQgcmF0aGVyIGlmIGFueSBzaWduaWZpY2FudCBwcm9wb3J0aW9uIG9mIG9ic2VydmVkIGNsdXN0ZXJpbmcgaXMgY2F1c2VkIHNwZWNpZmljYWxseSBieSB0aGUgdGVuZGVuY3kgdG93YXJkcyBpbnRyYSBncmFkdWF0ZSBzY2hvb2wgY29sbGFib3JhdGlvbi4gU28gdGhlIHNlY29uZCBoeXBvdGhlc2lzIGlzIGZvcm11bGF0ZWQgYXM6DQoNCg0KSHlwb3RoZXNpcyAyOg0KU29jaW9sb2dpc3RzJyB0ZW5kZW5jeSB0byBjb2xsYWJvcmF0ZSB3aXRoIG90aGVycyB3aG8gc2hhcmUgdGhlaXIgKG5vbilhZmZpbGlhdGlvbiB3aXRoIElDUyB3aWxsIGNhdXNlIGNsdXN0ZXJpbmcgaW4NCnRoZSBjb2xsYWJvcmF0aW9uIG5ldHdvcmsgb2Ygc29jaW9sb2dpc3RzIGF0IHRoZSBuZXR3b3JrIGxldmVsLg0KDQojIyBQb3RlbnRpYWwgY29uZm91bmRlcnMNCg0KVGhlIGNsb3NlIGFzc29jaWF0aW9uIGJldHdlZW4gZ3JhZHVhdGUgc2Nob29scyBhbmQgc29jaW9sb2d5IGRlcGFydG1lbnRzIGlzIGNhdXNlIGZvciBjYXV0aW9uLiBUaGUgcmVhc29uIGlzIHRoZSBhIGNvbmZvdW5kaW5nIGVmZmVjdCBvZiB1bml2ZXJzaXR5IGFmZmlsaWF0aW9uIG1heSBiZSBleHBlY3RlZCwgc2luY2UgYSB1bml2ZXJzaXR5IGRlcGFydG1lbnQgc2VydmVzIGFzIGEgZm9jdXMgZm9yIHNvY2lvbG9naXN0cyB0byBtZWV0IGFuZCBwb3NzaWJseSBjb2xsYWJvcmF0ZS4gVGh1cywgY2x1c3RlcmluZyBieSBncmFkIHNjaG9vbCBvbiB0aGUgc3VyZmFjZSBtaWdodCBhY3R1YWxseSBiZSBjbHVzdGVyaW5nIGJ5IGRlcGFydG1lbnQuIEEgcHJlZmVyZW5jZSBmb3IgY29sbGFib3JhdGlvbnMgd2l0aGluIHRoZSBzYW1lIHVuaXZlcnNpdHkgc2hvdWxkIGJlIGFjY291bnRlZCBmb3IgaW4gdGhlIGFuYWx5c2VzIHRvIHByZXZlbnQgb3ZlcmVzdGltYXRpb24gb2YgdGhlIGluZmx1ZW5jZSBvZiBncmFkdWF0ZSBzY2hvb2wgYWZmaWxpYXRpb24uCQ0KIAlBbm90aGVyIHBvc3NpYmxlIGNvbmZvdW5kaW5nIGVmZmVjdCBpcyB0aGF0IG9mIHNlbmlvcml0eSBzaW5jZSBQaEQgY2FuZGlkYXRlcyB0eXBpY2FsbHkgd29yayBmb3IgdGVudXJlZCBzdXBlcnZpc29ycyBhZmZpbGlhdGVkIHdpdGggdGhlIGdyYWR1YXRlIHNjaG9vbCB0aGUgUGhEIGlzIGFsc28gYWZmaWxpYXRlZCB3aXRoLCB0aGUgYW5hbHlzZXMgb2Ygc29jaW9sb2dpc3Rz4oCZIGh5cG90aGVzaXNlZCB0ZW5kZW5jaWVzIHRvIGNvbGxhYm9yYXRlIHdpdGggb3RoZXJzIGFmZmlsaWF0ZWQgd2l0aCB0aGUgc2FtZSBncmFkdWF0ZSBzY2hvb2wgbmVlZCB0byBlbnN1cmUgdGhhdCBzdWNoIHN1cGVydmlzb3J5IGNvbGxhYm9yYXRpb25zIGFyZSBub3QgdHJlYXRlZCBhcyBoYXZpbmcgYmVlbiBjYXVzZWQgYnkgYSBwcmVmZXJlbmNlIGZvciBpbnRyYSBncmFkdWF0ZSBzY2hvb2wgY29sbGFib3JhdGlvbnMuIA0KDQo=</div>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeSourceEmbed("finalTheory.Rmd");
+  window.initializeCodeFolding("show" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

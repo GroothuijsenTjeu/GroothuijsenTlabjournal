@@ -1,0 +1,39 @@
+---
+title: "Introduction"
+author: "Tjeu Groothuijsen"
+bibliography: references.bib
+output: html_document
+---
+
+```{=html}
+<style>
+body {
+  text-align: justify;
+  font-family: Times;
+}
+
+h1, .h1, h2, .h2, h3, .h3 {
+  margin-top: 24px;
+  font-family: Times;
+}
+</style>
+```
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Introduction
+
+Sociologists in the Netherlands have been characterised as working within two distinct traditions of research. Though these traditions both go by a variety of names, this study will refer to them as ‘historical sociology’ and ‘explanatory sociology’ [@Haan]. The two traditions differ considerably in their approach to sociology, they have distinct criteria for what constitutes good research, what sort of questions sociology is equipped to answer and when a theory is convincing [@Haan]. Though the competition between the historical and explanatory sociologists has calmed since the genesis of the two groups in the late twentieth century, the distinction between them has not disappeared. In fact, the two traditions have since been further institutionalised in the form of research lines, programmatic books and separate graduate schools [@Haan]. These graduate schools and their potential for reproducing and reinforcing the division between historical and explanatory sociology are the focus of this study.	
+	The topic of factionalist behaviour among Dutch sociologists is relevant to broader society insofar as the boundaries within the discipline impede the ability of sociologists to generate new knowledge. This issue relates to the literature on the flow of information in networks. When people form separate and more of less homogenous groups with little contact with other groups, this reduces their ability to come up with new and innovative ideas [@Burt]. In the case of a scientific discipline such as sociology, a lack of innovation would be problematic, as sociologists must be able to innovate to some extent to provide the expected answers to new and complex social problems. 
+	With regard to the broader literature, this study expands upon earlier studies of (social) scientific collaboration networks by specifically studying sociologists’ affiliations with graduate schools as a potential cause of clustering. Given that sociology graduate schools in the Netherlands are explicitly associated with the traditions of research mentioned before, as well as university sociology departments, preferential association of sociologists to others with affiliations with the same graduate school are a potential combined explanation for a tendency to work with others at the same university and the same research tradition. If such an effect is present, it would give additional insight in the way sociologists form groups and why. This explanation could add to existing theories by also providing a reason why some sociologists choose to cooperate with others with similar interests at different universities, if they have similar underlying theoretical and methodological preferences imparted by their PhD education.
+
+RQ 1: Do sociologists in the Netherlands display a greater likelihood to collaborate with colleagues affiliated with the same graduate school, compared to colleagues affiliated with a different graduate school?	 
+
+
+Another contribution that this study aims to make is the explicit testing of not only the tendency of sociologists to collaborate with others affiliated with the same graduate school as a micro level effect, but also the way this tendency might aggregate to cause graduate school related clustering in the collaboration network, which is a macro level outcome. This dual emphasis serves as a fairly stringent test of the theory, leaving neither the micro mechanism nor its macro level outcomes implicit. This goal is the basis for the second research question.		
+
+
+  RQ 2: Does the tendency to work with colleagues from the same graduate school cause clustering in the network of sociologists in the Netherlands?
+
+The rest of this study is structured as follows. First several theoretical insights relating to collaboration preferences of scientists, social scientists in particular. Hypotheses are derived from these theories, as well as potential alternative explanations for a tendency to collaborate with others affiliated with the same graduate school, which serve as controls. Second, the data, variables and their preparation are described, followed by the analytical strategy. Third, the hypotheses are tested using stochastic oriented actor models and simulations of network evolution. Finally, conclusions with regard to the two research questions are drawn. 

@@ -1,0 +1,59 @@
+---
+title: "Theory"
+bibliography: references.bib
+output: html_document
+---
+
+```{=html}
+<style>
+body {
+  text-align: justify;
+  font-family: Times;
+}
+
+h1, .h1, h2, .h2, h3, .h3 {
+  margin-top: 24px;
+  font-family: Times;
+}
+</style>
+```
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Theory
+
+In order to answer the research questions posed in the introduction, we first turn to previous literature on the subjects of the context of sociology graduate schools in the Netherlands, patterns in collaboration in (social) science networks, structural characteristics found in such networks and potential confounding effects.
+
+## Context
+
+As mentioned in the introduction, sociologists in the Netherlands can be categorised into two distinct overarching traditions of research, ‘historical sociology’ and ‘explanatory sociology’, both of which have a graduate school explicitly associated with them, the ASSR and ICS, respectively [@Haan]. These traditions and graduate schools are also affiliated with the sociology departments of specific universities, with ASSR being attached to the University of Amsterdam, whereas ICS is a collaboration between the departments of the universities of Groningen, Utrecht and Nijmegen. There are also a number of smaller graduate schools affiliated with the other universities, these are often specialised in a specific topic within social science instead of being more generalist, which ASSR and ICS are. 	
+ 	Going forward, this study will use affiliation with ICS as the characteristic under investigation, thus distinguishing only between whether sociologists are or are not affiliated with ICS. This decision was made primarily based on the availability of data, but is theoretically justifiable for the following reasons. First of all, three out of the total seven dedicated sociology departments in the Netherlands are institutionally affiliated with ICS, in that PhD candidates at these departments partake in ICS organised courses and are officially ICS graduates if they finish their PhD [@ICS]. This also means that ICS affiliated sociologists looking for a colleague to collaborate with would have plenty of opportunity to find other ICS affiliates, whereas other graduate schools are considerably smaller, which makes it more difficult for their affiliates to find collaboration partners from the same school. This means that if all graduate schools were accounted for when studying whether or not sociologists tend to collaborate with others from the same school, the effect may actually be underestimated simply because affiliates of the smaller schools have very few opportunities to form collaborations within their school. A second reason to only distinguish between ICS and non-ICS is that the theoretical and methodological preferences of the sociologists making up ICS, which are a core part of the theoretical mechanisms potentially explaining a tendency towards intra graduate school collaboration, are more homogenous than those of sociologists affiliated with the other major graduate school in sociology, ASSR [@Haan]. This would be cause to expect the tendency to form collaborations within a graduate school and avoid collaborations with colleagues from other graduate schools would be most apparent when a distinction is made between ICS and non-ICS, since ICS affiliates would generally have more difficulty working with others from a different graduate school than two sociologists from different non-ICS graduate schools would have working with each other. With this selection in mind, we now move on to theoretical mechanisms explaining tendencies of scientists for associating with similar others, which will be applied to the graduate school case.
+
+
+## Collaboration preferences
+
+Theoretically, the question of whether sociologists prefer to work with others affiliated with the same graduate school can be approached from multiple angles, two of which are applied here. On the one hand, the graduate school could be viewed as a social focus, shared courses and seminars may make it more likely for two affiliates of the same graduate school to become aware of each other, thus increasing their chances of forming a collaboration compared to two sociologists from different graduate schools. On the other hand, a graduate school can be considered as instilling certain shared theoretical and methodological preferences, which would make it easier for two affiliate of the same school to collaborate in the research because conflicts about the proper ways to conduct such research are less likely to arise. These two theoretical approaches are elaborated upon below, but they are treated as complementary in this study. The goal is not to test which of these theoretical approaches is a better explanation, it is to ascertain whether or not sociologists in the Netherlands have a tendency to collaborate with others from their own graduate school and if this leads to clustering at the network level. The theory thus serves mainly to illustrate why these effects could be expected, but this is not a theory testing study per se.
+	Within the literature on scientific collaboration networks, an approach based on foci of activity emphasises the way organisational arrangements influence opportunities for collaboration. In the case of university departments, it has been found that scientists are more likely to collaborate with others at their department compared to collaborating with those outside their department [@Ashwin?]. One explanation offered for this phenomenon is that frequent physical proximity makes it both easier to work together and more likely to be aware of the possibility of working together.  Departments are thus conceptualised as foci of activity, since their associated buildings, the coordinated times at which scientists work there and the other shared activities facilitated by working within the same organisation increase the chance of two scientists meeting and allow for easier communication and coordination during a project, which increases the chance of collaboration [@Kabo]. These reasons for why working at the same department is conducive to starting research collaborations can also be applied to graduate schools, though to a lesser extent. Affiliation with a graduate school such as ICS does not directly lead the same frequent physical proximity that working at the same department would. However, especially while studying for a PhD, candidates would still have some shared courses, which would be taught by affiliated lecturers [@ICS]. For this reason, a graduate school could still be considered a focus of activity.	  
+ 	The other theoretical approach under consideration views a the influence of being affiliated with the same graduate school on the likelihood to collaborate more as a matter of preference, with those who have attended the same graduate school potentially having more intellectual affinity with one another [@Ashwin]. Where is foci of activity approach placed emphasis on opportunities for tie formation and the ease of maintaining ties with those who share foci, the intellectual affinity approach turns attention to the theoretical and methodological preferences of researchers. Having similar theoretical and methodological preferences is more than a question of taste, it eases communication because collaboration partners have a greater proportion of shared language [@Sriva] and coordination through shared criteria for good quality research, which can prevent disagreements about what methods to use or when a theory is convincingly argued [@Raub]. The link with graduate school affiliation stems from the idea that these theoretical and methodological preferences are not inherent to people, but learned. Since the graduate schools are associated with traditions of research, their students would likely be instilled with the ideas about what is good sociology that that make up part of these traditions. An example would be that the explanatory sociology associated with ICS values a methodological individualist perspective [@Haan], which requires that macro level changes be explained through micro level behaviour. If a sociologist from outside ICS were to consider a collaboration with an ICS affiliate, they would then have to weigh whether their own beliefs about methodological individualism are compatible with those of their colleague and if this could cause friction in the collaboration. Such differences in preferences being associated with graduate school affiliations are another reason to suspect the first hypothesis:
+
+
+Hypothesis 1: 
+Sociologists affiliated with ICS are more likely to collaborate with others also affiliated with ICS,
+and sociologists not affiliated with ICS are more likely to collaborate with others also not affiliated with ICS.
+
+
+## Network structure
+
+Considering these reasons to expect sociologists the have a tendency to form collaborations with others form the same graduate school, we move on to the next question: how does this this turn out in aggregate, at the network level? Previous research suggests that theoretical fragmentation and mechanisms leading to a tendency to collaborate with others who share a researchers topics and theoretical preferences would cause a clustered network [@Moody]. Since ties would be more likely to be formed and maintained if the two connected people share such preferences, this would lead to the formation of clearly distinct groups, with relatively few ties bridging them. This perspective should also be applicable to graduate school affiliation, since we argue that preference to work with others from the same graduate school works partially through similar mechanisms. The main outcome of interest, however, is not so much whether the collaboration network conforms to a clustered topology, but rather if any significant proportion of observed clustering is caused specifically by the tendency towards intra graduate school collaboration. So the second hypothesis is formulated as:
+
+
+Hypothesis 2:
+Sociologists' tendency to collaborate with others who share their (non)affiliation with ICS will cause clustering in
+the collaboration network of sociologists at the network level.
+
+## Potential confounders
+
+The close association between graduate schools and sociology departments is cause for caution. The reason is the a confounding effect of university affiliation may be expected, since a university department serves as a focus for sociologists to meet and possibly collaborate. Thus, clustering by grad school on the surface might actually be clustering by department. A preference for collaborations within the same university should be accounted for in the analyses to prevent overestimation of the influence of graduate school affiliation.	
+ 	Another possible confounding effect is that of seniority since PhD candidates typically work for tenured supervisors affiliated with the graduate school the PhD is also affiliated with, the analyses of sociologists’ hypothesised tendencies to collaborate with others affiliated with the same graduate school need to ensure that such supervisory collaborations are not treated as having been caused by a preference for intra graduate school collaborations. 
+
